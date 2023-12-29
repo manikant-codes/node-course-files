@@ -1,8 +1,11 @@
 var http = require("http");
 var fs = require("fs");
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "./.env") });
 
 const server = http.createServer(function (req, res) {
   if (req.url === "/") {
+    console.log("process", process.env.SECRET);
     fs.readFile("./index.html", (err, data) => {
       if (err) {
         res.writeHead(404, { "Content-Type": "application/json" });
@@ -27,13 +30,3 @@ const server = http.createServer(function (req, res) {
 });
 
 server.listen(5050);
-
-// let txt = "";
-
-// for (let i = 0; i < 10; i++) {
-//   txt += "Hello " + i + "\n";
-// }
-
-// fs.writeFile("./info.txt", txt, (err) => {
-//   console.log(err);
-// });
