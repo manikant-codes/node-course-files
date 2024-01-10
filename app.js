@@ -31,25 +31,55 @@
 
 // server.listen(5050);
 
-let temp;
+// let temp;
 
-async function getData() {
-  try {
-    const data1 = await fs.readFile("./info.txt", { encoding: "utf-8" });
-    const data2 = await fs.readFile("./info2.txt", { encoding: "utf-8" });
-    const data3 = await fs.readFile("./info3.txt", { encoding: "utf-8" });
+// async function getData() {
+//   try {
+//     const data1 = await fs.readFile("./info.txt", { encoding: "utf-8" });
+//     const data2 = await fs.readFile("./info2.txt", { encoding: "utf-8" });
+//     const data3 = await fs.readFile("./info3.txt", { encoding: "utf-8" });
 
-    return data1 + data2 + data3;
-  } catch (err) {
-    console.log(err);
-  }
-}
+//     return data1 + data2 + data3;
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
 
-getData()
-  .then((data) => {
-    temp = data;
-    console.log("temp", temp);
-  })
-  .catch((err) => console.log(err));
+// getData()
+//   .then((data) => {
+//     temp = data;
+//     console.log("temp", temp);
+//   })
+//   .catch((err) => console.log(err));
 
-module.exports = { temp };
+// module.exports = { temp };
+
+// (function(__dirname, __filename, exports) {})()
+
+// function a() {
+//   console.log("A!");
+// }
+
+// function b() {
+//   console.log("B!");
+// }
+
+// function c() {
+//   console.log("C!");
+// }
+
+// a();
+
+// fs.open("./info.txt", "r", (err, fd) => {
+//   console.log("err", err);
+//   console.log("Second!", fd);
+//   console.log("fd", fd);
+// });
+
+// a();
+
+// setTimeout(function myTimeout() {
+//   console.log("Inside Timeout!");
+// }, 5000);
+
+// b();
