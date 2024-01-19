@@ -54,9 +54,33 @@ const fs = require("fs");
 
 // fs.writeFile("./concepts/fs/info.txt", "Hello World", function () {});
 
-fs.unlink("./concepts/fs/info.txt", function (err) {
-  if (err) {
-  } else {
-    console.log("File deleted successfully.");
-  }
-});
+// fs.unlink("./concepts/fs/info.txt", function (err) {
+//   if (err) {
+//   } else {
+//     console.log("File deleted successfully.");
+//   }
+// });
+
+// fs.mkdir("./concepts/fs/newDir2", function (err) {
+//   if (err) {
+//     console.log("err", err);
+//   } else {
+//     console.log("Folder created!");
+//   }
+// });
+
+// fs.readdir("./concepts/fs/newDir", function (err, files) {
+//   if (err) {
+//     console.log("err", err);
+//   } else {
+//     console.log("files", files);
+//   }
+// });
+
+// fs.rmdir("./concepts/fs/newDir", function (err) {
+//   if (err) {
+//     console.log("err", err);
+//   } else {
+//     console.log("Folder deleted!");
+//   }
+// });
