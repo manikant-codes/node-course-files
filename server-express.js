@@ -3,6 +3,7 @@ const app = express();
 const path = require("path");
 const productRouter = require("./routes/product");
 const connect = require("./db/connection");
+const errorHandler = require("./middlewares/errorHandler");
 
 const PORT = process.env.PORT || 5000;
 
@@ -10,6 +11,8 @@ app.use(express.static(path.resolve(__dirname, "public")));
 app.use(express.json());
 
 app.use("/product", productRouter);
+
+app.use(errorHandler);
 
 // app.get("/product", );
 
