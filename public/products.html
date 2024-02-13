@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Detail Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      Copy code header {
+        background-color: #f1f1f1;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .product-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        display: inline-block;
+        margin: 20px;
+        max-width: 600px;
+        padding: 20px;
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .card img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .card-content {
+        margin-top: 20px;
+      }
+
+      .cta-button {
+        background-color: #4caf50;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+      }
+
+      .cta-button:hover {
+        background-color: #45a049;
+      }
+
+      footer {
+        background-color: #f1f1f1;
+        padding: 20px;
+        text-align: center;
+      }
+
+      /* Responsive layout - makes a two column-layout instead of four columns */
+      @media (min-width: 768px) {
+        .card {
+          max-width: 33.33%;
+        }
+      }
+
+      /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+      @media (min-width: 992px) {
+        .card {
+          max-width: 25%;
+        }
+      }
+
+      /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+      @media (min-width: 1200px) {
+        .card {
+          max-width: 20%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header><h1>Product Detail Page</h1></header>
+    <section>
+      <div class="product-grid">
+        <div class="card product-card">
+          <img
+            src="https://source.unsplash.com/600x400/?product"
+            alt="Product 1"
+          />
+          <div class="card-content product-content">
+            <h2>Product 1</h2>
+            <p>
+              <strong>Price:</strong> $99.99 <br />
+              <strong>SKU:</strong> ABC1234 <br />
+              <strong>Category:</strong> Electronics <br />
+              <strong>Description:</strong> This is a sample product description
+              for Product 1. You can customize it for your needs.
+            </p>
+            <button class="cta-button">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="card product-card">
+          <img
+            src="https://source.unsplash.com/600x400/?product"
+            alt="Product 2"
+          />
+          <div class="card-content product-content">
+            <h2>Product 2</h2>
+            <p>
+              <strong>Price:</strong> $199.99 <br />
+              <strong>SKU:</strong> DEF4567 <br />
+              <strong>Category:</strong> Fashion <br />
+              <strong>Description:</strong> This is a sample product description
+              for Product 2. You can customize it for your needs.
+            </p>
+            <button class="cta-button">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="card product-card">
+          <img
+            src="https://source.unsplash.com/600x400/?product"
+            alt="Product 3"
+          />
+          <div class="card-content product-content">
+            <h2>Product 3</h2>
+            <p>
+              <strong>Price:</strong> $299.99 <br />
+              <strong>SKU:</strong> GHI7890 <br />
+              <strong>Category:</strong> Home &amp; Garden <br />
+              <strong>Description:</strong> This is a sample product description
+              for Product 3. You can customize it for your needs.
+            </p>
+            <button class="cta-button">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="card product-card">
+          <img
+            src="https://source.unsplash.com/600x400/?product"
+            alt="Product 4"
+          />
+          <div class="card-content product-content">
+            <h2>Product 4</h2>
+            <p>
+              <strong>Price:</strong> $399.99 <br />
+              <strong>SKU:</strong> JKL0123 <br />
+              <strong>Category:</strong> Sports &amp; Outdoors <br />
+              <strong>Description:</strong> This is a sample product description
+              for Product 4. You can customize it for your needs.
+            </p>
+            <button class="cta-button">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>&copy; 2024 Product Detail Page. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
