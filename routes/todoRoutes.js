@@ -1,4 +1,5 @@
 const express = require("express");
+const router = express.Router();
 const {
   getAllTodos,
   getTodo,
@@ -6,7 +7,6 @@ const {
   updateTodo,
   deleteTodo,
 } = require("../controllers/todoControllers");
-const router = express.Router();
 
 router.get("/", getAllTodos);
 router.get("/:id", getTodo);
