@@ -2,7 +2,37 @@ const Todo = require("../models/Todo");
 
 const getAllTodos = async (req, res) => {
   try {
-    const result = await Todo.find({});
+    const query = req.query;
+    const queryObject = {};
+
+    if (query.isCompleted) {
+      if (query.isCompleted === "true") {
+        queryObject.isCompleted = true;
+      } else {
+        queryObject.isCompleted = false;
+      }
+    }
+
+    if (query.task) {
+      queryObject.text = { $regex: query.task, $options: "i" };
+    }
+
+    if (query.priority) {
+      queryObject.priority = query.priority;
+    }
+
+    let result = Todo.find(queryObject);
+
+    if (query.fields) {
+      result = result.select(query.fields.replaceAll(",", " "));
+    }
+
+    const skip = (Number(query.page) - 1) * Number(query.limit) || 0;
+    const limit = Number(query.limit) || 10;
+    result = result.skip(skip).limit(limit);
+
+    result = await result;
+
     res.status(200).json({ success: true, data: result });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
