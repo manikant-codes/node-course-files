@@ -6,6 +6,8 @@ const getAllTodos = asyncWrapper(async function (req, res) {
   const query = req.query;
   const queryObject = {};
 
+  console.log("req.user", req.user);
+
   if (query.isCompleted) {
     if (query.isCompleted === "true") {
       queryObject.isCompleted = true;
@@ -21,6 +23,8 @@ const getAllTodos = asyncWrapper(async function (req, res) {
   if (query.priority) {
     queryObject.priority = query.priority;
   }
+
+  queryObject.userID = req.user._id;
 
   let result = Todo.find(queryObject);
 
@@ -51,7 +55,7 @@ const getTodo = asyncWrapper(async function (req, res, next) {
 });
 
 const addTodo = asyncWrapper(async function (req, res) {
-  const result = await Todo.create(req.body);
+  const result = await Todo.create({ ...req.body, userID: req.user._id });
   res.status(201).json({ success: true, data: result });
 });
 

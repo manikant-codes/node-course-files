@@ -1,6 +1,8 @@
 require("dotenv").config();
 const connect = require("./db/connection");
 const todoRouter = require("./routes/todoRoutes");
+const authRouter = require("./routes/authRoutes");
+const dashboardRouter = require("./routes/dashboardRoutes");
 const cors = require("cors");
 const express = require("express");
 const app = express();
@@ -10,8 +12,11 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+app.use("/dashboard", dashboardRouter);
 app.use("/todos", todoRouter);
+app.use("/auth", authRouter);
 
 app.use(errorMiddleware);
 

@@ -7,11 +7,12 @@ const {
   updateTodo,
   deleteTodo,
 } = require("../controllers/todoControllers");
+const authMiddleware = require("../middlewares/authMiddleware");
 
-router.get("/", getAllTodos);
-router.get("/:id", getTodo);
-router.post("/", addTodo);
-router.put("/:id", updateTodo);
-router.delete("/:id", deleteTodo);
+router.get("/", authMiddleware, getAllTodos);
+router.get("/:id", authMiddleware, getTodo);
+router.post("/", authMiddleware, addTodo);
+router.put("/:id", authMiddleware, updateTodo);
+router.delete("/:id", authMiddleware, deleteTodo);
 
 module.exports = router;
