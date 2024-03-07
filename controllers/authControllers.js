@@ -16,16 +16,47 @@ const signup = asyncWrapper(async (req, res, next) => {
 
   const result = await User.create({ name, email, password, role });
 
-  const user = { id: result._id, name: result.name };
+  const user = { id: result._id, name: result.name, role: result.role };
+
   const token = jwt.sign(user, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRY,
   });
 
-  res.status(200).json({ user, token });
+  res.status(200).json({ suceess: true, data: user, token });
 });
 
-const login = asyncWrapper(async (req, res, next) => {});
+const login = asyncWrapper(async (req, res, next) => {
+  const { email, password } = req.body;
 
-const logout = asyncWrapper(async (req, res, next) => {});
+  if (!email || !password) {
+    return next(new CustomError("Email and password are required!", 400));
+  }
+
+  const exisitingUser = await User.findOne({ email });
+
+  if (!exisitingUser) {
+    return next(new CustomError("No such user exists!", 404));
+  }
+
+  if (password !== exisitingUser.password) {
+    return next(new CustomError("Passwords do not match!", 403));
+  }
+
+  const user = {
+    id: exisitingUser._id,
+    name: exisitingUser.name,
+    role: exisitingUser.role,
+  };
+
+  const token = jwt.sign(user, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRY,
+  });
+
+  res.status(200).json({ sucess: true, data: user, token });
+});
+
+const logout = asyncWrapper(async (req, res, next) => {
+  res.status(200).json({ success: true, msg: "Logged out successfully!" });
+});
 
 module.exports = { signup, login, logout };
