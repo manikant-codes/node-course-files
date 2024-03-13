@@ -1,7 +1,7 @@
 const CustomError = require("../services/customError");
 const asyncWrapper = require("../utils/asyncWrapper");
 const User = require("../models/User");
-const { signJWT } = require("../utils/jwtHelper");
+const attachCookiesToResponse = require("../utils/cookiesHelper");
 
 const singup = asyncWrapper(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -20,22 +20,25 @@ const singup = asyncWrapper(async (req, res, next) => {
 
   const role = isFirstUser ? "admin" : "user";
 
-  const result = await User.create({ name, email, password, role });
-  const user = { id: result._id, name: result.name };
+  const result = await User.create({
+    name,
+    email,
+    password,
+    role,
+  });
 
-  const token = signJWT(user);
+  const trimmedUser = { id: result.id, name: result.name, role: result.role };
+
+  attachCookiesToResponse(res, trimmedUser);
 
   res.status(200).json({
     success: true,
-    data: user,
-    token,
+    data: trimmedUser,
   });
 });
 
 const login = asyncWrapper(async (req, res, next) => {
   const { email, password } = req.body;
-
-  console.log(req.body);
 
   if (!email?.trim() || !password?.trim()) {
     return next(new CustomError("Missing email or password!", 400));
@@ -47,21 +50,28 @@ const login = asyncWrapper(async (req, res, next) => {
     return next(new CustomError("No such user found!", 400));
   }
 
-  if (existingUser.password !== password) {
+  const isPasswordCorrect = await existingUser.comparePassword(password);
+
+  if (!isPasswordCorrect) {
     return next(new CustomError("Incorrect password!", 400));
   }
 
-  const user = { id: existingUser._id, name: existingUser.name };
-  const token = signJWT(user);
+  const trimmedUser = {
+    id: existingUser.id,
+    name: existingUser.name,
+    role: existingUser.role,
+  };
+
+  attachCookiesToResponse(res, trimmedUser);
 
   res.status(200).json({
     success: true,
-    data: user,
-    token,
+    data: trimmedUser,
   });
 });
 
 const logout = asyncWrapper(async (req, res, next) => {
+  res.cookie("token", "logout", { expires: new Date(Date.now()) });
   res.status(200).json({ success: true, msg: "Logged out successfully!" });
 });
 

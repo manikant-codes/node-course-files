@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const TodoSchema = new mongoose.Schema(
+const TodoSchema = mongoose.Schema(
   {
     text: { type: String, required: true },
     isCompleted: { type: Boolean, default: false },

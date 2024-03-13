@@ -7,7 +7,7 @@ const {
   updateTodo,
   deleteTodo,
 } = require("../controllers/todoControllers");
-const authMiddleware = require("../middlewares/authMiddleware");
+const { authMiddleware } = require("../middlewares/authMiddleware");
 
 router.get("/", authMiddleware, getAllTodos);
 router.get("/:id", authMiddleware, getTodo);
