@@ -6,6 +6,9 @@ const app = express();
 
 const PORT = process.env.PORT || 5050;
 
+app.use(express.json());
+// app.use(express.urlencoded());
+
 app.get("/", (req, res) => {
   res.status(200).send("Hello world!");
 });
