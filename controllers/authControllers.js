@@ -32,7 +32,7 @@ const signup = async (req, res, next) => {
     role: isFirstUser ? "admin" : "user",
   });
 
-  const trimmedUser = getTrimmedUser(existingUser);
+  const trimmedUser = getTrimmedUser(user);
 
   const token = getToken(trimmedUser);
 

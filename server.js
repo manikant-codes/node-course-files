@@ -2,7 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const connect = require("./db/connect");
 const authRouter = require("./routes/authRoutes");
-const userRouter = require("./routes/userRoutes");
+const userRouter = require("./routes/usersRoutes");
+const productRouter = require("./routes/productsRoutes");
+const errorMiddleware = require("./middlewares/errorMiddleware");
 const app = express();
 
 const PORT = process.env.PORT || 5050;
@@ -15,6 +17,9 @@ app.get("/", (req, res) => {
 });
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
+app.use("/products", productRouter);
+
+app.use(errorMiddleware);
 
 const start = async () => {
   try {

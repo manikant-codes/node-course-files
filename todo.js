@@ -1,20 +1,49 @@
+// --------------------
+// auth
+// --------------------
+
 // logout
-// check for token
-// logout else [return 401 if not sent]
-
 // login
-// check -> email, password [return 404 if not sent]
-// check password [return 400 if not sent]
-// token generate
-// res -> user, token
-
 // signup
-// create user in DB
-// token generate
-// res -> user, token
 
-// user-model
-// name
-// email
-// password
-// role [admin, user]
+// --------------------
+// users
+// --------------------
+
+// get all users
+// get single user
+// update user
+// update user password
+// delete user
+
+// --------------------
+// products
+// --------------------
+
+// get all products (public)
+// get single product (public)
+// create product (admin only)
+// update product (admin only)
+// delete product (admin only)
+
+// schema
+// name: string
+// desc: string
+// image: string
+// sellingPrice: number
+// price: number
+// qty: number
+// category [hoodies, t-shirts, shirt, cap, glasses]
+// color: [string]
+// size [xs, s, m, l, xl, xxl, xxxl]
+// avgRating: number
+// totalReviews: number
+// isFeatured: boolean
+
+// --------------------
+// reviews
+// --------------------
+
+// --------------------
+// orders
+// --------------------
