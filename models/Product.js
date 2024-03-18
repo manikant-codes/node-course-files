@@ -11,7 +11,6 @@ const ProductSchema = mongoose.Schema(
       required: true,
     },
     image: { type: String, required: true },
-    sellingPrice: { type: Number, min: 0 },
     price: { type: Number, min: 0, required: true },
     qty: { type: Number, min: 0, default: 0 },
     category: {
@@ -22,12 +21,13 @@ const ProductSchema = mongoose.Schema(
     color: { type: [String], default: [] },
     size: {
       type: [String],
-      enum: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
+      // enum: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
       default: [],
     },
     avgRating: { type: Number, default: 0 },
     totalReviews: { type: Number, default: 0 },
     isFeatured: { type: Boolean, default: false },
+    user: { type: mongoose.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );

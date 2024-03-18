@@ -5,12 +5,15 @@ const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/usersRoutes");
 const productRouter = require("./routes/productsRoutes");
 const errorMiddleware = require("./middlewares/errorMiddleware");
+const fileUpload = require("express-fileupload");
 const app = express();
 
 const PORT = process.env.PORT || 5050;
 
 app.use(express.json());
-// app.use(express.urlencoded());
+app.use(express.static("./public"));
+app.use(express.urlencoded());
+app.use(fileUpload());
 
 app.get("/", (req, res) => {
   res.status(200).send("Hello world!");
