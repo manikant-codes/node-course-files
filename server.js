@@ -2,8 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const connect = require("./db/connect");
 const authRouter = require("./routes/authRoutes");
-const userRouter = require("./routes/usersRoutes");
-const productRouter = require("./routes/productsRoutes");
+const usersRouter = require("./routes/usersRoutes");
+const productsRouter = require("./routes/productsRoutes");
+const reviewsRouter = require("./routes/reviewsRoutes");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 const fileUpload = require("express-fileupload");
 const app = express();
@@ -19,8 +20,9 @@ app.get("/", (req, res) => {
   res.status(200).send("Hello world!");
 });
 app.use("/auth", authRouter);
-app.use("/users", userRouter);
-app.use("/products", productRouter);
+app.use("/users", usersRouter);
+app.use("/products", productsRouter);
+app.use("/reviews", reviewsRouter);
 
 app.use(errorMiddleware);
 
