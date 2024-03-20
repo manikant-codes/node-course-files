@@ -15,9 +15,9 @@ const getAllProducts = async (req, res, next) => {
 
 const getSingleProduct = asyncWrapper(async (req, res, next) => {
   const { id } = req.params;
-  const product = await Product.findById(id);
+  const product = await Product.findById(id).populate("reviews");
 
-  if (!product) {
+           if (!product) {
     return next(new CustomError(404, "No such product found!"));
   }
 
@@ -49,7 +49,15 @@ const updateProduct = asyncWrapper(async (req, res, next) => {
 const deleteProduct = asyncWrapper(async (req, res, next) => {
   const { id } = req.params;
 
-  await Product.findByIdAndDelete(id);
+  const existingProduct = await Product.findOne({ _id: id });
+
+  if (!existingProduct) {
+    return next(new CustomError(404, "No such product found!"));
+  }
+
+  await existingProduct.deleteOne();
+
+  // await Product.findByIdAndDelete(id);
 
   res.status(200).json({ success: true, msg: "Product deleted successfully!" });
 });

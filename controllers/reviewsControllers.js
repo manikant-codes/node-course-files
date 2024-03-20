@@ -2,12 +2,13 @@ const asyncWrapper = require("../utils/asyncWrapper");
 const Review = require("../models/Review");
 const Product = require("../models/Product");
 const CustomError = require("../services/errorServices");
-const hasAccess = require("../utils/checkAccess");
 const checkAccess = require("../utils/checkAccess");
 
 const getAllReviews = asyncWrapper(async (req, res, next) => {
   const { id: productId } = req.params;
-  const reviews = await Review.find({ product: productId });
+  const reviews = await Review.find({ product: productId })
+    .populate("user", "name email")
+    .populate("product", "name price");
   res.status(200).json({ success: true, data: reviews });
 });
 
@@ -54,7 +55,7 @@ const updateReview = asyncWrapper(async (req, res, next) => {
   if (comment?.trim()) {
     newReview.comment = comment;
   }
-  if (rating?.trim()) {
+  if (rating) {
     newReview.rating = rating;
   }
 
@@ -79,7 +80,27 @@ const updateReview = asyncWrapper(async (req, res, next) => {
   res.status(200).json({ success: true, data: review });
 });
 
-const deleteReview = asyncWrapper(async (req, res, next) => {});
+const deleteReview = asyncWrapper(async (req, res, next) => {
+  const { id } = req.params;
+
+  const existingReview = await Review.findOne({ _id: id });
+
+  if (!existingReview) {
+    return next(new CustomError(404, "No such review found!"));
+  }
+
+  const hasAccess = checkAccess(req.user.id, existingReview.user);
+
+  if (!hasAccess) {
+    return next(
+      new CustomError(401, "Does not have permission to delete this review!")
+    );
+  }
+
+  await Review.findOneAndDelete({ _id: id });
+
+  res.status(200).json({ success: true, msg: "Review deleted successfully!" });
+});
 
 module.exports = {
   getAllReviews,
