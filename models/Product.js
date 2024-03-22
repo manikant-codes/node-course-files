@@ -38,7 +38,6 @@ const ProductSchema = mongoose.Schema(
 );
 
 ProductSchema.pre("deleteOne", { document: true }, async function () {
-  console.log("inside deleteOne", this._id);
   await Review.deleteMany({ product: this._id });
 });
 
