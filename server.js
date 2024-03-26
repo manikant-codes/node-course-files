@@ -4,6 +4,7 @@ const todoRouter = require("./routes/todoRoutes");
 const cors = require("cors");
 const express = require("express");
 const app = express();
+const errorMiddleware = require("./middlewares/errorMiddleware");
 
 const PORT = process.env.PORT || 5000;
 
@@ -11,6 +12,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/todos", todoRouter);
+
+app.use(errorMiddleware);
 
 const start = async () => {
   try {
