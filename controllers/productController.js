@@ -16,7 +16,7 @@ const getAllProducts = asyncWrapper(async (req, res, next) => {
 
 const getSingleProduct = asyncWrapper(async (req, res, next) => {
   const { id } = req.params;
-  const product = await Product.findById(id);
+  const product = await Product.findById(id).populate("reviews");
 
   if (!product) {
     return next(new CustomError("No such product found!", 404));
@@ -38,16 +38,18 @@ const updateProduct = asyncWrapper(async (req, res, next) => {
 
 const deleteProduct = asyncWrapper(async (req, res, next) => {
   const { id } = req.params;
-  const product = await Product.findByIdAndDelete(id);
-  console.log("product", product);
+  const product = await Product.findById(id);
+
   if (!product) {
     return next(new CustomError("No such product found!", 404));
   }
+
+  await product.deleteOne();
+
   res.status(200).json({ success: true, msg: "Product deleted successfully!" });
 });
 
 const uploadImage = asyncWrapper(async (req, res, next) => {
-  console.log(req.files);
   if (!req.files) {
     return next(new CustomError("No image provided!", 400));
   }

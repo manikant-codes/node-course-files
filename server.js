@@ -6,6 +6,7 @@ const dashboardRouter = require("./routes/dashboardRoutes");
 const userRouter = require("./routes/userRoutes");
 const productRouter = require("./routes/productRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
+const orderRouter = require("./routes/orderRoutes");
 const cors = require("cors");
 const express = require("express");
 const cookieParser = require("cookie-parser");
@@ -28,6 +29,7 @@ app.use("/todos", todoRouter);
 app.use("/products", productRouter);
 app.use("/auth", authRouter);
 app.use("/reviews", reviewRouter);
+app.use("/orders", orderRouter);
 
 app.use(errorMiddleware);
 

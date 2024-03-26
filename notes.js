@@ -15,3 +15,21 @@
 // models
 // middlewares
 // db
+
+// Reviews
+
+// Pehle CRUD karlena hai.
+// Populate method ka use kar ke review jo mil raha hai us me user aur product ke info add karsakte hai. Ham store sirf id kar rahe hai unki.
+// Fir populate aur mongoose virtuals ka use kar ke ham product jo hame mil raha hai us me us product ke reviews add kar sakte hai. Ye ek virtual property hoogi, yane ye database me stored nahi hai, jab ham fetch karrahe hain us samay add karenge.
+// ProductSchema.virtual("reviews", {
+//     ref: "Review",
+//     localField: "_id",
+//     foreignField: "product",
+//     justOne: false,
+//     // match: { rating: 5 },
+//   });
+
+// Is se bhi pehle ham user aur product ko mila ke ek unique index set karenge ta ke ek user ek product pe ek hi review desake.
+// ReviewSchema.index({ product: 1, user: 1 }, { unique: true });
+
+// Iske baad product schema pe ham post deleteOne hook define karenge isme {document: true} dena jaruru rahe ga agar ham chahte hai ke this andar document ko refer kare. Is me ham us product ke related sare reviews delete kardenge.

@@ -11,6 +11,7 @@ const {
   authMiddleware,
   permissionMiddleware,
 } = require("../middlewares/authMiddleware");
+const { getSingleProductReviews } = require("../controllers/reviewControllers");
 const router = express.Router();
 
 router.get("/", getAllProducts);
@@ -34,5 +35,7 @@ router.delete(
   permissionMiddleware(["admin"]),
   deleteProduct
 );
+
+router.get("/:id/reviews", getSingleProductReviews);
 
 module.exports = router;

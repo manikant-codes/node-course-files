@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Review = require("./Review");
 
 const ProductSchema = mongoose.Schema(
   {
@@ -57,13 +58,34 @@ const ProductSchema = mongoose.Schema(
       type: Number,
       default: 0,
     },
+    numOfReviews: {
+      type: Number,
+      default: 0,
+    },
     user: {
       type: mongoose.Types.ObjectId,
       ref: "User",
       required: [true, "User ID is required"],
     },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+ProductSchema.post(
+  "deleteOne",
+  { document: true, query: false },
+  async (next) => {
+    await Review.deleteMany({ product: this._id });
+    next();
+  }
+);
+
+ProductSchema.virtual("reviews", {
+  ref: "Review",
+  localField: "_id",
+  foreignField: "product",
+  justOne: false,
+  // match: { rating: 5 },
+});
 
 module.exports = mongoose.model("Product", ProductSchema);
