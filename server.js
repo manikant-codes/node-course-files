@@ -1,6 +1,7 @@
 require("dotenv").config();
 const connect = require("./db/connection");
 const todoRouter = require("./routes/todoRoutes");
+const authRouter = require("./routes/authRoutes");
 const cors = require("cors");
 const express = require("express");
 const app = express();
@@ -12,6 +13,9 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/todos", todoRouter);
+app.use("/auth", authRouter);
+
+app.use(errorMiddleware);
 
 app.use(errorMiddleware);
 

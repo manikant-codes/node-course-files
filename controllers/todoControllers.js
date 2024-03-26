@@ -1,112 +1,78 @@
 const Todo = require("../models/Todo");
+const CustomError = require("../services/customError");
 const asyncWrapper = require("../utils/asyncWrapper");
 
-// Ye controller mai router ko as an argument dunga. Iska function hoona jaruri hai. Is controller ko router req, res aur next dega.
+const getAllTodos = asyncWrapper(async function (req, res) {
+  const query = req.query;
+  const queryObject = {};
 
-// const getAllTodos = async (req, res) => {
-//   try {
-//     const result = await Todo.find({});
-//     res.status(200).json({ success: true, data: result });
-//   } catch (error) {
-//     res.status(500).json({ success: false, msg: error.message });
-//   }
-// };
+  if (query.isCompleted) {
+    if (query.isCompleted === "true") {
+      queryObject.isCompleted = true;
+    } else {
+      queryObject.isCompleted = false;
+    }
+  }
 
-const getAllTodos = asyncWrapper(async (req, res) => {
-  const result = await Todo.find({});
+  if (query.task) {
+    queryObject.text = { $regex: query.task, $options: "i" };
+  }
+
+  if (query.priority) {
+    queryObject.priority = query.priority;
+  }
+
+  let result = Todo.find(queryObject);
+
+  if (query.fields) {
+    result = result.select(query.fields.replaceAll(",", " "));
+  }
+
+  if (query.sort) {
+    result = result.sort(query.sort.replaceAll(",", " "));
+  }
+
+  const skip = (Number(query.page) - 1) * Number(query.limit) || 0;
+  const limit = Number(query.limit) || 10;
+  result = result.skip(skip).limit(limit);
+
+  result = await result;
+
   res.status(200).json({ success: true, data: result });
 });
 
-// const getTodo = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const result = await Todo.findById(id);
-//     if (!result) {
-//       return res
-//         .status(404)
-//         .json({ success: false, msg: "No such todo found!" });
-//     }
-//     res.status(200).json({ success: true, data: result });
-//   } catch (error) {
-//     res.status(500).json({ success: false, msg: error.message });
-//   }
-// };
-
-const getTodo = asyncWrapper(async (req, res) => {
+const getTodo = asyncWrapper(async function (req, res, next) {
   const { id } = req.params;
   const result = await Todo.findById(id);
   if (!result) {
-    return res.status(404).json({ success: false, msg: "No such todo found!" });
+    next(new CustomError("No such todo found!", 404));
   }
   res.status(200).json({ success: true, data: result });
 });
 
-// const addTodo = async (req, res) => {
-//   try {
-//     const result = await Todo.create(req.body);
-//     res.status(201).json({ success: true, data: result });
-//   } catch (error) {
-//     res.status(500).json({ success: false, msg: error.message });
-//   }
-// };
-
-const addTodo = asyncWrapper(async (req, res) => {
+const addTodo = asyncWrapper(async function (req, res) {
   const result = await Todo.create(req.body);
   res.status(201).json({ success: true, data: result });
 });
 
-// const updateTodo = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const result = await Todo.findByIdAndUpdate(id, req.body, {
-//       returnOriginal: false,
-//     });
-
-//     if (!result) {
-//       return res
-//         .status(404)
-//         .json({ success: false, msg: "No such todo found!" });
-//     }
-
-//     res.status(200).json({ success: true, data: result });
-//   } catch (error) {
-//     res.status(500).json({ success: false, msg: error.message });
-//   }
-// };
-
-const updateTodo = asyncWrapper(async (req, res) => {
+const updateTodo = asyncWrapper(async function (req, res) {
   const { id } = req.params;
   const result = await Todo.findByIdAndUpdate(id, req.body, {
     returnOriginal: false,
   });
 
   if (!result) {
-    return res.status(404).json({ success: false, msg: "No such todo found!" });
+    next(new CustomError("No such todo found!", 404));
   }
 
   res.status(200).json({ success: true, data: result });
 });
 
-// const deleteTodo = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const result = await Todo.findByIdAndDelete(id);
-//     if (!result) {
-//       return res
-//         .status(404)
-//         .json({ success: false, msg: "No such todo found!" });
-//     }
-//     res.status(200).json({ success: true, data: null });
-//   } catch (error) {
-//     res.status(500).json({ success: false, msg: error.message });
-//   }
-// };
-
-const deleteTodo = asyncWrapper(async (req, res) => {
+const deleteTodo = asyncWrapper(async function (req, res) {
   const { id } = req.params;
   const result = await Todo.findByIdAndDelete(id);
   if (!result) {
-    return res.status(404).json({ success: false, msg: "No such todo found!" });
+    next(new CustomError("No such todo found!", 404));
   }
   res.status(200).json({ success: true, data: null });
 });
