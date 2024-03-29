@@ -1,4 +1,6 @@
 const { add, subtract, multiply, divide } = require("./calc");
+require("./fruitA");
+// import { add, subtract, multiply, divide } from "./calc.js";
 
 const sum = add(2, 3);
 const difference = subtract(2, 3);
