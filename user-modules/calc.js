@@ -51,7 +51,8 @@ const impValue = 10;
 // };
 
 // exports = { add, subtract, multiply, divide };
-module.exports = { add, subtract, multiply, divide };
 // module.exports = impValue;
 
 // export { add, multiply, subtract, divide };
+
+module.exports = { add, subtract, multiply, divide };
