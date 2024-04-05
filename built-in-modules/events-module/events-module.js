@@ -20,7 +20,10 @@ const PizzaShop = require("./pizza-shop");
 const pizzaShop = new PizzaShop();
 
 pizzaShop.on("order", (size, topping) => {
-  console.log(`Baking a ${size} size pizza with ${topping} toppings.`);
+  console.log(`Baking ${size} pizza with ${topping} toppings!`);
+  if (size === "large") {
+    console.log("Free pepsi!");
+  }
 });
 
 pizzaShop.order("large", "pineapple");
