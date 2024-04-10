@@ -1,7 +1,8 @@
 const buffer = new Buffer.from("Hello");
+// const buffer = Buffer.alloc(10);
 
-buffer.write("How are you?");
+buffer.write("Universe");
 
-console.log(buffer);
-console.log(buffer.toJSON());
-console.log(buffer.toString());
+console.log("buffer", buffer);
+console.log("buffer", buffer.toJSON());
+console.log("buffer", buffer.toString());
