@@ -1,23 +1,29 @@
 const express = require("express");
-const fs = require("fs");
 const path = require("path");
+const tasksRouter = require("./routes/tasks");
 
 const app = express();
 
-// app.use(express.static("./pages"));
+app.use("/tasks", tasksRouter);
 
-app.get("/", (req, res, next) => {
-  // res.sendStatus(404);
-  // res.send("Hello World!");
-  // res.json({ msg: "Hello World!" });
-  // res.sendFile(path.join(__dirname, "/pages/index.html"));
-  // res.status(404).send("Not Found!");
-  // res.status(404).json("Not Found!");
-  res.status(200).sendFile(path.join(__dirname, "/pages/index.html"));
-});
+// app.get("/tasks", (req, res) => {
+//   res.send("All To-Dos");
+// });
 
-// app.get("/index.css", (req, res, next) => {
-//   res.status(200).sendFile(path.join(__dirname, "/pages/index.css"));
+// app.get("/tasks/:id", (req, res) => {
+//   res.send("To-Do with ID: " + req.params.id);
+// });
+
+// app.post("/tasks", (req, res) => {
+//   res.send("Added New Todo");
+// });
+
+// app.patch("/tasks/:id", (req, res) => {
+//   res.send("Updated Todo with ID: " + req.params.id);
+// });
+
+// app.delete("/tasks/:id", (req, res) => {
+//   res.send("Deleted Todo with ID: " + req.params.id);
 // });
 
 app.listen(5000, () => {
