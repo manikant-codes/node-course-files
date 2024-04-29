@@ -1,0 +1,33 @@
+1. mongosh - to start the mongo shell
+w. show dbs - to see the list of databases
+3. use <db-name> - to switch to a database or create a new one
+4. show collections - to see the list of collections in a database
+(collections are tables equivalent of a sql database)
+5. db.dropDatabase() - to drop the current database
+6. cls - to clear terminal()
+7. exit - to exit from mongo shell
+8. db - gives you the current database that you are in
+// Inserting
+9. db.<collection>.insertOne(<document>) - to insert a document in collection
+(documents are records equivalent of a sql database)
+E.g.: db.users.insertOne({name : "Manikant"}) 
+E.g.: db.users.insertOne({name : "Rituraj", address: {city: "Surat"}) 
+10. db.<collection>.find() - to get all documents from a collection
+E.g.: db.users.find()
+11. db.<collection>.insertMany(<[documents]>) - to insert multiple documents in a collection
+E.g.: db.users.insertMany([{name: "John"}, {name: "Jenny"}, {name: "Jacob"}])
+// Querying
+12. db.<collection>.find().limit(2) - to get only two documents from a collection
+12. db.<collection>.find().sort({name: 1/-1}).limit(2) - to get only two documents from a collection and sort them by name in ascending or descending order.
+13. db.<collection>.find().sort({name: 1/-1, age: 1/-1}).limit(2) - to get only two documents from a collection and sort them by name in ascending or descending order and if two people have same names then sort them by age in ascending or descending order.
+14. db.<collection>.find().skip(2) - to get documents from a collection by skipping first two documents.
+15. db.<collection>.find({name: "Manikant"}) - to get a document from the collection where name is "Manikant".
+16. db.<collection>.find({name: "Manikant"}, {name: 1, _id: 0}) - to get a document from the collection where name is "Manikant" and in that document get only name field omit the id field.
+17. db.<collection>.find({name: "Manikant"}, {_id: 0}) - to get all the fields except _id.
+18. db.<collection>.find({name: {$ne: "Manikant" }}) - to get all the documents where name is not equal to "Manikant".
+19. db.<collection>.find({age: {$gt: 13 }}) - to get all the documents where age is greater than 13.
+($eq, $ne, $gt, $gte, $lt, $lte, $in)
+20. db.<collection>.find({name: {$in: ["John", "Jane"] }})
+20. db.<collection>.find({name: {$nin: ["John", "Jane"] }})
+
+
