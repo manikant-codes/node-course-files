@@ -30,4 +30,23 @@ E.g.: db.users.insertMany([{name: "John"}, {name: "Jenny"}, {name: "Jacob"}])
 20. db.<collection>.find({name: {$in: ["John", "Jane"] }})
 20. db.<collection>.find({name: {$nin: ["John", "Jane"] }})
 
+21. db.<collection>.find({age: {$exists: false }})
+22. db.users.find({age: {$get: 20, $lte: 40}, name: "Manikant"})
+23. db.users.find({$and: [{age: 10}, {name: "John"}]})
+24. db.users.find({$or: [{age: {$lte: 20}, {city: "surat"}]})
+25. db.users.find({age: {$not: {$lte: 10}}});
+26. db.users.updateOne({age: 10}, {$set:{age: 11}})
+27. db.users.updateOne({age: 10}, {$inc:{age: 1}})
+28. db.users.updateOne({age: 10}, {$rename:{age: "yearsOld"}})
+29. db.users.updateOne({age: 10}, {$unset:{age: ""}})
+(Removes a fieldfrom the document.)
+30. db.users.updateOne({age: 10}, {$push:{hobbies: "Running"}})
+(Push an item to an array.)
+31. db.users.updateOne({age: 10}, {$pull:{hobbies: "Running"}})
+(Remove an item from an array.)
+32. db.users.updateMany({age: 10}, {$set: {age: 11}})
+33. db.users.replaceOne({age: 10}, {age: 11})
+34. db.users.deleteOne({age: 10})
+35. db.users.deleteMay({age: {$exists: false}})
+
 
