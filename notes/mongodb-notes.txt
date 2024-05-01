@@ -49,4 +49,17 @@ E.g.: db.users.insertMany([{name: "John"}, {name: "Jenny"}, {name: "Jacob"}])
 34. db.users.deleteOne({age: 10})
 35. db.users.deleteMay({age: {$exists: false}})
 
+Model:
+
+Mongoose mein model ek aisa concept hai jo aapko MongoDB ke saath interact karne ke liye madad karta hai. Iska matlab hai ki aap model ka use karke documents ko create, read, update, aur delete kar sakte hain. Model ek class hota hai jo aapke data ko represent karta hai. Har model ke instances ko document kehte hain.
+
+Model ka use karke aap:
+
+Documents ko create kar sakte hain.
+Database se documents ko retrieve kar sakte hain.
+Documents ko update kar sakte hain.
+Documents ko delete kar sakte hain.
+
+Jaise ki aap ek car model ke blueprint se actual cars create karte hain, waise hi Mongoose model se MongoDB mein documents create hote hain. Model aapke data ko query karne, update karne, aur remove karne mein madad karta hai. 🚗
+
 
