@@ -9,6 +9,21 @@ async function run() {
   //   user.save();
   // const user = new User({ name: "Manikant", city: "Surat" });
   //   console.log(user);
+  User.findById("id");
+  User.find({ _id: "id" });
+  User.find({ _id: "id" });
+  User.exists({ _id: "id" });
+  User.updateOne({ _id: "id" });
+  User.deleteOne({ _id: "id" });
+  User.where("name").equals("Manikant");
+  User.where("age")
+    .gt(12)
+    .lt(31)
+    .where("name")
+    .equals("Manikant")
+    .limit(2)
+    .select("age")
+    .populate("bestFriend");
 }
 
 run();
