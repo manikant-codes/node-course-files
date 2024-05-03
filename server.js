@@ -1,7 +1,12 @@
+const dotenv = require("dotenv");
+dotenv.config();
 const express = require("express");
 const app = express();
 const tasksRouter = require("./routes/tasks");
 const connect = require("./db/connect");
+
+app.use(express.json());
+// app.use(express.urlencoded());
 
 app.use("/tasks", tasksRouter);
 
