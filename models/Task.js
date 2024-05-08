@@ -9,7 +9,7 @@ const taskSchema = new mongoose.Schema({
     trim: true,
   },
   isCompleted: { type: Boolean, default: false },
-  priority: { type: String, enum: ["A", "B", "C", "D"], default: "D" },
+  priority: { type: String, enum: ["a", "b", "c", "d"], default: "D" },
   dueDate: String,
 });
 
