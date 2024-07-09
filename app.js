@@ -1,10 +1,8 @@
-function add(n1, n2) {
-  console.log("add", n1 + n2);
-}
+// ES6 Modules
+// import { add, subtract } from "./calc.js";
 
-function subtract(n1, n2) {
-  console.log("subtract", n1 - n2);
-}
+// CommonJS Modules
+const add = require("./calc");
 
 add(2, 2);
 subtract(4, 2);
