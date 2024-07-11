@@ -21,4 +21,4 @@ const path = require("path");
 //   "__filename",
 //   path.join(__dirname, "folderOne", "folderTwo", "info.txt")
 // );
-console.log("__filename", path.resolve("folderOne", "folderTwo", "info.txt"));
+// console.log("__filename", path.resolve("folderOne", "folderTwo", "info.txt"));
