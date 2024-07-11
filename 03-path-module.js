@@ -1,4 +1,4 @@
-const path = require("path");
+// const path = require("path");
 
 // console.log("__dirname", __dirname);
 // console.log("__filename", __filename);
@@ -21,4 +21,10 @@ const path = require("path");
 //   "__filename",
 //   path.join(__dirname, "folderOne", "folderTwo", "info.txt")
 // );
-// console.log("__filename", path.resolve("folderOne", "folderTwo", "info.txt"));
+
+// console.log("__filename", path.resolve("/folderOne", "folderTwo", "info.txt"));
+
+// const pathOne = path.join(__dirname, "folderOne", "folderTwo");
+// const pathTwo = path.join(__dirname, "fileTwo.txt");
+
+// console.log("", path.relative(pathOne, pathTwo));
