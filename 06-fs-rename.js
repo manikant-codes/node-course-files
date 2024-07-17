@@ -1,58 +1,46 @@
-const path = require("path");
 const fs = require("fs");
+const path = require("path");
 
-// const filePath = path.join(__dirname, "cake-shop.js");
+const folderPath = path.join(__dirname, "files");
 
-// fs.stat(filePath, (err, stats) => {
-//   if (err) {
-//     return console.log("Error: ", err);
-//   }
-
-//   console.log("Stats: ", stats);
-// });
-
-fs.readdir(__dirname, (err, files) => {
+fs.readdir(folderPath, (err, files) => {
   if (err) {
     return console.log("Error: ", err);
   }
-  const filesToRename = files.filter((name) => {
-    if (
-      name.startsWith(".") ||
-      name === "folderOne" ||
-      name === "package.json" ||
-      name === "fs-rename.js"
-    ) {
-      return false;
-    }
-    return true;
+
+  const filePaths = files.map((fileName) => {
+    return path.join(__dirname, "files", fileName);
   });
 
-  const filesCTime = [];
-
-  for (const value of filesToRename) {
-    const filePath = path.join(__dirname, value);
-    const stats = fs.statSync(filePath);
-    filesCTime.push({ time: stats.ctimeMs, filePath });
-  }
-
-  filesCTime.sort((a, b) => {
-    return a.time - b.time;
+  const fileStats = filePaths.map((filePath) => {
+    return { path: filePath, stats: fs.statSync(filePath) };
   });
+
+  const fileStatsSorted = fileStats
+    .sort(function (a, b) {
+      return a.stats.ctimeMs - b.stats.ctimeMs;
+    })
+    .map((value) => {
+      return value.path;
+    });
 
   let counter = 1;
 
-  for (const value of filesCTime) {
-    const objPath = path.parse(value.filePath);
+  for (const fileName of fileStatsSorted) {
+    const pathObj = path.parse(fileName);
+    console.log(pathObj);
     fs.rename(
-      value.filePath,
-      path.join(objPath.dir, `${counter}-${objPath.base}`),
+      fileName,
+      path.join(pathObj.dir, `file-${counter}.txt`),
       (err) => {
         if (err) {
           return console.log("Error: ", err);
         }
-        console.log("File renamed!");
+        console.log("Renamed");
       }
     );
     counter++;
   }
+
+  console.log("fileStatsSorted", fileStatsSorted);
 });

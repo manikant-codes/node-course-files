@@ -3,9 +3,7 @@ const path = require("path");
 
 const filePath = path.join(__dirname, "files", "info.json");
 
-fetch(
-  "https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg"
-)
+fetch("")
   .then((response) => {
     return response.json();
   })
