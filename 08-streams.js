@@ -1,9 +1,31 @@
 const fs = require("fs");
 const path = require("path");
-const https = require("https");
 
-https.get("https://www.w3schools.com/js/default.asp", (res) => {
-  res.pipe(fs.WriteStream(path.join(__dirname, "files", "img.html")));
+const pathCopy = path.join(__dirname, "files", "file-1.txt");
+const pathPaste = path.join(__dirname, "files", "file-2.txt");
 
-  // console.log(res);
-});
+// fs.readFile(pathCopy, (err, data) => {
+//   if (err) {
+//     return console.log("Error: ", err);
+//   }
+
+//   fs.writeFile(pathPaste, data.toString(), (err) => {
+//     if (err) {
+//       return console.log("Error: ", err);
+//     }
+//     console.log("Write Completed!");
+//   });
+// });
+
+const readStream = fs.createReadStream(pathCopy, { highWaterMark: 1024 });
+const writeStream = fs.createWriteStream(pathPaste);
+
+// readStream.on("data", (chunk) => {
+//   writeStream.write(chunk, (err) => {
+//     if (err) {
+//       return console.log("Error: ", err);
+//     }
+//   });
+// });
+
+readStream.pipe(writeStream);
