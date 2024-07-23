@@ -2,13 +2,22 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
-const data = fs.readFileSync(path.join(__dirname, "pages", "index.html"));
-
 const server = http.createServer(function (req, res) {
   if (req.url === "/") {
+    // const data = fs.readFileSync(path.join(__dirname, "pages", "index.html"));
+    const readStream = fs.createReadStream(
+      path.join(__dirname, "pages", "index.html"),
+      { highWaterMark: 1024 }
+    );
+
     res.writeHead(200, { "Content-Type": "text/html" });
-    res.write(data);
-    res.end();
+
+    readStream.on("data", (chunk) => {
+      res.write(chunk);
+    });
+    readStream.on("close", () => {
+      res.end();
+    });
   } else if (req.url === "/about") {
     res.writeHead(200, { "Content-Type": "text/html" });
     res.write("<h1>About</h1>");
