@@ -4,31 +4,29 @@ const path = require("path");
 
 const server = http.createServer(function (req, res) {
   if (req.url === "/") {
-    // const data = fs.readFileSync(path.join(__dirname, "pages", "index.html"));
-    const readStream = fs.createReadStream(
-      path.join(__dirname, "pages", "index.html"),
-      { highWaterMark: 1024 }
-    );
-
-    res.writeHead(200, { "Content-Type": "text/html" });
-
-    readStream.on("data", (chunk) => {
-      res.write(chunk);
+    res.writeHead(200, {
+      "Content-Type": "text/html",
     });
-    readStream.on("close", () => {
-      res.end();
-    });
+    const data = fs.readFileSync(path.join(__dirname, "pages", "index.html"));
+    res.write(data);
+    res.end();
   } else if (req.url === "/about") {
-    res.writeHead(200, { "Content-Type": "text/html" });
-    res.write("<h1>About</h1>");
+    res.writeHead(200, {
+      "Content-Type": "text/html",
+    });
+    res.write("<h1>About Page</h1>");
     res.end();
   } else if (req.url === "/contact") {
-    res.writeHead(200, { "Content-Type": "text/html" });
-    res.write("<h1>Contact</h1>");
+    res.writeHead(200, {
+      "Content-Type": "text/html",
+    });
+    res.write("<h1>Contact Page</h1>");
     res.end();
   } else {
-    res.writeHead(404, { "Content-Type": "text/html" });
-    res.write("<h1>Not Found</h1>");
+    res.writeHead(200, {
+      "Content-Type": "text/html",
+    });
+    res.write("<h1>Page Not Found</h1>");
     res.end();
   }
 });
