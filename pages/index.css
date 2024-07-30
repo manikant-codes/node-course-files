@@ -1,5 +1,11 @@
-#mydiv {
-  height: 200px;
-  width: 200px;
-  background-color: blueviolet;
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nav ul {
+  list-style-type: none;
+  display: flex;
+  gap: 16px;
 }
