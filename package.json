@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node --watch 11-express.js"
+    "start": "node --watch server.js"
   },
   "keywords": [],
   "author": "",
