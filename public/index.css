@@ -35,3 +35,9 @@ nav ul li a:hover {
   width: 100%;
   object-fit: cover;
 }
+
+.para-list-item {
+  padding: 16px;
+  background-color: cornflowerblue;
+  margin-bottom: 8px;
+}

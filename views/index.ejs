@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <%- navbar %>
+    <%- locals.navbar %> <%- locals.data.map((value) => {return `
+    <p class="para-list-item">${value}</p>
+    ` }).join("") %>
     <img id="hero-image" src="01.webp" />
     <script src="index.js"></script>
   </body>
