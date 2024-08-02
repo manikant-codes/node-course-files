@@ -41,13 +41,17 @@ const server = http.createServer(function (req, res) {
           "Content-Type": "application/json",
         });
         const arrData = JSON.parse(data);
-        const filteredData = arrData.filter((value, index, array) => {
-          if (value.postId === Number(postId) && value.email === email) {
-            return true;
-          }
-          return false;
-        });
-        res.end(JSON.stringify(filteredData));
+        if (postId || email) {
+          const filteredData = arrData.filter((value, index, array) => {
+            if (value.postId === Number(postId) || value.email === email) {
+              return true;
+            }
+            return false;
+          });
+          res.end(JSON.stringify(filteredData));
+        } else {
+          res.end(JSON.stringify(arrData));
+        }
       }
     });
   } else {
