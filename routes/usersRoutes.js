@@ -1,20 +1,19 @@
 const express = require("express");
+const {
+  getAllUsers,
+  addUser,
+  updateUser,
+  deleteUser,
+} = require("../controllers/usersControllers");
+
 const userRouter = express.Router();
 
-userRouter.get("/", (req, res) => {
-  res.status(200).json({ msg: "All users" });
-});
+userRouter.get("/", getAllUsers);
 
-userRouter.post("/", (req, res) => {
-  res.status(200).json({ msg: "User added" });
-});
+userRouter.post("/", addUser);
 
-userRouter.patch("/", (req, res) => {
-  res.status(200).json({ msg: "User updated" });
-});
+userRouter.patch("/:id", updateUser);
 
-userRouter.delete("/", (req, res) => {
-  res.status(200).json({ msg: "User deleted" });
-});
+userRouter.delete("/:id", deleteUser);
 
 module.exports = userRouter;
