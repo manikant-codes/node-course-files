@@ -1,22 +1,33 @@
-const getAllUsers = (req, res) => {
-  res.status(200).json({ msg: "All users" });
+const getAllUsers = async (req, res) => {
+  try {
+  } catch (error) {}
 };
 
-const addUser = (req, res) => {
-  res.status(200).json({ msg: "User added" });
+const getSingleUser = async (req, res) => {
+  try {
+  } catch (error) {}
 };
 
-const updateUser = (req, res) => {
-  const { id } = req.params;
-  res.status(200).json({ msg: `User ${id} updated` });
+const addUser = async (req, res) => {
+  try {
+    console.log("req.body", req.body);
+    res.send("User added!");
+  } catch (error) {}
 };
 
-const deleteUser = (req, res) => {
-  res.status(200).json({ msg: "User deleted" });
+const updateUser = async (req, res) => {
+  try {
+  } catch (error) {}
+};
+
+const deleteUser = async (req, res) => {
+  try {
+  } catch (error) {}
 };
 
 module.exports = {
   getAllUsers,
+  getSingleUser,
   addUser,
   updateUser,
   deleteUser,
