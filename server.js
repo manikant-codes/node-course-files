@@ -1,11 +1,17 @@
 const express = require("express");
-const productsRouter = require("./routes/productsRoutes");
-const usersRouter = require("./routes/usersRoutes");
+const connect = require("./db/connect");
+const todosRouter = require("./routes/todosRoutes");
 
 const server = express();
-server.use("/products", productsRouter);
-server.use("/users", usersRouter);
+server.use("/todos", todosRouter);
 
-server.listen(5000, () => {
-  console.log("Server is listening on port 5000.");
-});
+connect()
+  .then(() => {
+    console.log("Database connected.");
+    server.listen(5000, () => {
+      console.log("Server is listening on port 5000.");
+    });
+  })
+  .catch((error) => {
+    console.log("Error: ", error.message);
+  });
