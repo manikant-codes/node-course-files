@@ -1,15 +1,22 @@
 const Todo = require("../models/Todo");
 
 function getAllTodos(req, res) {
-  res.send("Get All Todos");
+  Todo.find()
+    .then((data) => {
+      res.status(200).json({ data });
+    })
+    .catch((error) => {
+      res.status(500).json({ msg: error.message });
+    });
 }
 
 function getSingleTodo(req, res) {
   res.send("Get Single Todo");
 }
 
-function addTodo(req, res) {
-  res.send("Add Todo");
+async function addTodo(req, res) {
+  try {
+  } catch (error) {}
 }
 
 function updateTodo(req, res) {
