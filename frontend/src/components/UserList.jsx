@@ -12,7 +12,6 @@ function UserList({ user, handleDelete }) {
     <div className="flex items-center bg-gray-200 p-2 rounded-md">
       <div className="flex grow-[1] flex-col">
         <p className="flex items-center gap-2">
-          <span className="">{user.userID}.</span>
           <span>{user.name}</span>
         </p>
         <p>Department: {user.department}</p>
