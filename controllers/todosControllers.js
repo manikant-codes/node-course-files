@@ -11,12 +11,25 @@ function getAllTodos(req, res) {
 }
 
 function getSingleTodo(req, res) {
-  res.send("Get Single Todo");
+  console.log("req.params.id", req.params.id);
+  Todo.findById(req.params.id)
+    .then((data) => {
+      res.status(200).json({ data });
+    })
+    .catch((error) => {
+      res.status(500).json({ msg: error.message });
+    });
 }
 
 async function addTodo(req, res) {
-  try {
-  } catch (error) {}
+  console.log("req.body", req.body);
+  Todo.create(req.body)
+    .then((data) => {
+      res.status(200).json({ data });
+    })
+    .catch((error) => {
+      res.status(500).json({ msg: error.message });
+    });
 }
 
 function updateTodo(req, res) {
@@ -24,7 +37,13 @@ function updateTodo(req, res) {
 }
 
 function deleteTodo(req, res) {
-  res.send("Delete Todo");
+  Todo.findByIdAndDelete(req.params.id)
+    .then((data) => {
+      res.status(200).json({ data });
+    })
+    .catch((error) => {
+      res.status(500).json({ msg: error.message });
+    });
 }
 
 module.exports = {

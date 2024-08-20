@@ -3,6 +3,8 @@ const connect = require("./db/connect");
 const todosRouter = require("./routes/todosRoutes");
 
 const server = express();
+
+server.use(express.json());
 server.use("/todos", todosRouter);
 
 connect()
