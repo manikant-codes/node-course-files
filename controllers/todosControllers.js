@@ -33,12 +33,25 @@ async function addTodo(req, res) {
 }
 
 function updateTodo(req, res) {
-  res.send("Update Todo");
+  const { id } = req.params;
+  Todo.findByIdAndUpdate(id, req.body, { new: true })
+    .then((data) => {
+      if (!data) {
+        res.status(404).json({ msg: "No such task found." });
+      }
+      res.status(200).json({ data });
+    })
+    .catch((error) => {
+      res.status(500).json({ msg: error.message });
+    });
 }
 
 function deleteTodo(req, res) {
   Todo.findByIdAndDelete(req.params.id)
     .then((data) => {
+      if (!data) {
+        res.status(404).json({ msg: "No such task found." });
+      }
       res.status(200).json({ data });
     })
     .catch((error) => {
