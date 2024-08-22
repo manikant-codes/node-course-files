@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { deleteUser, getAllUsers } from "../services/apiServices";
-import UserList from "../components/UserList";
+import UserListItem from "../components/UserListItem";
 
 function Home() {
   const [users, setUsers] = useState(null);
@@ -15,7 +15,6 @@ function Home() {
     const userInput = window.confirm("Are you sure?");
     if (userInput) {
       deleteUser(id).then((data) => {
-        console.log(data);
         getAllUsers().then((data) => {
           setUsers(data.data);
         });
@@ -29,7 +28,11 @@ function Home() {
     <div className="flex flex-col gap-4">
       {users.map((user) => {
         return (
-          <UserList key={user._id} user={user} handleDelete={handleDelete} />
+          <UserListItem
+            key={user._id}
+            user={user}
+            handleDelete={handleDelete}
+          />
         );
       })}
     </div>

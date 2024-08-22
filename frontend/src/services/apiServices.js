@@ -1,11 +1,11 @@
-export async function getAllUsers() {
-  try {
-    const response = await fetch("http://localhost:5000/users");
-    const data = response.json();
-    return data;
-  } catch (error) {
-    console.log("Error: ", error);
-  }
+export function getAllUsers() {
+  return fetch("http://localhost:5000/users")
+    .then((response) => {
+      return response.json();
+    })
+    .catch((error) => {
+      console.log(error.message);
+    });
 }
 
 export function getSingleUser(id) {
@@ -17,6 +17,7 @@ export function getSingleUser(id) {
       console.log(error.message);
     });
 }
+
 export function addUser(body) {
   return fetch("http://localhost:5000/users", {
     method: "POST",
@@ -32,6 +33,7 @@ export function addUser(body) {
       console.log(err.message);
     });
 }
+
 export function updateUser(id, body) {
   return fetch(`http://localhost:5000/users/${id}`, {
     method: "PATCH",
@@ -48,14 +50,14 @@ export function updateUser(id, body) {
     });
 }
 
-export async function deleteUser(id) {
-  try {
-    const response = await fetch(`http://localhost:5000/users/${id}`, {
-      method: "DELETE",
+export function deleteUser(id) {
+  return fetch(`http://localhost:5000/users/${id}`, {
+    method: "DELETE",
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((error) => {
+      console.log(error.message);
     });
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log("Error: ", error);
-  }
 }

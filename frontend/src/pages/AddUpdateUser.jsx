@@ -9,6 +9,7 @@ function AddUpdateUser() {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  // Add ka case hai ya nahi wo store kar rahe hai.
   const isAdd = id === "add";
 
   const [formState, setFormState] = useState(
@@ -23,6 +24,7 @@ function AddUpdateUser() {
   useEffect(() => {
     if (!isAdd) {
       getSingleUser(id).then((data) => {
+        console.log("data", data);
         setFormState(data.data);
       });
     }

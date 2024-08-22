@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function UserList({ user, handleDelete }) {
+function UserListItem({ user, handleDelete }) {
   const navigate = useNavigate();
 
   function goToUpdate() {
@@ -36,4 +36,4 @@ function UserList({ user, handleDelete }) {
   );
 }
 
-export default UserList;
+export default UserListItem;
