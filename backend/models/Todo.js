@@ -10,6 +10,9 @@ const todoSchema = new mongoose.Schema({
       return new Date();
     },
   },
+  dueDate: {
+    type: Date,
+  },
 });
 
 const Todo = mongoose.model("Task", todoSchema);
