@@ -7,8 +7,8 @@ const productSchema = new mongoose.Schema({
   images: {
     type: [String],
     validate: {
-      validator: function (value) {
-        if (Array.isArray(value) && value.length !== 0) {
+      validator: function (images) {
+        if (Array.isArray(images) && images.length !== 0) {
           return true;
         }
         return false;
