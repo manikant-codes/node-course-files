@@ -10,13 +10,9 @@ async function getAllTodos() {
   //       console.log("error", error);
   //     });
 
-  try {
-    const response = await fetch("http://localhost:5000/todos");
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log("error", error);
-  }
+  const response = await fetch("http://localhost:5000/todos");
+  const data = await response.json();
+  return data;
 }
 async function getSingleTodo(id) {
   try {
@@ -28,17 +24,17 @@ async function getSingleTodo(id) {
   }
 }
 
-async function addTodo(body) {
+async function addTodo(data) {
   try {
-    const response = await fetch(`http://localhost:5000/todos/`, {
+    const response = await fetch("http://localhost:5000/todos", {
       method: "POST",
-      body: JSON.stringify(body),
+      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
     });
-    const data = await response.json();
-    return data;
+    const result = await response.json();
+    return result;
   } catch (error) {
     console.log("error", error);
   }
