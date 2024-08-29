@@ -1,4 +1,6 @@
 const Category = require("../models/Category");
+const fs = require("fs");
+const path = require("path");
 
 const getAllCategories = async (req, res) => {
   try {
@@ -15,7 +17,9 @@ const getCategory = async (req, res) => {
     const category = await Category.findById(id);
 
     if (!category) {
-      res.status(404).json({ success: false, msg: "No such category found!" });
+      return res
+        .status(404)
+        .json({ success: false, msg: "No such category found!" });
     }
 
     res.status(200).json({ success: true, data: category });
@@ -26,7 +30,28 @@ const getCategory = async (req, res) => {
 
 const addCategory = async (req, res) => {
   try {
-    res.status(200).json({ success: true, msg: "addCategory" });
+    const image = req.files.image;
+
+    if (!image) {
+      return res
+        .status(400)
+        .json({ success: false, msg: "Image is required!" });
+    }
+
+    const uniqueFileName = Date.now() + "-" + image.name;
+    const uploadPath = path.join(
+      __dirname,
+      "../uploads/categories",
+      uniqueFileName
+    );
+
+    await image.mv(uploadPath);
+
+    const addedCategory = await Category.create({
+      ...req.body,
+      image: `${process.env.BASE_URL}/uploads/categories/${uniqueFileName}`,
+    });
+    res.status(200).json({ success: true, data: addedCategory });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }
@@ -47,7 +72,9 @@ const deleteCategory = async (req, res) => {
     const category = await Category.findById(id);
 
     if (!category) {
-      res.status(404).json({ success: false, msg: "No such category found!" });
+      return res
+        .status(404)
+        .json({ success: false, msg: "No such category found!" });
     }
 
     await Category.findByIdAndDelete(id);
