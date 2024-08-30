@@ -25,21 +25,25 @@ async function getSingleTodo(id) {
 }
 
 async function addTodo(data) {
-  try {
-    const response = await fetch("http://localhost:5000/todos", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.log("error", error);
-  }
+  const response = await fetch("http://localhost:5000/todos", {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const result = await response.json();
+  return result;
 }
+
 function updateTodo() {}
-function deleteTodo() {}
+
+async function deleteTodo(id) {
+  const response = await fetch(`http://localhost:5000/todos/${id}`, {
+    method: "DELETE",
+  });
+  const data = await response.json();
+  return data;
+}
 
 export { getAllTodos, getSingleTodo, addTodo, updateTodo, deleteTodo };

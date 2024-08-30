@@ -1,8 +1,21 @@
 import { Button } from "flowbite-react";
 import React from "react";
 import { HiPencil, HiTrash } from "react-icons/hi";
+import { deleteTodo } from "../../services/apiServices";
 
 function TodoListItem({ todo }) {
+  async function handleDelete() {
+    const userSelection = window.confirm("Are you sure?");
+    if (userSelection) {
+      try {
+        await deleteTodo(todo._id);
+        alert("Task deleted successfully!");
+      } catch (error) {
+        alert("Failed to delete task!");
+      }
+    }
+  }
+
   return (
     <li className="flex items-center justify-between py-4">
       <div>
@@ -19,7 +32,7 @@ function TodoListItem({ todo }) {
         <Button pill>
           <HiPencil />
         </Button>
-        <Button pill color="failure">
+        <Button pill color="failure" onClick={handleDelete}>
           <HiTrash />
         </Button>
       </div>
