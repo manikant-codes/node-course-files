@@ -1,15 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Checkbox, Label, Select, TextInput } from "flowbite-react";
-import { addTodo } from "../../services/apiServices";
+import { addTodo, getSingleTodo, updateTodo } from "../../services/apiServices";
+import { useParams } from "react-router-dom";
+
+const sampleTodoFromDB = {
+  _id: "66c5e26a6b467d8d905b295b",
+  title: "Revise React",
+  isCompleted: false,
+  priority: "A",
+  date: "2024-08-21T12:49:46.095Z",
+  __v: 0,
+};
+
 function AddUpdateTodoForm() {
-  const [formState, setFormState] = useState({
-    title: "",
-    priority: "A",
-    dueDate: "",
-    isCompleted: false,
-  });
+  const { id } = useParams();
+
+  const isAdd = id === "add" ? true : false;
+
+  const [formState, setFormState] = useState(
+    isAdd
+      ? {
+          title: "",
+          priority: "A",
+          dueDate: "",
+          isCompleted: false,
+        }
+      : null
+  );
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isAdd) {
+      getSingleTodo(id).then((data) => {
+        setFormState(data.data);
+        console.log(data);
+      });
+    }
+  }, []);
 
   function handleChange(e) {
     setFormState({ ...formState, [e.target.name]: e.target.value });
@@ -22,17 +50,32 @@ function AddUpdateTodoForm() {
   function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
-    addTodo(formState)
-      .then((data) => {
-        alert("Task added!");
-      })
-      .catch((error) => {
-        alert("Failed to add task!");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    if (isAdd) {
+      addTodo(formState)
+        .then((data) => {
+          alert("Task added!");
+        })
+        .catch((error) => {
+          alert("Failed to add task!");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      updateTodo(formState._id, formState)
+        .then((data) => {
+          alert("Task updated!");
+        })
+        .catch((error) => {
+          alert("Failed to update task!");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   }
+
+  if (!formState) return null;
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -65,7 +108,11 @@ function AddUpdateTodoForm() {
           id="dueDate"
           type="date"
           name="dueDate"
-          value={formState.dueDate}
+          value={
+            formState.dueDate
+              ? new Date(formState.dueDate).toISOString().split("T")[0]
+              : formState.dueDate
+          }
           onChange={handleChange}
         />
       </div>

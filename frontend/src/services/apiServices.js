@@ -14,6 +14,7 @@ async function getAllTodos() {
   const data = await response.json();
   return data;
 }
+
 async function getSingleTodo(id) {
   try {
     const response = await fetch(`http://localhost:5000/todos/${id}`);
@@ -36,7 +37,15 @@ async function addTodo(data) {
   return result;
 }
 
-function updateTodo() {}
+async function updateTodo(id, data) {
+  const response = await fetch(`http://localhost:5000/todos/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" },
+  });
+  const result = await response.json();
+  return result;
+}
 
 async function deleteTodo(id) {
   const response = await fetch(`http://localhost:5000/todos/${id}`, {
