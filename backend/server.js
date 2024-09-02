@@ -3,11 +3,13 @@ const connectToDB = require("./db/connect");
 const fileUpload = require("express-fileupload");
 const categoriesRouter = require("./routes/categoriesRoutes");
 require("dotenv").config();
+const cors = require("cors");
 const server = express();
 
-server.use("/uploads", express.static("uploads"));
+server.use(cors());
 server.use(express.json());
 server.use(fileUpload());
+server.use("/uploads", express.static("uploads"));
 
 server.use("/categories", categoriesRouter);
 
