@@ -1,0 +1,48 @@
+step 1: 
+    - Ek backend naam ka folder banaye aur use vs-code ke saath open karlen.
+
+step 2: 
+    - Is folder me ek empty node project initialize karen.
+    - Iske liye command hai:
+        - npm init -y
+
+step 3: 
+    - Zaruri libraries install karen:
+        - E.g. npm i mongoose express cors     
+
+step 4: 
+    - package.json me aa ke test ki script hata kar start ki script likhen.
+    - "start": "node --watch server.js"
+    - Is se baar baar server ko band karke start karne ki jarurat nahi padegi, changes kar ke save karo ge to server apne aap restart hoo jae ga.
+
+step 5: 
+    - server.js ki file banani hai aur usme express ko import karke ek simple server banana hai.
+    - E.g.: 
+    const express = require("express");
+    const server = express();
+    server.listen(5000, () => {
+        console.log("Server is listening on port 5000!")
+    })
+
+step 6: 
+    - Is step me hame apne server ko database ke saath connect karna hai.
+    - Iske liye ham mongoose library ka use karenge.
+    - mongoose me ek function aata hai connect kar ke, ise call kar ke agar database ka url dedo to ye database ke saath connect kar deta hai.
+    - E.g. mongoose.connect("mongodb://localhost:27017/yashvi")
+        - Yaha 27017/ ke baad aapke database ka naam hai, jis database ke saath karna hai uska naam yaha likhe.
+        - Ye connect function ek promise return karta hai, is promise ke fulfill hone par hi ham apna server shuru karna chahenge.
+    - Isi liye db naam ka ek folder banayenge, uske anadar connect.js naam ki file banayenge aur usme ek funciton banake uske andar mongoose ka connect function call karenge. Aur wo jo promise return kare use hamare banaye function se return karenge.
+
+step 7: 
+    - Ab aap ko routes ka ek folder banana hai aur uske andar jis bhi entity ke related aap ko routes banane hai uski js file banao ge.
+    - E.g. tasksRoutes.js
+    - Iske andar aap router banana hai aur alag alag (jo routes aap ko handel karne hoo) routes handle karne hai.
+    - In routes ko handle karne wale function ham controllers folder me banayenge. Kyu? Taa ke routes ka file chota rahe aur routes aur unhe handle karne ka logic alag rahe. Is se dono code ko manage karna aasaan rehta hai.
+
+step 8:
+    - Controlles ke folder me us entity ka ek js file bana hai aur uske andar uske routes handle karne ke functions banane hai.
+    - E.g. tasksControllers.js
+    - Functions banake unhe yaha se export karna hai. Aur fir routes ke file me import karna hai.
+
+step 9: 
+    - Iske baad aapko apna model banan hai, uske liye pehle models ka folder banayenge aur andar apna <Model>.js file banayenge.

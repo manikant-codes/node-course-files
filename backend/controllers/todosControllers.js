@@ -11,7 +11,6 @@ function getAllTodos(req, res) {
 }
 
 function getSingleTodo(req, res) {
-  console.log("req.params.id", req.params.id);
   Todo.findById(req.params.id)
     .then((data) => {
       res.status(200).json({ data });
@@ -22,7 +21,6 @@ function getSingleTodo(req, res) {
 }
 
 async function addTodo(req, res) {
-  console.log("req.body", req.body);
   Todo.create(req.body)
     .then((data) => {
       res.status(200).json({ data });

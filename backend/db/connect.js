@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
 
-function connect() {
-  return mongoose.connect("mongodb://localhost:27017/yashvi");
+function connectToDB() {
+  const dbConnectionPromise = mongoose.connect(
+    "mongodb://localhost:27017/yashvi"
+  );
+  return dbConnectionPromise;
 }
 
-module.exports = connect;
+module.exports = connectToDB;
