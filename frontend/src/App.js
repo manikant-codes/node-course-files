@@ -2,15 +2,22 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import LayoutMain from "./layouts/main/LayoutMain";
 import Home from "./pages/main/Home";
-import { purple } from "@mui/material/colors";
+import { purple, grey } from "@mui/material/colors";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import AddUpdateCategoryForm from "./pages/admin/categories/AddUpdateCategoryForm";
+import CategoriesList from "./pages/admin/categories/CategoriesList";
 
 function App() {
   const theme = createTheme({
     palette: {
       primary: {
         main: purple[500],
+      },
+      secondary: {
+        main: grey[800],
+      },
+      text: {
+        main: grey[700],
       },
     },
   });
@@ -21,10 +28,10 @@ function App() {
         <Routes>
           <Route path="/" element={<LayoutMain />}>
             <Route index element={<Home />} />
-            <Route
-              path="/admin/add-update-category/:id"
-              element={<AddUpdateCategoryForm />}
-            />
+          </Route>
+          <Route path="/admin" element={<LayoutMain />}>
+            <Route path="categories" element={<CategoriesList />} />
+            <Route path="categories/:id" element={<AddUpdateCategoryForm />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -3,6 +3,8 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import SendIcon from "@mui/icons-material/Send";
 import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
+import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
+import { useNavigate } from "react-router-dom";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -17,6 +19,7 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 function AddUpdateCategoryForm() {
+  const navigate = useNavigate();
   const [formState, setFormState] = useState({
     name: "",
     slug: "",
@@ -52,17 +55,15 @@ function AddUpdateCategoryForm() {
         body: formData,
       });
       const data = await response.json();
-      console.log(data);
+      navigate("/admin/categories");
     } catch (error) {
-      console.log(error);
+      alert(error.message);
     }
   }
 
   return (
     <div>
-      <Typography variant="h2" fontSize="2rem">
-        Add/Update Category
-      </Typography>
+      <AdminPageTitle text="Add/Update Category" />
       <Paper
         className="p-4 mt-8 gap-4 grid grid-cols-1 md:grid-cols-2"
         variant="outlined"
@@ -70,41 +71,43 @@ function AddUpdateCategoryForm() {
         <Paper variant="outlined" className="overflow-hidden w-full h-[300px]">
           <img src={imageURL} alt="" className="w-full h-full object-contain" />
         </Paper>
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-          <TextField
-            id="name"
-            label="Category Name"
-            variant="outlined"
-            name="name"
-            value={formState.name}
-            onChange={handleNameChange}
-          />
-          <TextField
-            id="slug"
-            disabled
-            label="Category Slug"
-            variant="outlined"
-            name="slug"
-            value={formState.slug}
-          />
-          <Button
-            component="label"
-            role={undefined}
-            variant="contained"
-            tabIndex={-1}
-            startIcon={<CloudUploadIcon />}
-          >
-            Upload Category Image
-            <VisuallyHiddenInput
-              type="file"
-              name="image"
-              onChange={handleImageChange}
+        <Paper variant="outlined" className="overflow-hidden w-full p-4">
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <TextField
+              id="name"
+              label="Category Name"
+              variant="outlined"
+              name="name"
+              value={formState.name}
+              onChange={handleNameChange}
             />
-          </Button>
-          <Button type="submit" variant="contained" endIcon={<SendIcon />}>
-            Send
-          </Button>
-        </form>
+            <TextField
+              id="slug"
+              disabled
+              label="Category Slug"
+              variant="outlined"
+              name="slug"
+              value={formState.slug}
+            />
+            <Button
+              component="label"
+              role={undefined}
+              variant="contained"
+              tabIndex={-1}
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload Category Image
+              <VisuallyHiddenInput
+                type="file"
+                name="image"
+                onChange={handleImageChange}
+              />
+            </Button>
+            <Button type="submit" variant="contained" endIcon={<SendIcon />}>
+              Send
+            </Button>
+          </form>
+        </Paper>
       </Paper>
     </div>
   );
