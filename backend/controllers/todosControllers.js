@@ -20,7 +20,7 @@ function getSingleTodo(req, res) {
     });
 }
 
-async function addTodo(req, res) {
+function addTodo(req, res) {
   Todo.create(req.body)
     .then((data) => {
       res.status(200).json({ data });

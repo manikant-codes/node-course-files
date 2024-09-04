@@ -2,6 +2,7 @@ const express = require("express");
 const connectToDB = require("./db/connect");
 const todosRouter = require("./routes/todosRoutes");
 const cors = require("cors");
+const { addTodo } = require("./controllers/todosControllers");
 
 const server = express();
 

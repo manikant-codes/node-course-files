@@ -46,3 +46,9 @@ step 8:
 
 step 9: 
     - Iske baad aapko apna model banan hai, uske liye pehle models ka folder banayenge aur andar apna <Model>.js file banayenge.
+
+Notes:
+
+- Express Router
+    - Ye ek object hai jo hame functions deta hai kisi route(url) pe aaye request ko handle karne ke liye.
+    - Konse functions deta hai? get, put, post, patch, delete, etc 
