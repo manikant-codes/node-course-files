@@ -1,8 +1,9 @@
-import { Avatar, Button, IconButton, Typography } from "@mui/material";
-import { Delete, Edit, EditNote } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
+import { Avatar, IconButton, Typography } from "@mui/material";
 import React from "react";
+import { Link } from "react-router-dom";
 
-function CategoryListItem({ category }) {
+function CategoryListItem({ category, handleDelete }) {
   return (
     <li className="flex items-center gap-4 py-4">
       <Avatar
@@ -17,10 +18,21 @@ function CategoryListItem({ category }) {
         <Typography>{category.name}</Typography>
       </div>
       <div>
-        <IconButton color="secondary" aria-label="add an alarm">
+        <IconButton
+          LinkComponent={Link}
+          to={`/admin/categories/${category._id}`}
+          color="secondary"
+          aria-label="add an alarm"
+        >
           <Edit />
         </IconButton>
-        <IconButton color="error" aria-label="add an alarm">
+        <IconButton
+          onClick={() => {
+            handleDelete(category._id);
+          }}
+          color="error"
+          aria-label="add an alarm"
+        >
           <Delete />
         </IconButton>
       </div>

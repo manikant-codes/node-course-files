@@ -1,5 +1,5 @@
 const Category = require("../models/Category");
-const fs = require("fs");
+const fs = require("fs/promises");
 const path = require("path");
 
 const getAllCategories = async (req, res) => {
@@ -67,7 +67,7 @@ const updateCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
   try {
-    const { id } = req.prarams;
+    const { id } = req.params;
 
     const category = await Category.findById(id);
 
@@ -75,6 +75,18 @@ const deleteCategory = async (req, res) => {
       return res
         .status(404)
         .json({ success: false, msg: "No such category found!" });
+    }
+
+    const fileToBeDeleted = path.parse(category.image).base;
+
+    const filesInCategories = await fs.readdir(
+      path.join(__dirname, "../uploads/categories")
+    );
+
+    if (filesInCategories.includes(fileToBeDeleted)) {
+      await fs.unlink(
+        path.join(__dirname, "../uploads/categories", fileToBeDeleted)
+      );
     }
 
     await Category.findByIdAndDelete(id);

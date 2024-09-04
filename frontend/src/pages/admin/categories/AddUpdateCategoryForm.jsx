@@ -2,9 +2,10 @@ import { Button, Paper, TextField, Typography } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import SendIcon from "@mui/icons-material/Send";
 import { styled } from "@mui/material/styles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { getCategory } from "../../../services/apiServices";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -19,13 +20,29 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 function AddUpdateCategoryForm() {
+  const { id } = useParams();
+  const isAdd = id === "add";
   const navigate = useNavigate();
-  const [formState, setFormState] = useState({
-    name: "",
-    slug: "",
-    image: null,
-  });
+  const [formState, setFormState] = useState(
+    isAdd
+      ? {
+          name: "",
+          slug: "",
+          image: null,
+        }
+      : null
+  );
   const [imageURL, setImageURL] = useState("");
+
+  useEffect(() => {
+    if (!isAdd) {
+      getCategory(id).then((data) => {
+        console.log("data", data);
+        setFormState(data.data);
+        setImageURL(data.data.image);
+      });
+    }
+  }, []);
 
   function handleNameChange(e) {
     setFormState({
@@ -61,9 +78,11 @@ function AddUpdateCategoryForm() {
     }
   }
 
+  if (!formState) return null;
+
   return (
     <div>
-      <AdminPageTitle text="Add/Update Category" />
+      <AdminPageTitle text={(isAdd ? "Add" : "Update") + " Category"} />
       <Paper
         className="p-4 mt-8 gap-4 grid grid-cols-1 md:grid-cols-2"
         variant="outlined"

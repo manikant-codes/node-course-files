@@ -6,6 +6,7 @@ import { purple, grey } from "@mui/material/colors";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import AddUpdateCategoryForm from "./pages/admin/categories/AddUpdateCategoryForm";
 import CategoriesList from "./pages/admin/categories/CategoriesList";
+import LayoutAdmin from "./layouts/admin/LayoutAdmin";
 
 function App() {
   const theme = createTheme({
@@ -29,7 +30,7 @@ function App() {
           <Route path="/" element={<LayoutMain />}>
             <Route index element={<Home />} />
           </Route>
-          <Route path="/admin" element={<LayoutMain />}>
+          <Route path="/admin" element={<LayoutAdmin />}>
             <Route path="categories" element={<CategoriesList />} />
             <Route path="categories/:id" element={<AddUpdateCategoryForm />} />
           </Route>
