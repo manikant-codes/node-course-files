@@ -12,9 +12,23 @@ async function getCategory(id) {
   return data;
 }
 
-async function addCategory() {}
+async function addCategory(body) {
+  const response = await fetch("http://localhost:5000/categories", {
+    method: "POST",
+    body: body,
+  });
+  const data = await response.json();
+  return data;
+}
 
-async function updateCategory() {}
+async function updateCategory(id, body) {
+  const response = await fetch(`http://localhost:5000/categories/${id}`, {
+    method: "PATCH",
+    body: body,
+  });
+  const data = await response.json();
+  return data;
+}
 
 async function deleteCategory(id) {
   const response = await fetch(`${BASE_URL}/categories/${id}`, {

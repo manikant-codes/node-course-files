@@ -5,7 +5,11 @@ import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import { useNavigate, useParams } from "react-router-dom";
-import { getCategory } from "../../../services/apiServices";
+import {
+  addCategory,
+  getCategory,
+  updateCategory,
+} from "../../../services/apiServices";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -61,17 +65,18 @@ function AddUpdateCategoryForm() {
   async function handleSubmit(e) {
     e.preventDefault();
     console.log("formState", formState);
+
     const formData = new FormData();
     formData.append("name", formState.name);
     formData.append("slug", formState.slug);
     formData.append("image", formState.image);
 
     try {
-      const response = await fetch("http://localhost:5000/categories", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
+      if (isAdd) {
+        await addCategory(formData);
+      } else {
+        await updateCategory(formState._id, formData);
+      }
       navigate("/admin/categories");
     } catch (error) {
       alert(error.message);

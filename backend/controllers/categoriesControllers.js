@@ -59,7 +59,42 @@ const addCategory = async (req, res) => {
 
 const updateCategory = async (req, res) => {
   try {
-    res.status(200).json({ success: true, msg: "updateCategory" });
+    const { id } = req.params;
+    let body = req.body;
+
+    const category = await Category.findById(id);
+
+    if (!category) {
+      res.status(404).json({ success: false, msg: "No such category found!" });
+    }
+
+    if (req.files) {
+      // Image is updated.
+      const image = req.files.image;
+      const fileToBeDeleted = path.parse(category.image).base;
+      const filesInCategories = await fs.readdir(
+        path.join(__dirname, "../uploads/categories")
+      );
+      if (filesInCategories.includes(fileToBeDeleted)) {
+        await fs.unlink(
+          path.join(__dirname, "../uploads/categories", fileToBeDeleted)
+        );
+      }
+      const uniqueFileName = Date.now() + "-" + image.name;
+      const uploadPath = path.join(
+        __dirname,
+        "../uploads/categories",
+        uniqueFileName
+      );
+      await image.mv(uploadPath);
+      body = {
+        ...body,
+        image: `${process.env.BASE_URL}/uploads/categories/${uniqueFileName}`,
+      };
+    }
+
+    const updatedCategory = await Category.findByIdAndUpdate(id, body);
+    res.status(200).json({ success: true, data: updatedCategory });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }
