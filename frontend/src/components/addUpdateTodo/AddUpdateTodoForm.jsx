@@ -3,20 +3,21 @@ import { Button, Checkbox, Label, Select, TextInput } from "flowbite-react";
 import { addTodo, getSingleTodo, updateTodo } from "../../services/apiServices";
 import { useParams } from "react-router-dom";
 
-const sampleTodoFromDB = {
-  _id: "66c5e26a6b467d8d905b295b",
-  title: "Revise React",
-  isCompleted: false,
-  priority: "A",
-  date: "2024-08-21T12:49:46.095Z",
-  __v: 0,
-};
+// const sampleTodoFromDB = {
+//   _id: "66c5e26a6b467d8d905b295b",
+//   title: "Revise React",
+//   isCompleted: false,
+//   priority: "A",
+//   date: "2024-08-21T12:49:46.095Z",
+//   __v: 0,
+// };
 
 function AddUpdateTodoForm() {
   const { id } = useParams();
 
   const isAdd = id === "add" ? true : false;
 
+  const [loading, setLoading] = useState(false);
   const [formState, setFormState] = useState(
     isAdd
       ? {
@@ -27,8 +28,6 @@ function AddUpdateTodoForm() {
         }
       : null
   );
-
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!isAdd) {

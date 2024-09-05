@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function TodoListItem({ todo }) {
   const navigate = useNavigate();
+
   async function handleDelete() {
     const userSelection = window.confirm("Are you sure?");
     if (userSelection) {
