@@ -7,6 +7,10 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import AddUpdateCategoryForm from "./pages/admin/categories/AddUpdateCategoryForm";
 import CategoriesList from "./pages/admin/categories/CategoriesList";
 import LayoutAdmin from "./layouts/admin/LayoutAdmin";
+import SubCategoriesList from "./pages/admin/subCategories/SubCategoriesList";
+import ProductsList from "./pages/admin/products/ProductsList";
+import OrdersList from "./pages/admin/orders/OrdersList";
+import UsersList from "./pages/admin/users/UsersList";
 
 function App() {
   const theme = createTheme({
@@ -33,6 +37,10 @@ function App() {
           <Route path="/admin" element={<LayoutAdmin />}>
             <Route path="categories" element={<CategoriesList />} />
             <Route path="categories/:id" element={<AddUpdateCategoryForm />} />
+            <Route path="sub-categories" element={<SubCategoriesList />} />
+            <Route path="products" element={<ProductsList />} />
+            <Route path="orders" element={<OrdersList />} />
+            <Route path="users" element={<UsersList />} />
           </Route>
         </Routes>
       </BrowserRouter>

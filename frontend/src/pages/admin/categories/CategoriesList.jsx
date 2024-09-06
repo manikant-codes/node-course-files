@@ -6,7 +6,7 @@ import {
   getAllCategories,
 } from "../../../services/apiServices";
 import { Button } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import Add from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 
 function CategoriesList() {
@@ -47,17 +47,12 @@ function CategoriesList() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
-        <AdminPageTitle text="Categories" />
-        <Button
-          component={Link}
-          to="/admin/categories/add"
-          variant="contained"
-          startIcon={<Add />}
-        >
-          Add Category
-        </Button>
-      </div>
+      <AdminPageTitle
+        text="Categories"
+        hasBtn
+        btnText="Add Category"
+        btnLink="/admin/categories/add"
+      />
       <div>
         <ul className="flex flex-col [&>li]:border-b [&>li]:border-b-gray-300 [&>li:last-child]:border-b-0">
           {categories.map((category) => {

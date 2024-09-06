@@ -1,16 +1,21 @@
-import MailIcon from "@mui/icons-material/Mail";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
+import CategoryIcon from "@mui/icons-material/Category";
+import GroupIcon from "@mui/icons-material/Group";
+import Inventory2Icon from "@mui/icons-material/Inventory2";
+import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import { Toolbar } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
+import { useTheme } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import { styled } from "@mui/material/styles";
 import * as React from "react";
+import { NavLink } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -60,36 +65,63 @@ const Drawer = styled(MuiDrawer, {
   ],
 }));
 
-const links = ["Categories", "Subcategories", "Products", "Users", "Orders"];
-const extraLinks = ["Log Out"];
+const links = [
+  { icon: <CategoryIcon />, text: "Categories", to: "/admin/categories" },
+  {
+    icon: <CategoryIcon />,
+    text: "Subcategories",
+    to: "/admin/sub-categories",
+  },
+  { icon: <Inventory2Icon />, text: "Products", to: "/admin/products" },
+  { icon: <GroupIcon />, text: "Users", to: "/admin/users" },
+  { icon: <ReceiptLongIcon />, text: "Orders", to: "/admin/orders" },
+];
+const extraLinks = [
+  {
+    icon: <PowerSettingsNewIcon />,
+    text: "Logout",
+    to: "",
+  },
+];
 
 export default function DrawerAdmin({ open, toggleDrawer }) {
+  const theme = useTheme();
   return (
     <>
       <Drawer variant="permanent" open={open}>
         <Toolbar />
-        <Box onClick={toggleDrawer}>
+        <Box>
           <List>
-            {links.map((text, index) => (
-              <ListItem key={text} disablePadding>
+            {links.map((link, index) => (
+              <ListItem
+                component={NavLink}
+                to={link.to}
+                key={index}
+                disablePadding
+                style={({ isActive }) => {
+                  return isActive
+                    ? {
+                        color: theme.palette.primary.main,
+                      }
+                    : {};
+                }}
+              >
                 <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  <ListItemIcon style={{ color: "inherit" }}>
+                    {link.icon}
                   </ListItemIcon>
-                  <ListItemText primary={text} />
+                  <ListItemText primary={link.text} />
                 </ListItemButton>
               </ListItem>
             ))}
           </List>
           <Divider />
           <List>
-            {extraLinks.map((text, index) => (
-              <ListItem key={text} disablePadding>
+            {extraLinks.map((link, index) => (
+              <ListItem key={index} disablePadding>
                 <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
+                  <ListItemIcon>{link.icon}</ListItemIcon>
+                  <ListItemText primary={link.text} />
                 </ListItemButton>
               </ListItem>
             ))}
