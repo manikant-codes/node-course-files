@@ -3,7 +3,7 @@ import { Avatar, IconButton, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 
-function CategoryListItem({ category, handleDelete }) {
+function CategoryListItem({ category, handleDelete, link }) {
   return (
     <li className="flex items-center gap-4 py-4">
       <Avatar
@@ -20,7 +20,7 @@ function CategoryListItem({ category, handleDelete }) {
       <div>
         <IconButton
           LinkComponent={Link}
-          to={`/admin/categories/${category._id}`}
+          to={link}
           color="secondary"
           aria-label="add an alarm"
         >

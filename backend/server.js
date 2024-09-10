@@ -4,6 +4,7 @@ const fileUpload = require("express-fileupload");
 const categoriesRouter = require("./routes/categoriesRoutes");
 require("dotenv").config();
 const cors = require("cors");
+const subCategoriesRouter = require("./routes/subCategoriesRoutes");
 const server = express();
 
 server.use(cors());
@@ -12,6 +13,7 @@ server.use(fileUpload());
 server.use("/uploads", express.static("uploads"));
 
 server.use("/categories", categoriesRouter);
+server.use("/subCategories", subCategoriesRouter);
 
 const start = async () => {
   try {

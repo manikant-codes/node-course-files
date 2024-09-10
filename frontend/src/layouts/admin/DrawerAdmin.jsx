@@ -70,7 +70,7 @@ const links = [
   {
     icon: <CategoryIcon />,
     text: "Subcategories",
-    to: "/admin/sub-categories",
+    to: "/admin/subCategories",
   },
   { icon: <Inventory2Icon />, text: "Products", to: "/admin/products" },
   { icon: <GroupIcon />, text: "Users", to: "/admin/users" },

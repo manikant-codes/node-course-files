@@ -61,6 +61,7 @@ function CategoriesList() {
                 key={category._id}
                 category={category}
                 handleDelete={handleDelete}
+                link={`/admin/categories/${category._id}`}
               />
             );
           })}

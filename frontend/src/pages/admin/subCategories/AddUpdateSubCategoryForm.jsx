@@ -1,14 +1,22 @@
-import { Button, Paper, TextField, Typography } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import SendIcon from "@mui/icons-material/Send";
+import {
+  Button,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
-import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import { useNavigate, useParams } from "react-router-dom";
+import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import {
-  addCategory,
-  getCategory,
-  updateCategory,
+  addSubCategory,
+  getAllCategories,
+  getSubCategory,
+  updateSubCategory,
 } from "../../../services/apiServices";
 
 const VisuallyHiddenInput = styled("input")({
@@ -23,24 +31,36 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-function AddUpdateCategoryForm() {
+function AddUpdateSubCategoryForm() {
   const { id } = useParams();
   const isAdd = id === "add";
   const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
   const [formState, setFormState] = useState(
     isAdd
       ? {
           name: "",
           slug: "",
           image: null,
+          categoryId: "",
         }
       : null
   );
   const [imageURL, setImageURL] = useState("");
 
   useEffect(() => {
+    getAllCategories()
+      .then((data) => {
+        setCategories(data.data);
+      })
+      .catch((error) => {
+        console.log("Failed to get categories!");
+      });
+  }, []);
+
+  useEffect(() => {
     if (!isAdd) {
-      getCategory(id).then((data) => {
+      getSubCategory(id).then((data) => {
         setFormState(data.data);
         setImageURL(data.data.image);
       });
@@ -61,21 +81,29 @@ function AddUpdateCategoryForm() {
     setImageURL(url);
   }
 
+  function handleCategoryChange(e) {
+    setFormState({ ...formState, categoryId: e.target.value });
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
+    console.log("formState", formState);
 
     const formData = new FormData();
     formData.append("name", formState.name);
     formData.append("slug", formState.slug);
     formData.append("image", formState.image);
+    formData.append("categoryId", formState.categoryId);
+
+    console.log("formData", Array.from(formData.entries()));
 
     try {
       if (isAdd) {
-        await addCategory(formData);
+        await addSubCategory(formData);
       } else {
-        await updateCategory(formState._id, formData);
+        await updateSubCategory(formState._id, formData);
       }
-      navigate("/admin/categories");
+      navigate("/admin/subCategories");
     } catch (error) {
       alert(error.message);
     }
@@ -97,7 +125,7 @@ function AddUpdateCategoryForm() {
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <TextField
               id="name"
-              label="Category Name"
+              label="Sub-Category Name"
               variant="outlined"
               name="name"
               value={formState.name}
@@ -106,11 +134,26 @@ function AddUpdateCategoryForm() {
             <TextField
               id="slug"
               disabled
-              label="Category Slug"
+              label="Sub-Category Slug"
               variant="outlined"
               name="slug"
               value={formState.slug}
             />
+
+            <Select
+              id="category"
+              name="category"
+              variant="outlined"
+              label="Category"
+              value={formState.categoryId}
+              onChange={handleCategoryChange}
+            >
+              {categories.map((category) => {
+                return (
+                  <MenuItem value={category._id}>{category.name}</MenuItem>
+                );
+              })}
+            </Select>
             <Button
               component="label"
               role={undefined}
@@ -135,4 +178,4 @@ function AddUpdateCategoryForm() {
   );
 }
 
-export default AddUpdateCategoryForm;
+export default AddUpdateSubCategoryForm;
