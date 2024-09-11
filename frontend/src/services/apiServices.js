@@ -30,8 +30,8 @@ async function addTodo(data) {
     method: "POST",
     body: JSON.stringify(data),
     headers: {
-      "Content-Type": "application/json",
-    },
+      "Content-Type": "application/json"
+    }
   });
   const result = await response.json();
   return result;
@@ -41,7 +41,7 @@ async function updateTodo(id, data) {
   const response = await fetch(`http://localhost:5000/todos/${id}`, {
     method: "PATCH",
     body: JSON.stringify(data),
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json" }
   });
   const result = await response.json();
   return result;
@@ -49,7 +49,7 @@ async function updateTodo(id, data) {
 
 async function deleteTodo(id) {
   const response = await fetch(`http://localhost:5000/todos/${id}`, {
-    method: "DELETE",
+    method: "DELETE"
   });
   const data = await response.json();
   return data;

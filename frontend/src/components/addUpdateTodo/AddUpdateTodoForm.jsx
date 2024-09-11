@@ -15,25 +15,24 @@ import { useParams } from "react-router-dom";
 function AddUpdateTodoForm() {
   const { id } = useParams();
 
-  const isAdd = id === "add" ? true : false;
+  const addKarnaHai = id === "add" ? true : false;
 
   const [loading, setLoading] = useState(false);
   const [formState, setFormState] = useState(
-    isAdd
+    addKarnaHai
       ? {
           title: "",
           priority: "A",
           dueDate: "",
-          isCompleted: false,
+          isCompleted: false
         }
       : null
   );
 
   useEffect(() => {
-    if (!isAdd) {
+    if (!addKarnaHai) {
       getSingleTodo(id).then((data) => {
         setFormState(data.data);
-        console.log(data);
       });
     }
   }, []);
@@ -49,7 +48,7 @@ function AddUpdateTodoForm() {
   function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
-    if (isAdd) {
+    if (addKarnaHai) {
       addTodo(formState)
         .then((data) => {
           alert("Task added!");
@@ -74,7 +73,7 @@ function AddUpdateTodoForm() {
     }
   }
 
-  if (!formState) return null;
+  if (!formState) return <>Loading...</>;
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>

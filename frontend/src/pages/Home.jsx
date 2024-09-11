@@ -26,8 +26,8 @@ function Home() {
   return (
     <div>
       <ul className="flex flex-col [&>li]:border-b [&>li]:border-b-gray-300 [&>li:last-child]:border-b-0 ">
-        {todos.map((todo) => {
-          return <TodoListItem key={todo._id} todo={todo} />;
+        {todos.map((value) => {
+          return <TodoListItem key={value._id} todo={value} />;
         })}
       </ul>
     </div>
