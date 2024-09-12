@@ -4,7 +4,7 @@ const SubCategory = require("../models/SubCategory");
 
 const getAllSubCategories = async (req, res) => {
   try {
-    const subCategories = await SubCategory.find();
+    const subCategories = await SubCategory.find().populate("categoryId");
     res.status(200).json({ success: true, data: subCategories });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
@@ -49,7 +49,7 @@ const addSubCategory = async (req, res) => {
 
     const addedSubCategory = await SubCategory.create({
       ...req.body,
-      image: `${process.env.BASE_URL}/uploads/subCategories/${uniqueFileName}`,
+      image: `${process.env.BASE_URL}/uploads/subCategories/${uniqueFileName}`
     });
     res.status(200).json({ success: true, data: addedSubCategory });
   } catch (error) {
@@ -91,7 +91,7 @@ const updateSubCategory = async (req, res) => {
       await image.mv(uploadPath);
       body = {
         ...body,
-        image: `${process.env.BASE_URL}/uploads/subCategories/${uniqueFileName}`,
+        image: `${process.env.BASE_URL}/uploads/subCategories/${uniqueFileName}`
       };
     }
 
@@ -139,5 +139,5 @@ module.exports = {
   getSubCategory,
   addSubCategory,
   updateSubCategory,
-  deleteSubCategory,
+  deleteSubCategory
 };

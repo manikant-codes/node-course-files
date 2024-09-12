@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import CommonListItem from "./CommonListItem";
+import { Alert, Box, CircularProgress } from "@mui/material";
 
-function CommonList({ getAllData, deleteData, entity, fields }) {
+function CommonList({
+  getAllData,
+  deleteData,
+  entity,
+  fields,
+  renderSubtitle
+}) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
@@ -34,8 +41,20 @@ function CommonList({ getAllData, deleteData, entity, fields }) {
     }
   }
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading)
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "32px"
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  if (error) return <Alert severity="error">{error}</Alert>;
 
   return (
     <div>
@@ -43,11 +62,12 @@ function CommonList({ getAllData, deleteData, entity, fields }) {
         {data.map((item) => {
           return (
             <CommonListItem
-              key={data._id}
+              key={item._id}
               item={item}
               handleDelete={handleDelete}
-              link={`/admin/${entity}/${data._id}`}
+              link={`/admin/${entity}/${item._id}`}
               fields={fields}
+              renderSubtitle={renderSubtitle}
             />
           );
         })}

@@ -3,7 +3,7 @@ import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import CommonList from "../../../components/common/CommonList";
 import {
   deleteCategory,
-  getAllCategories,
+  getAllCategories
 } from "../../../services/apiServices";
 
 function CategoriesList() {
