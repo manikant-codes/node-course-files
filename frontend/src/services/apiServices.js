@@ -85,11 +85,15 @@ async function deleteSubCategory(id) {
 // End SubCategories
 
 // Products
-function getAllProducts() {}
-function getProduct() {}
-function addProduct() {}
-function updateProduct() {}
-function deleteProduct() {}
+async function getAllProducts() {
+  const response = await fetch(`${BASE_URL}/products`);
+  const data = await response.json();
+  return data;
+}
+async function getProduct() {}
+async function addProduct() {}
+async function updateProduct() {}
+async function deleteProduct() {}
 // End Products
 
 export {

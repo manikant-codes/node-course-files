@@ -7,6 +7,7 @@ function CommonList({
   deleteData,
   entity,
   fields,
+  renderImage,
   renderSubtitle
 }) {
   const [loading, setLoading] = useState(true);
@@ -68,6 +69,7 @@ function CommonList({
               link={`/admin/${entity}/${item._id}`}
               fields={fields}
               renderSubtitle={renderSubtitle}
+              renderImage={renderImage}
             />
           );
         })}

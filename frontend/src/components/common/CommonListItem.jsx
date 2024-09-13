@@ -3,13 +3,20 @@ import { Avatar, IconButton, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 
-function CommonListItem({ item, handleDelete, link, fields, renderSubtitle }) {
+function CommonListItem({
+  item,
+  handleDelete,
+  link,
+  fields,
+  renderImage,
+  renderSubtitle
+}) {
   return (
     <div>
       <li className="flex items-center gap-4 py-4">
         <Avatar
           alt={item[fields.title]}
-          src={item[fields.image]}
+          src={renderImage ? renderImage(item) : item[fields.image]}
           sx={{
             height: { xs: "2rem", md: "3rem" },
             width: { xs: "2rem", md: "3rem" }

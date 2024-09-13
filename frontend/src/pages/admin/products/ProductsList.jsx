@@ -4,6 +4,11 @@ import CommonList from "../../../components/common/CommonList";
 import { deleteProduct, getAllProducts } from "../../../services/apiServices";
 
 function ProductsList() {
+  function renderImage(item) {
+    console.log(item);
+    return item.images[0];
+  }
+
   return (
     <div>
       <AdminPageTitle
@@ -17,7 +22,8 @@ function ProductsList() {
           getAllData={getAllProducts}
           deleteData={deleteProduct}
           entity="products"
-          fields={{ image: "", title: "", subTitle: "" }}
+          fields={{ title: "name", subTitle: "desc" }}
+          renderImage={renderImage}
         />
       </div>
     </div>

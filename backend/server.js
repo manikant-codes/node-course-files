@@ -5,6 +5,7 @@ const categoriesRouter = require("./routes/categoriesRoutes");
 require("dotenv").config();
 const cors = require("cors");
 const subCategoriesRouter = require("./routes/subCategoriesRoutes");
+const productsRouter = require("./routes/productsRoutes");
 const server = express();
 
 server.use(cors());
@@ -14,6 +15,7 @@ server.use("/uploads", express.static("uploads"));
 
 server.use("/categories", categoriesRouter);
 server.use("/subCategories", subCategoriesRouter);
+server.use("/products", productsRouter);
 
 const start = async () => {
   try {
