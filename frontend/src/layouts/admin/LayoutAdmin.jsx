@@ -1,18 +1,16 @@
 import React from "react";
-import NavbarMain from "./NavbarMain";
-import FooterMain from "./FooterMain";
+import NavbarAdmin from "./NavbarAdmin";
 import { Outlet } from "react-router-dom";
 
-function LayoutMain() {
+function LayoutAdmin() {
   return (
     <div>
-      <NavbarMain />
+      <NavbarAdmin />
       <div className="p-8">
         <Outlet />
       </div>
-      <FooterMain />
     </div>
   );
 }
 
-export default LayoutMain;
+export default LayoutAdmin;
