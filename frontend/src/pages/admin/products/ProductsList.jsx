@@ -15,7 +15,7 @@ function ProductsList() {
         text="Products"
         hasBtn
         btnText={"Add Products"}
-        btnLink="#"
+        btnLink="/admin/products/add"
       />
       <div>
         <CommonList
