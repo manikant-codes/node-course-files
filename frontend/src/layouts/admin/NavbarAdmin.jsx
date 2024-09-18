@@ -14,7 +14,6 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { COMPANY_NAME } from "../../consts/main";
-import SidebarAdmin from "./SidebarAdmin";
 
 function NavbarAdmin() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -193,7 +192,6 @@ function NavbarAdmin() {
           </Box>
         </Toolbar>
       </AppBar>
-      <SidebarAdmin />
       {renderMobileMenu}
       {renderMenu}
     </Box>
