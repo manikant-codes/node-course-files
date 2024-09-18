@@ -17,7 +17,7 @@ async function getCategory(id) {
 async function addCategory(body) {
   const response = await fetch("http://localhost:5000/categories", {
     method: "POST",
-    body: body
+    body: body,
   });
   const data = await response.json();
   return data;
@@ -26,7 +26,7 @@ async function addCategory(body) {
 async function updateCategory(id, body) {
   const response = await fetch(`http://localhost:5000/categories/${id}`, {
     method: "PATCH",
-    body: body
+    body: body,
   });
   const data = await response.json();
   return data;
@@ -34,7 +34,7 @@ async function updateCategory(id, body) {
 
 async function deleteCategory(id) {
   const response = await fetch(`${BASE_URL}/categories/${id}`, {
-    method: "DELETE"
+    method: "DELETE",
   });
   const data = await response.json();
   return data;
@@ -59,7 +59,7 @@ async function getSubCategory(id) {
 async function addSubCategory(body) {
   const response = await fetch(`${BASE_URL}/subCategories`, {
     method: "POST",
-    body: body
+    body: body,
   });
   const data = await response.json();
   return data;
@@ -68,7 +68,7 @@ async function addSubCategory(body) {
 async function updateSubCategory(id, body) {
   const response = await fetch(`${BASE_URL}/subCategories/${id}`, {
     method: "PATCH",
-    body: body
+    body: body,
   });
   const data = await response.json();
   return data;
@@ -76,7 +76,7 @@ async function updateSubCategory(id, body) {
 
 async function deleteSubCategory(id) {
   const response = await fetch(`${BASE_URL}/subCategories/${id}`, {
-    method: "DELETE"
+    method: "DELETE",
   });
   const data = await response.json();
   return data;
@@ -91,7 +91,16 @@ async function getAllProducts() {
   return data;
 }
 async function getProduct() {}
-async function addProduct() {}
+
+async function addProduct(body) {
+  const response = await fetch(`${BASE_URL}/products`, {
+    method: "POST",
+    body: body,
+  });
+  const data = await response.json();
+  return data;
+}
+
 async function updateProduct() {}
 async function deleteProduct() {}
 // End Products
@@ -111,5 +120,5 @@ export {
   getProduct,
   addProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
 };
