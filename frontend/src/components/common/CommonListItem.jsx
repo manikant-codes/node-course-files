@@ -9,7 +9,7 @@ function CommonListItem({
   link,
   fields,
   renderImage,
-  renderSubtitle
+  renderSubtitle,
 }) {
   return (
     <div>
@@ -19,18 +19,18 @@ function CommonListItem({
           src={renderImage ? renderImage(item) : item[fields.image]}
           sx={{
             height: { xs: "2rem", md: "3rem" },
-            width: { xs: "2rem", md: "3rem" }
+            width: { xs: "2rem", md: "3rem" },
           }}
         />
         <div className="flex-grow-[1]">
           <Typography>{item[fields.title]}</Typography>
           {(renderSubtitle || fields.subTitle) && (
-            <Typography color="textSecondary">
+            <Typography color="textSecondary" className="line-clamp-1">
               {renderSubtitle ? renderSubtitle(item) : item[fields.subTitle]}
             </Typography>
           )}
         </div>
-        <div>
+        <div className="shrink-0">
           <IconButton LinkComponent={Link} to={link} color="secondary">
             <Edit />
           </IconButton>

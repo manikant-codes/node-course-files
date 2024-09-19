@@ -8,7 +8,7 @@ function CommonList({
   entity,
   fields,
   renderImage,
-  renderSubtitle
+  renderSubtitle,
 }) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
@@ -49,7 +49,7 @@ function CommonList({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "32px"
+          padding: "32px",
         }}
       >
         <CircularProgress />

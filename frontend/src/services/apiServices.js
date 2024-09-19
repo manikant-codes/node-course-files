@@ -90,7 +90,11 @@ async function getAllProducts() {
   const data = await response.json();
   return data;
 }
-async function getProduct() {}
+async function getProduct(id) {
+  const response = await fetch(`${BASE_URL}/products/${id}`);
+  const data = await response.json();
+  return data;
+}
 
 async function addProduct(body) {
   const response = await fetch(`${BASE_URL}/products`, {
@@ -101,8 +105,22 @@ async function addProduct(body) {
   return data;
 }
 
-async function updateProduct() {}
-async function deleteProduct() {}
+async function updateProduct(id, body) {
+  const response = await fetch(`${BASE_URL}/products/${id}`, {
+    method: "PATCH",
+    body: body,
+  });
+  const data = await response.json();
+  return data;
+}
+
+async function deleteProduct(id) {
+  const response = await fetch(`${BASE_URL}/products/${id}`, {
+    method: "DELETE",
+  });
+  const data = await response.json();
+  return data;
+}
 // End Products
 
 export {

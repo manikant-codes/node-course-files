@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true, minLength: 2, maxLength: 300 },
   slug: { type: String, required: true, unique: true },
-  desc: { type: String, required: true, minLength: 100, maxLength: 2000 },
+  desc: { type: String, required: true, minLength: 20, maxLength: 2000 },
   images: {
     type: [String],
     validate: {

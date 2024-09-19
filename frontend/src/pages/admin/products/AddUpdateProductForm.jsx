@@ -19,6 +19,7 @@ import {
   getAllCategories,
   getAllSubCategories,
   getProduct,
+  updateProduct,
 } from "../../../services/apiServices";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -59,13 +60,12 @@ function AddUpdateProductForm() {
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
 
-  console.log("subCategories", subCategories);
-
   useEffect(() => {
     if (!isAdd) {
       getProduct(id).then((data) => {
+        console.log(data);
         setFormState(data.data);
-        // setImagesURL(data.data.image);
+        setImagesURL(data.data.images);
       });
     }
   }, []);
@@ -104,8 +104,11 @@ function AddUpdateProductForm() {
     for (const file of e.target.files) {
       tempURLs.push(URL.createObjectURL(file));
     }
-    setImagesURL(tempURLs);
-    setFormState({ ...formState, images: Array.from(e.target.files) });
+    setImagesURL([...imagesURL, ...tempURLs]);
+    setFormState({
+      ...formState,
+      images: [...formState.images, ...Array.from(e.target.files)],
+    });
   }
 
   function handleImagesRemove(index) {
@@ -140,8 +143,24 @@ function AddUpdateProductForm() {
     e.preventDefault();
     const formData = new FormData(e.target);
     console.log(Array.from(formData.entries()));
-    await addProduct(formData);
-    alert("Product added!");
+    try {
+      if (isAdd) {
+        await addProduct(formData);
+        alert("Product added!");
+        navigate("/admin/products");
+      } else {
+        for (const image of formState.images) {
+          if (typeof image === "string") {
+            formData.append("images", image);
+          }
+        }
+        await updateProduct(id, formData);
+        alert("Product updated!");
+        navigate("/admin/products");
+      }
+    } catch (error) {
+      alert(error.message);
+    }
   }
 
   if (!formState) return null;
