@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import TitleAdmin from "../../../components/admin/common/TitleAdmin";
 import MyFileUpload from "../../../components/common/MyFileUpload";
+import { addCategory } from "../../../services/apiServices";
 
 function AddUpdateCategory() {
   const { id } = useParams();
@@ -32,10 +33,11 @@ function AddUpdateCategory() {
     });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    console.log(Array.from(formData.entries()));
+    // console.log(Array.from(formData.entries()));
+    await addCategory(formData);
   }
 
   return (
