@@ -69,6 +69,9 @@ const updateProduct = async (req, res) => {
       params: { id },
     } = req;
 
+    console.log("body.images", body.images); // undefined // str // []
+    console.log("files.images", files, files.images.length); // null // obj /// []
+
     const existingProduct = await Product.findById(id);
 
     if (!existingProduct) {
@@ -78,15 +81,33 @@ const updateProduct = async (req, res) => {
       });
     }
 
+    if (body.images && !Array.isArray(body.images)) {
+      body.images = [body.images];
+    }
+
     productValidator(id, body, res);
+
+    if (
+      (!files && !body.images) ||
+      (files && !files.images.length && !body.images) ||
+      (!files && body.images && body.images.length < 2)
+    ) {
+      return res.status(400).json({
+        success: false,
+        msg: "At least 2 product images are required!",
+      });
+    }
 
     const pathToProductsDir = path.join(__dirname, "../uploads/products");
     await checkAndCreateDir(pathToProductsDir);
 
     const images = [];
 
+    console.log("body.images", body.images); // undefined // str // []
+    console.log("files.images", files); // null // obj /// []
+
     // If there are file save them in uploads/products and push their url in images array.
-    if (files.images) {
+    if (files && files.images) {
       if (Array.isArray(files.images)) {
         for (const image of files.images) {
           const uniqueName = Date.now() + "-" + image.name;
@@ -104,7 +125,7 @@ const updateProduct = async (req, res) => {
 
     const productsImagesInUplods = await fs.readdir(pathToProductsDir);
 
-    // Check if images in existingProduct are in body.images, if not delete them from uploads/products folder.
+    // // Check if images in existingProduct are in body.images, if not delete them from uploads/products folder.
     if (body.images) {
       for (const image of existingProduct.images) {
         if (!body.images.includes(image)) {

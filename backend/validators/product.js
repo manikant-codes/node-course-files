@@ -15,10 +15,22 @@ const productValidator = async (id, body, res) => {
     });
   }
 
+  if (body.desc?.trim().length < 20) {
+    return res.status(400).json({
+      success: false,
+      msg: "Description must be atleat 20 characters!",
+    });
+  }
+
   if (id) {
     const existingProductById = await Product.findById(id);
     const existingProductBySlug = await Product.findOne({ slug: body.slug });
-    if (existingProductById.slug !== existingProductBySlug.slug) {
+
+    if (
+      existingProductById &&
+      existingProductBySlug &&
+      existingProductById.slug !== existingProductBySlug.slug
+    ) {
       return res.status(400).json({
         success: false,
         msg: "Product slug already exists!",

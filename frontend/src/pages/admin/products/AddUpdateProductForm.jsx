@@ -141,7 +141,16 @@ function AddUpdateProductForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const formData = new FormData(e.target);
+    const formData = new FormData();
+    for (const key in formState) {
+      if (Array.isArray(formState[key])) {
+        for (const value of formState[key]) {
+          formData.append(key, value);
+        }
+      } else {
+        formData.append(key, formState[key]);
+      }
+    }
     console.log(Array.from(formData.entries()));
     try {
       if (isAdd) {
@@ -149,11 +158,6 @@ function AddUpdateProductForm() {
         alert("Product added!");
         navigate("/admin/products");
       } else {
-        for (const image of formState.images) {
-          if (typeof image === "string") {
-            formData.append("images", image);
-          }
-        }
         await updateProduct(id, formData);
         alert("Product updated!");
         navigate("/admin/products");
