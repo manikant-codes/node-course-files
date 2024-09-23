@@ -10,9 +10,6 @@ async function addCategory(body) {
   const response = await fetch("http://localhost:5000/categories", {
     method: "POST",
     body: body,
-    // headers: {
-    //   "Content-Type": "application/json",
-    // },
   });
   const data = await response.json();
   return data;
@@ -20,7 +17,13 @@ async function addCategory(body) {
 
 async function updateCategory() {}
 
-async function deleteCategory() {}
+async function deleteCategory(id) {
+  const response = await fetch(`http://localhost:5000/categories/${id}`, {
+    method: "DELETE",
+  });
+  const data = await response.json();
+  return data;
+}
 
 export {
   getAllCategories,

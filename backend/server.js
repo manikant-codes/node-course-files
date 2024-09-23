@@ -7,6 +7,7 @@ require("dotenv").config();
 
 const server = express();
 
+server.use("/uploads", express.static("uploads"));
 server.use(cors());
 server.use(fileUpload());
 server.use(express.json());

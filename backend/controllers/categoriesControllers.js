@@ -1,5 +1,6 @@
 const Category = require("../models/Category");
 const path = require("path");
+const fs = require("fs/promises");
 
 const getAllCategories = async (req, res) => {
   try {
@@ -51,7 +52,7 @@ const addCategory = async (req, res) => {
 
     await files.image.mv(uploadPath);
 
-    const image = `http:/localhost:5000/uploads/categories/${uniqueName}`;
+    const image = `http://localhost:5000/uploads/categories/${uniqueName}`;
 
     const category = await Category.create({ image, ...body });
 
@@ -63,7 +64,34 @@ const addCategory = async (req, res) => {
 
 const updateCategory = async (req, res) => {};
 
-const deleteCategory = async (req, res) => {};
+const deleteCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const existingCategory = await Category.findById(id);
+
+    if (!existingCategory) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "No such category found!" });
+    }
+
+    const pathToCategories = path.join(__dirname, "../uploads/categories");
+    const filesInCategories = await fs.readdir(pathToCategories);
+    const imageName = path.parse(existingCategory.image).base;
+    if (filesInCategories.includes(imageName)) {
+      await fs.unlink(path.join(pathToCategories, imageName));
+    }
+
+    await Category.findByIdAndDelete(id);
+
+    res
+      .status(200)
+      .json({ success: true, msg: "Category deleted successfully!" });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
 
 module.exports = {
   getAllCategories,
