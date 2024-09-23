@@ -1,6 +1,7 @@
 const fs = require("fs/promises");
 const path = require("path");
 const SubCategory = require("../models/SubCategory");
+const Product = require("../models/Product");
 
 const getAllSubCategories = async (req, res) => {
   try {
@@ -49,7 +50,7 @@ const addSubCategory = async (req, res) => {
 
     const addedSubCategory = await SubCategory.create({
       ...req.body,
-      image: `${process.env.BASE_URL}/uploads/subCategories/${uniqueFileName}`
+      image: `${process.env.BASE_URL}/uploads/subCategories/${uniqueFileName}`,
     });
     res.status(200).json({ success: true, data: addedSubCategory });
   } catch (error) {
@@ -91,7 +92,7 @@ const updateSubCategory = async (req, res) => {
       await image.mv(uploadPath);
       body = {
         ...body,
-        image: `${process.env.BASE_URL}/uploads/subCategories/${uniqueFileName}`
+        image: `${process.env.BASE_URL}/uploads/subCategories/${uniqueFileName}`,
       };
     }
 
@@ -112,6 +113,15 @@ const deleteSubCategory = async (req, res) => {
       return res
         .status(404)
         .json({ success: false, msg: "No such sub-category found!" });
+    }
+
+    const product = await Product.findOne({ subCategory: id });
+
+    if (product) {
+      return res.status(400).json({
+        success: false,
+        msg: "Cannot delete this sub-category as it is being used in other products!",
+      });
     }
 
     const fileToBeDeleted = path.parse(subCategory.image).base;
@@ -139,5 +149,5 @@ module.exports = {
   getSubCategory,
   addSubCategory,
   updateSubCategory,
-  deleteSubCategory
+  deleteSubCategory,
 };

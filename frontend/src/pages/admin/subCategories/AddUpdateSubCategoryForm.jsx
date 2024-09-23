@@ -2,6 +2,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import SendIcon from "@mui/icons-material/Send";
 import {
   Button,
+  FormControl,
   InputLabel,
   MenuItem,
   Paper,
@@ -139,21 +140,23 @@ function AddUpdateSubCategoryForm() {
               name="slug"
               value={formState.slug}
             />
-
-            <Select
-              id="category"
-              name="category"
-              variant="outlined"
-              label="Category"
-              value={formState.categoryId}
-              onChange={handleCategoryChange}
-            >
-              {categories.map((category) => {
-                return (
-                  <MenuItem value={category._id}>{category.name}</MenuItem>
-                );
-              })}
-            </Select>
+            <FormControl fullWidth>
+              <InputLabel id="category-label">Category</InputLabel>
+              <Select
+                id="category"
+                name="category"
+                variant="outlined"
+                label="Category"
+                value={formState.categoryId}
+                onChange={handleCategoryChange}
+              >
+                {categories.map((category) => {
+                  return (
+                    <MenuItem value={category._id}>{category.name}</MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
             <Button
               component="label"
               role={undefined}

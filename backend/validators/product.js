@@ -1,6 +1,6 @@
 const Product = require("../models/Product");
 
-const productValidator = async (id, body, res) => {
+const productValidator = async (body, res, id) => {
   if (
     !body.price ||
     !body.category ||

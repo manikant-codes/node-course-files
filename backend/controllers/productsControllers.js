@@ -69,8 +69,8 @@ const updateProduct = async (req, res) => {
       params: { id },
     } = req;
 
-    console.log("body.images", body.images); // undefined // str // []
-    console.log("files.images", files, files.images.length); // null // obj /// []
+    // console.log("body.images", body.images); // undefined // str // []
+    // console.log("files.images", files, files.images.length); // null // obj /// []
 
     const existingProduct = await Product.findById(id);
 
@@ -85,7 +85,7 @@ const updateProduct = async (req, res) => {
       body.images = [body.images];
     }
 
-    productValidator(id, body, res);
+    productValidator(body, res, id);
 
     if (
       (!files && !body.images) ||
@@ -148,7 +148,38 @@ const updateProduct = async (req, res) => {
   }
 };
 
-const deleteProduct = async (req, res) => {};
+const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const existingProduct = await Product.findById(id);
+
+    if (!existingProduct) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "No such product exists!" });
+    }
+
+    const pathToProducts = path.join(__dirname, "../uploads/products");
+
+    const filesInProducts = await fs.readdir(pathToProducts);
+
+    for (const image of existingProduct.images) {
+      const name = path.parse(image).base;
+      if (filesInProducts.includes(name)) {
+        await fs.unlink(path.join(pathToProducts, name));
+      }
+    }
+
+    await Product.findByIdAndDelete(id);
+
+    res
+      .status(200)
+      .json({ success: true, msg: "Product deleted successfully!" });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
 
 module.exports = {
   getAllProducts,

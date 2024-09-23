@@ -1,4 +1,6 @@
 const Category = require("../models/Category");
+const Product = require("../models/Product");
+const SubCategory = require("../models/SubCategory");
 const fs = require("fs/promises");
 const path = require("path");
 
@@ -110,6 +112,16 @@ const deleteCategory = async (req, res) => {
       return res
         .status(404)
         .json({ success: false, msg: "No such category found!" });
+    }
+
+    const product = await Product.findOne({ category: id });
+    const subCategory = await SubCategory.findOne({ categoryId: id });
+
+    if (product || subCategory) {
+      return res.status(400).json({
+        success: false,
+        msg: "Cannot delete this category as it is being used in other products or sub-categories!",
+      });
     }
 
     const fileToBeDeleted = path.parse(category.image).base;

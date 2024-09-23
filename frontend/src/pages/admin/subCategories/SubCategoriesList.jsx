@@ -3,12 +3,12 @@ import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import CommonList from "../../../components/common/CommonList";
 import {
   deleteSubCategory,
-  getAllSubCategories
+  getAllSubCategories,
 } from "../../../services/apiServices";
 
 function SubCategoriesList() {
   function renderSubtitle(item) {
-    return item.categoryId.name;
+    return item?.categoryId?.name;
   }
 
   return (
