@@ -13,6 +13,9 @@ import OrdersList from "./pages/admin/orders/OrdersList";
 import UsersList from "./pages/admin/users/UsersList";
 import AddUpdateSubCategoryForm from "./pages/admin/subCategories/AddUpdateSubCategoryForm";
 import AddUpdateProductForm from "./pages/admin/products/AddUpdateProductForm";
+import Dashboard from "./pages/admin/Dashboard";
+import PagesList from "./pages/admin/pages/PagesList";
+import AddUpdatePageForm from "./pages/admin/pages/AddUpdatePageForm";
 
 function App() {
   const theme = createTheme({
@@ -37,6 +40,7 @@ function App() {
             <Route index element={<Home />} />
           </Route>
           <Route path="/admin" element={<LayoutAdmin />}>
+            <Route index element={<Dashboard />} />
             <Route path="categories" element={<CategoriesList />} />
             <Route path="categories/:id" element={<AddUpdateCategoryForm />} />
             <Route path="subCategories" element={<SubCategoriesList />} />
@@ -46,6 +50,8 @@ function App() {
             />
             <Route path="products" element={<ProductsList />} />
             <Route path="products/:id" element={<AddUpdateProductForm />} />
+            <Route path="pages" element={<PagesList />} />
+            <Route path="pages/:id" element={<AddUpdatePageForm />} />
             <Route path="orders" element={<OrdersList />} />
             <Route path="users" element={<UsersList />} />
           </Route>

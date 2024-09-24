@@ -15,7 +15,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { COMPANY_NAME } from "../../consts/consts";
 
 const drawerWidth = 240;
@@ -46,6 +46,7 @@ const AppBar = styled(MuiAppBar, {
 function NavbarAdmin({ toggleDrawer }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const navigate = useNavigate();
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -85,7 +86,12 @@ function NavbarAdmin({ toggleDrawer }) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem LinkComponent={Link} to="/" onClick={handleMenuClose}>
+      <MenuItem
+        onClick={() => {
+          handleMenuClose();
+          navigate("/");
+        }}
+      >
         Home
       </MenuItem>
       <MenuItem onClick={handleMenuClose}>Log Out</MenuItem>

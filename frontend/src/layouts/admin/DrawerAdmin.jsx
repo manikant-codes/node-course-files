@@ -1,4 +1,6 @@
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import CategoryIcon from "@mui/icons-material/Category";
+import NoteAddIcon from "@mui/icons-material/NoteAdd";
 import GroupIcon from "@mui/icons-material/Group";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
@@ -66,6 +68,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const links = [
+  { icon: <DashboardIcon />, text: "Dashboard", to: "/admin" },
   { icon: <CategoryIcon />, text: "Categories", to: "/admin/categories" },
   {
     icon: <CategoryIcon />,
@@ -73,6 +76,7 @@ const links = [
     to: "/admin/subCategories",
   },
   { icon: <Inventory2Icon />, text: "Products", to: "/admin/products" },
+  { icon: <NoteAddIcon />, text: "Pages", to: "/admin/pages" },
   { icon: <GroupIcon />, text: "Users", to: "/admin/users" },
   { icon: <ReceiptLongIcon />, text: "Orders", to: "/admin/orders" },
 ];
@@ -95,6 +99,7 @@ export default function DrawerAdmin({ open, toggleDrawer }) {
             {links.map((link, index) => (
               <ListItem
                 component={NavLink}
+                end
                 to={link.to}
                 key={index}
                 disablePadding
