@@ -1,6 +1,7 @@
 const Category = require("../models/Category");
 const path = require("path");
-const fs = require("fs/promises");
+const { deleteFile, addFile } = require("../helpers/fileHelpers");
+const { categoryValidator } = require("../validators/categoriesValidators");
 
 const getAllCategories = async (req, res) => {
   try {
@@ -31,30 +32,21 @@ const addCategory = async (req, res) => {
   try {
     const { body, files } = req;
 
-    if (!files) {
-      return res
-        .status(400)
-        .json({ success: false, msg: "Image is required!" });
-    }
-    if (!body.name.trim()) {
-      return res.status(400).json({ success: false, msg: "Name is required!" });
-    }
-    if (!body.slug.trim()) {
-      return res.status(400).json({ success: false, msg: "Slug is required!" });
+    try {
+      categoryValidator(files, body);
+    } catch (error) {
+      return res.status(400).json({ success: false, msg: error.message });
     }
 
-    const uniqueName = Date.now() + "-" + files.image.name;
-    const uploadPath = path.join(
-      __dirname,
-      "../uploads/categories",
-      uniqueName
+    const pathToCategories = path.join(__dirname, "../uploads/categories");
+
+    body.image = await addFile(
+      files.image,
+      pathToCategories,
+      "http://localhost:5000/uploads/categories"
     );
 
-    await files.image.mv(uploadPath);
-
-    const image = `http://localhost:5000/uploads/categories/${uniqueName}`;
-
-    const category = await Category.create({ image, ...body });
+    const category = await Category.create(body);
 
     res.status(200).json({ success: true, data: category });
   } catch (error) {
@@ -62,7 +54,45 @@ const addCategory = async (req, res) => {
   }
 };
 
-const updateCategory = async (req, res) => {};
+const updateCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const existingCategory = await Category.findById(id);
+
+    if (!existingCategory) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "No such category found!" });
+    }
+
+    try {
+      categoryValidator(req.files, req.body);
+    } catch (error) {
+      return res.status(400).json({ success: false, msg: error.message });
+    }
+
+    if (req.files) {
+      const pathToCategories = path.join(__dirname, "../uploads/categories");
+
+      await deleteFile(existingCategory.image, pathToCategories);
+
+      req.body.image = await addFile(
+        req.files.image,
+        pathToCategories,
+        "http://localhost:5000/uploads/categories"
+      );
+    }
+
+    const updatedCategory = await Category.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+
+    res.status(200).json({ success: true, data: updatedCategory });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
 
 const deleteCategory = async (req, res) => {
   try {
@@ -77,11 +107,8 @@ const deleteCategory = async (req, res) => {
     }
 
     const pathToCategories = path.join(__dirname, "../uploads/categories");
-    const filesInCategories = await fs.readdir(pathToCategories);
-    const imageName = path.parse(existingCategory.image).base;
-    if (filesInCategories.includes(imageName)) {
-      await fs.unlink(path.join(pathToCategories, imageName));
-    }
+
+    await deleteFile(existingCategory.image, pathToCategories);
 
     await Category.findByIdAndDelete(id);
 

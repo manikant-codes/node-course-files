@@ -5,9 +5,11 @@ import {
   deleteCategory,
   getAllCategories,
 } from "../../../services/apiServices";
+import { useNavigate } from "react-router-dom";
 
 function CategoriesList() {
   const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   async function fetchAllCategories() {
     try {
@@ -34,6 +36,10 @@ function CategoriesList() {
     }
   }
 
+  function handleEdit(id) {
+    navigate(`/admin/categories/${id}`);
+  }
+
   return (
     <div>
       <TitleAdmin
@@ -48,6 +54,7 @@ function CategoriesList() {
               key={category._id}
               category={category}
               handleDelete={handleDelete}
+              handleEdit={handleEdit}
             />
           );
         })}

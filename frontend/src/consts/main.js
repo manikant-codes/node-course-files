@@ -1,1 +1,1 @@
-export const COMPANY_NAME = "Apni Dukaan";
+export const COMPANY_NAME = "Urban Clothing";

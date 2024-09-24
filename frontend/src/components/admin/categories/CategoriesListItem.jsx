@@ -5,8 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-function CategoriesListItem({ category, handleDelete }) {
-  console.log(category.image);
+function CategoriesListItem({ category, handleDelete, handleEdit }) {
   return (
     <div className="flex items-center gap-4 border-b py-4">
       <div>
@@ -16,7 +15,12 @@ function CategoriesListItem({ category, handleDelete }) {
         <Typography>{category.name}</Typography>
       </div>
       <div>
-        <IconButton aria-label="delete">
+        <IconButton
+          onClick={() => {
+            handleEdit(category._id);
+          }}
+          aria-label="delete"
+        >
           <EditIcon />
         </IconButton>
         <IconButton

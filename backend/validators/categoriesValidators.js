@@ -1,5 +1,6 @@
-const addCategoryValidator = (files, body) => {
-  if (!files) {
+const categoryValidator = (files, body) => {
+  console.log(files, body);
+  if (!files && !body.image) {
     throw new Error("Image is required!");
   }
 
@@ -12,4 +13,4 @@ const addCategoryValidator = (files, body) => {
   }
 };
 
-module.exports = { addCategoryValidator };
+module.exports = { categoryValidator };

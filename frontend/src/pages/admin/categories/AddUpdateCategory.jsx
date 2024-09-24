@@ -1,10 +1,14 @@
 import SendIcon from "@mui/icons-material/Send";
 import { Button, Paper, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TitleAdmin from "../../../components/admin/common/TitleAdmin";
 import MyFileUpload from "../../../components/common/MyFileUpload";
-import { addCategory } from "../../../services/apiServices";
+import {
+  addCategory,
+  getCategory,
+  updateCategory,
+} from "../../../services/apiServices";
 
 function AddUpdateCategory() {
   const { id } = useParams();
@@ -20,6 +24,15 @@ function AddUpdateCategory() {
       : null
   );
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getCategory(id).then((data) => {
+      if (!isAdd) {
+        setFormState(data.data);
+        setImageURL(data.data.image);
+      }
+    });
+  }, []);
 
   function handleFileUpload(e) {
     setImageURL(URL.createObjectURL(e.target.files[0]));
@@ -38,12 +51,21 @@ function AddUpdateCategory() {
     e.preventDefault();
     const formData = new FormData(e.target);
     try {
-      await addCategory(formData);
+      if (isAdd) {
+        await addCategory(formData);
+      } else {
+        if (typeof formState.image === "string") {
+          formData.append("image", formState.image);
+        }
+        await updateCategory(id, formData);
+      }
       navigate("/admin/categories");
     } catch (error) {
       console.log(error.message);
     }
   }
+
+  if (!formState) return null;
 
   return (
     <div>
