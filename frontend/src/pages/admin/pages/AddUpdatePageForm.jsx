@@ -1,11 +1,15 @@
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
 import {
   Button,
+  Checkbox,
   FormControl,
-  IconButton,
+  FormControlLabel,
+  FormLabel,
   InputLabel,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   MenuItem,
   Paper,
   Select,
@@ -15,23 +19,23 @@ import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
+import MyFileUpload from "../../../components/admin/common/MyFileUpload";
+import TransferList from "../../../components/admin/common/TransferList";
 import {
   getAllCategories,
   getAllSubCategories,
 } from "../../../services/apiServices";
-import MyFileUpload from "../../../components/admin/common/MyFileUpload";
 
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
+function renderList(list) {
+  console.log("list", list);
+  return (
+    <div className="flex flex-col">
+      {list.map((value) => {
+        return <FormControlLabel control={<Checkbox />} label={value.name} />;
+      })}
+    </div>
+  );
+}
 
 function AddUpdatePageForm() {
   const { id } = useParams();
@@ -43,16 +47,16 @@ function AddUpdatePageForm() {
       ? {
           name: "",
           slug: "",
+          title: "",
+          subCategories: [],
           images: [],
-          categoriesTitle: "",
-          categories: [],
         }
       : null
   );
 
   const [imagesURL, setImagesURL] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [subCategories, setSubCategories] = useState([]);
+  const [categories, setCategories] = useState(null);
+  const [subCategories, setSubCategories] = useState(null);
 
   useEffect(() => {
     getAllCategories()
@@ -82,6 +86,8 @@ function AddUpdatePageForm() {
         console.log("Error: ", error.message);
       });
   }, []);
+
+  console.log("subCategories", subCategories);
 
   function handleImagesUpload(e) {
     const tempURLs = [];
@@ -151,7 +157,7 @@ function AddUpdatePageForm() {
     }
   }
 
-  if (!formState) return null;
+  if (!formState || !categories || !setCategories) return null;
 
   return (
     <div>
@@ -176,13 +182,13 @@ function AddUpdatePageForm() {
         >
           <div className="grid grid-cols-2 gap-4">
             <FormControl fullWidth>
-              <InputLabel id="category-label">Category</InputLabel>
+              <InputLabel id="name-label">Name</InputLabel>
               <Select
-                labelId="category-label"
-                id="category"
-                label="Category"
-                name="category"
-                value={formState.category}
+                labelId="name-label"
+                id="name"
+                label="Name"
+                name="name"
+                value={formState.name}
                 onChange={handleChange}
               >
                 {categories?.map((category) => {
@@ -203,16 +209,14 @@ function AddUpdatePageForm() {
             />
           </div>
           <TextField
-            id="desc"
-            label="Product Description"
-            name="desc"
-            multiline
-            maxRows={4}
+            id="title"
+            label="Section Title"
+            name="title"
             variant="outlined"
             onChange={handleChange}
-            value={formState.desc}
+            value={formState.title}
           />
-          <div className="grid grid-cols-2 gap-4">
+          {/* <div className="grid grid-cols-2 gap-4">
             <FormControl fullWidth>
               <InputLabel id="subCategory-label">Sub Category</InputLabel>
               <Select
@@ -240,7 +244,12 @@ function AddUpdatePageForm() {
                   })}
               </Select>
             </FormControl>
-          </div>
+          </div> */}
+          <TransferList
+            listLeft={subCategories}
+            listRight={formState.subCategories}
+            renderList={renderList}
+          />
           <Button type="submit" variant="contained" endIcon={<SendIcon />}>
             Send
           </Button>
