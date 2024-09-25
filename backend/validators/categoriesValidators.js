@@ -1,15 +1,17 @@
+const { MyError } = require("../helpers/errorHelper");
+
 const categoryValidator = (files, body) => {
-  console.log(files, body);
   if (!files && !body.image) {
-    throw new Error("Image is required!");
+    // throw new Error("Image is required!");
+    throw new MyError("Image is required!", 404);
   }
 
   if (!body.name.trim()) {
-    throw new Error("Name is required!");
+    throw new MyError("Name is required!", 404);
   }
 
   if (!body.slug.trim()) {
-    throw new Error("Slug is required!");
+    throw new MyError("Slug is required!", 404);
   }
 };
 

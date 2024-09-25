@@ -30,27 +30,23 @@ const getCategory = async (req, res) => {
 
 const addCategory = async (req, res) => {
   try {
-    const { body, files } = req;
-
-    try {
-      categoryValidator(files, body);
-    } catch (error) {
-      return res.status(400).json({ success: false, msg: error.message });
-    }
+    categoryValidator(req.files, req.body);
 
     const pathToCategories = path.join(__dirname, "../uploads/categories");
 
-    body.image = await addFile(
-      files.image,
+    req.body.image = await addFile(
+      req.files.image,
       pathToCategories,
       "http://localhost:5000/uploads/categories"
     );
 
-    const category = await Category.create(body);
+    const category = await Category.create(req.body);
 
     res.status(200).json({ success: true, data: category });
   } catch (error) {
-    res.status(500).json({ success: false, msg: error.message });
+    res
+      .status(error.status || 500)
+      .json({ success: false, msg: error.message });
   }
 };
 
@@ -66,11 +62,7 @@ const updateCategory = async (req, res) => {
         .json({ success: false, msg: "No such category found!" });
     }
 
-    try {
-      categoryValidator(req.files, req.body);
-    } catch (error) {
-      return res.status(400).json({ success: false, msg: error.message });
-    }
+    categoryValidator(req.files, req.body);
 
     if (req.files) {
       const pathToCategories = path.join(__dirname, "../uploads/categories");
@@ -90,7 +82,9 @@ const updateCategory = async (req, res) => {
 
     res.status(200).json({ success: true, data: updatedCategory });
   } catch (error) {
-    res.status(500).json({ success: false, msg: error.message });
+    res
+      .status(error.status || 500)
+      .json({ success: false, msg: error.message });
   }
 };
 
