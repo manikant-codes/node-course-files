@@ -1,6 +1,7 @@
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
+import { useState } from "react";
 
 const ListPaper = styled(Paper)(({ theme }) => {
   return {
@@ -8,15 +9,63 @@ const ListPaper = styled(Paper)(({ theme }) => {
   };
 });
 
-function TransferList({ listLeft, listRight, renderList }) {
+function TransferList({
+  listLeft,
+  setListLeft,
+  listRight,
+  setListRight,
+  renderList,
+}) {
+  const [listCheckedLeft, setListCheckedLeft] = useState([]);
+  const [listCheckedRight, setListCheckedRight] = useState([]);
+
+  function handleCheckedLeft(e, value) {
+    if (e.target.checked) {
+      setListCheckedLeft([...listCheckedLeft, value]);
+    } else {
+      const temp = listCheckedLeft.filter((item) => {
+        if (item.value !== value.value) {
+          return true;
+        }
+        return false;
+      });
+      setListCheckedLeft(temp);
+    }
+  }
+
+  function handleCheckedRight(e, value) {
+    if (e.target.checked) {
+      setListCheckedRight([...listCheckedRight, value]);
+    } else {
+      const temp = listCheckedRight.filter((item) => {
+        if (item.value !== value.value) {
+          return true;
+        }
+        return false;
+      });
+      setListCheckedRight(temp);
+    }
+  }
+
+  function shiftLeft() {
+    setListLeft(listCheckedRight, setListCheckedLeft);
+  }
+  function shiftRight() {
+    setListRight(listCheckedLeft, setListCheckedRight);
+  }
+
+  function shiftLeftAll() {}
+  function shiftRightAll() {}
   return (
     <div className="flex items-center gap-4">
-      <ListPaper variant="outlined">{renderList(listLeft)}</ListPaper>
+      <ListPaper variant="outlined">
+        {renderList(listLeft, handleCheckedLeft)}
+      </ListPaper>
       <div className="flex flex-col gap-2">
         <Button
           variant="outlined"
           size="small"
-          //   onClick={handleAllRight}
+          onClick={shiftRightAll}
           //   disabled={left.length === 0}
         >
           ≫
@@ -24,7 +73,7 @@ function TransferList({ listLeft, listRight, renderList }) {
         <Button
           variant="outlined"
           size="small"
-          //   onClick={handleCheckedRight}
+          onClick={shiftRight}
           //   disabled={leftChecked.length === 0}
         >
           &gt;
@@ -32,7 +81,7 @@ function TransferList({ listLeft, listRight, renderList }) {
         <Button
           variant="outlined"
           size="small"
-          //   onClick={handleCheckedLeft}
+          onClick={shiftLeft}
           //   disabled={rightChecked.length === 0}
         >
           &lt;
@@ -40,13 +89,15 @@ function TransferList({ listLeft, listRight, renderList }) {
         <Button
           variant="outlined"
           size="small"
-          //   onClick={handleAllLeft}
+          onClick={shiftLeftAll}
           //   disabled={right.length === 0}
         >
           ≪
         </Button>
       </div>
-      <ListPaper variant="outlined">{renderList(listRight)}</ListPaper>
+      <ListPaper variant="outlined">
+        {renderList(listRight, handleCheckedRight)}
+      </ListPaper>
     </div>
   );
 }

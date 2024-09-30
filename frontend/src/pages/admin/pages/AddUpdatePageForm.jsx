@@ -26,15 +26,73 @@ import {
   getAllSubCategories,
 } from "../../../services/apiServices";
 
-function renderList(list) {
+function renderList(list, handleChange) {
   console.log("list", list);
   return (
     <div className="flex flex-col">
-      {list.map((value) => {
-        return <FormControlLabel control={<Checkbox />} label={value.name} />;
+      {list?.map((value) => {
+        return (
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={(e) => {
+                  handleChange(e, value);
+                }}
+              />
+            }
+            label={value.name}
+          />
+        );
       })}
     </div>
   );
+}
+
+function setListLeft(
+  listCheckedRight,
+  listRight,
+  listLeft,
+  formState,
+  setListLeft,
+  setListRight,
+  setCheckedList
+) {
+  setListLeft([...listLeft, ...listCheckedRight]);
+  const temp = listRight.filter((value) => {
+    const found = listCheckedRight.find((v) => {
+      return v.value === value.value;
+    });
+    return !found;
+  });
+  setListRight({
+    ...formState,
+    subCategories: temp,
+  });
+  setCheckedList([]);
+}
+
+function setListRight(
+  listCheckedLeft,
+  listLeft,
+  listRight,
+  formState,
+  setListRight,
+  setListLeft,
+  setCheckedList
+) {
+  console.log("listRight asd", listRight);
+  setListRight({
+    ...formState,
+    subCategories: [...listRight, ...listCheckedLeft],
+  });
+  const temp = listLeft.filter((value) => {
+    const found = listCheckedLeft.find((v) => {
+      return v.value === value.value;
+    });
+    return !found;
+  });
+  setListLeft(temp);
+  setCheckedList([]);
 }
 
 function AddUpdatePageForm() {
@@ -248,6 +306,28 @@ function AddUpdatePageForm() {
           <TransferList
             listLeft={subCategories}
             listRight={formState.subCategories}
+            setListLeft={(checkList, setCheckedList) => {
+              setListLeft(
+                checkList,
+                formState.subCategories,
+                subCategories,
+                formState,
+                setSubCategories,
+                setFormState,
+                setCheckedList
+              );
+            }}
+            setListRight={(checkedList, setCheckedList) => {
+              setListRight(
+                checkedList,
+                subCategories,
+                formState.subCategories,
+                formState,
+                setFormState,
+                setSubCategories,
+                setCheckedList
+              );
+            }}
             renderList={renderList}
           />
           <Button type="submit" variant="contained" endIcon={<SendIcon />}>
