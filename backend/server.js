@@ -3,6 +3,7 @@ const fileUpload = require("express-fileupload");
 const connectToDB = require("./db/connect");
 const categoriesRouter = require("./routes/categoriesRoutes");
 const cors = require("cors");
+const subCategoriesRouter = require("./routes/subCategoriesRoutes");
 require("dotenv").config();
 
 const server = express();
@@ -13,6 +14,7 @@ server.use(fileUpload());
 server.use(express.json());
 
 server.use("/categories", categoriesRouter);
+server.use("/subCategories", subCategoriesRouter);
 
 const start = async () => {
   try {

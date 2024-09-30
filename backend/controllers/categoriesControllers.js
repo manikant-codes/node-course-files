@@ -37,7 +37,7 @@ const addCategory = async (req, res) => {
     req.body.image = await addFile(
       req.files.image,
       pathToCategories,
-      "http://localhost:5000/uploads/categories"
+      `${process.env.BASE_URL}/uploads/categories`
     );
 
     const category = await Category.create(req.body);
@@ -72,7 +72,7 @@ const updateCategory = async (req, res) => {
       req.body.image = await addFile(
         req.files.image,
         pathToCategories,
-        "http://localhost:5000/uploads/categories"
+        `${process.env.BASE_URL}/uploads/categories`
       );
     }
 
