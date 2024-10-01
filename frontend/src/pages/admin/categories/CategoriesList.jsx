@@ -28,7 +28,7 @@ function CategoriesList() {
     const answer = window.confirm("Are you sure you want to delete this?");
     try {
       if (answer) {
-        const data = await deleteCategory(id);
+        await deleteCategory(id);
         fetchAllCategories();
       }
     } catch (error) {

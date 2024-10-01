@@ -1,5 +1,4 @@
 const Category = require("../models/Category");
-const path = require("path");
 const { deleteFile, addFile } = require("../helpers/fileHelpers");
 const { categoryValidator } = require("../validators/categoriesValidators");
 
@@ -32,13 +31,7 @@ const addCategory = async (req, res) => {
   try {
     categoryValidator(req.files, req.body);
 
-    const pathToCategories = path.join(__dirname, "../uploads/categories");
-
-    req.body.image = await addFile(
-      req.files.image,
-      pathToCategories,
-      `${process.env.BASE_URL}/uploads/categories`
-    );
+    req.body.image = await addFile(req.files.image, "categories");
 
     const category = await Category.create(req.body);
 
@@ -65,15 +58,9 @@ const updateCategory = async (req, res) => {
     categoryValidator(req.files, req.body);
 
     if (req.files) {
-      const pathToCategories = path.join(__dirname, "../uploads/categories");
+      await deleteFile(existingCategory.image, "categories");
 
-      await deleteFile(existingCategory.image, pathToCategories);
-
-      req.body.image = await addFile(
-        req.files.image,
-        pathToCategories,
-        `${process.env.BASE_URL}/uploads/categories`
-      );
+      req.body.image = await addFile(req.files.image, "categories");
     }
 
     const updatedCategory = await Category.findByIdAndUpdate(id, req.body, {
@@ -100,9 +87,7 @@ const deleteCategory = async (req, res) => {
         .json({ success: false, msg: "No such category found!" });
     }
 
-    const pathToCategories = path.join(__dirname, "../uploads/categories");
-
-    await deleteFile(existingCategory.image, pathToCategories);
+    await deleteFile(existingCategory.image, "categories");
 
     await Category.findByIdAndDelete(id);
 

@@ -3,7 +3,6 @@ const SubCategory = require("../models/SubCategory");
 const {
   subCategoryValidator,
 } = require("../validators/subCategoriesValidators");
-const path = require("path");
 
 const getAllSubCategories = async (req, res) => {
   try {
@@ -36,16 +35,7 @@ const addSubCategory = async (req, res) => {
   try {
     subCategoryValidator(req);
 
-    const pathToSubCategories = path.join(
-      __dirname,
-      "../uploads/subCategories"
-    );
-
-    req.body.image = await addFile(
-      req.files.image,
-      pathToSubCategories,
-      `${process.env.BASE_URL}/uploads/subCategories`
-    );
+    req.body.image = await addFile(req.files.image, "subCategories");
 
     const subCategory = await SubCategory.create(req.body);
 
@@ -59,6 +49,28 @@ const addSubCategory = async (req, res) => {
 
 const updateSubCategory = async (req, res) => {
   try {
+    subCategoryValidator(req);
+    const { id } = req.params;
+    const subCategory = await SubCategory.findById(id);
+
+    if (!subCategory) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "No such sub-category found!" });
+    }
+
+    if (req.files) {
+      await deleteFile(subCategory.image, "subCategories");
+      req.body.image = await addFile(req.files.image, "subCategories");
+    }
+
+    const updatedSubCategory = await SubCategory.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true }
+    );
+
+    res.status(200).json({ success: true, data: updatedSubCategory });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }
@@ -76,12 +88,7 @@ const deleteSubCategory = async (req, res) => {
         .json({ success: false, msg: "No such sub-category found!" });
     }
 
-    const pathToSubCategories = path.join(
-      __dirname,
-      "../uploads/subCategories"
-    );
-
-    await deleteFile(subCategory.image, pathToSubCategories);
+    await deleteFile(subCategory.image, "subCategories");
 
     await SubCategory.findByIdAndDelete(id);
 

@@ -1,7 +1,7 @@
 const { MyError } = require("../helpers/errorHelper");
 
-const subCategoryValidator = () => {
-  if (!req.files) {
+const subCategoryValidator = (req) => {
+  if (!req.body.image && !req.files) {
     throw new MyError("Image is required!", 400);
   }
 
