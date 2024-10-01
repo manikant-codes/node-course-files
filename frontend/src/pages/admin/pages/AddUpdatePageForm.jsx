@@ -145,8 +145,6 @@ function AddUpdatePageForm() {
       });
   }, []);
 
-  console.log("subCategories", subCategories);
-
   function handleImagesUpload(e) {
     const tempURLs = [];
     for (const file of e.target.files) {
@@ -190,10 +188,15 @@ function AddUpdatePageForm() {
   async function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData();
+
     for (const key in formState) {
       if (Array.isArray(formState[key])) {
         for (const value of formState[key]) {
-          formData.append(key, value);
+          if (key === "subCategories") {
+            formData.append(key, value.value);
+          } else {
+            formData.append(key, value);
+          }
         }
       } else {
         formData.append(key, formState[key]);
@@ -251,7 +254,7 @@ function AddUpdatePageForm() {
               >
                 {categories?.map((category) => {
                   return (
-                    <MenuItem key={category.value} value={category.value}>
+                    <MenuItem key={category.value} value={category.name}>
                       {category.name}
                     </MenuItem>
                   );
@@ -274,35 +277,6 @@ function AddUpdatePageForm() {
             onChange={handleChange}
             value={formState.title}
           />
-          {/* <div className="grid grid-cols-2 gap-4">
-            <FormControl fullWidth>
-              <InputLabel id="subCategory-label">Sub Category</InputLabel>
-              <Select
-                disabled={!formState.category}
-                labelId="subCategory-label"
-                id="subCategory"
-                label="Sub Category"
-                name="subCategory"
-                value={formState.subCategory}
-                onChange={handleChange}
-              >
-                {subCategories
-                  ?.filter((subCategory) => {
-                    return subCategory.category === formState.category;
-                  })
-                  .map((subCategory) => {
-                    return (
-                      <MenuItem
-                        key={subCategory.value}
-                        value={subCategory.value}
-                      >
-                        {subCategory.name}
-                      </MenuItem>
-                    );
-                  })}
-              </Select>
-            </FormControl>
-          </div> */}
           <TransferList
             listLeft={subCategories}
             listRight={formState.subCategories}

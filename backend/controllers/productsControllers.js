@@ -1,8 +1,9 @@
 const Product = require("../models/Product");
 const path = require("path");
 const fs = require("fs/promises");
-const { checkAndCreateDir } = require("../utils/fileUtils");
-const { productValidator } = require("../validators/product");
+const { checkAndCreateDir, addFiles } = require("../utils/fileUtils");
+const { productValidator } = require("../validators/productsValidators");
+const { successDataRes, errorMsgRes } = require("../utils/responseUtils");
 
 const getAllProducts = async (req, res) => {
   try {
@@ -28,36 +29,20 @@ const getProduct = async (req, res) => {
 
 const addProduct = async (req, res) => {
   try {
-    const { body, files } = req;
+    await productValidator(req.body);
 
-    productValidator(body, res);
+    const pathToProducts = path.join(__dirname, "../uploads/products");
 
-    // Check if at least 2 images are there.
-    if (!files.images || !Array.isArray(files.images)) {
-      return res.status(400).json({
-        success: false,
-        msg: "At least 2 product images are required!",
-      });
-    }
+    req.body.images = await addFiles(
+      req.files.images,
+      pathToProducts,
+      `${process.env.BASE_URL}/uploads/products`
+    );
 
-    // Check if products folder exists in uploads.
-    const pathToProductsDir = path.join(__dirname, "../uploads/products");
-    await checkAndCreateDir(pathToProductsDir);
-
-    const images = [];
-
-    for (const image of files.images) {
-      const uniqueName = Date.now() + "-" + image.name;
-      const uploadPath = path.join(pathToProductsDir, uniqueName);
-      await image.mv(uploadPath);
-      images.push(`${process.env.BASE_URL}/uploads/products/${uniqueName}`);
-    }
-
-    const product = await Product.create({ ...body, images });
-
-    res.status(200).json({ success: true, data: product });
+    const product = await Product.create(req.body);
+    successDataRes(res, product);
   } catch (error) {
-    res.status(500).json({ success: false, msg: error.message });
+    errorMsgRes(res, error.message);
   }
 };
 
@@ -85,7 +70,7 @@ const updateProduct = async (req, res) => {
       body.images = [body.images];
     }
 
-    productValidator(body, res, id);
+    await productValidator(body, id);
 
     if (
       (!files && !body.images) ||
@@ -144,7 +129,7 @@ const updateProduct = async (req, res) => {
 
     res.status(200).json({ success: true, data: updatedProduct });
   } catch (error) {
-    res.status(500).json({ success: false, msg: error.message });
+    errorMsgRes(res, error.message, error.status || 500);
   }
 };
 
