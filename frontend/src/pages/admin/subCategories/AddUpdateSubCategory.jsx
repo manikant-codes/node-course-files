@@ -35,10 +35,8 @@ function AddUpdateSubCategory() {
   useEffect(() => {
     if (!isAdd) {
       getSubCategory(id).then((data) => {
-        if (!isAdd) {
-          setFormState(data.data);
-          setImageURL(data.data.image);
-        }
+        setFormState(data.data);
+        setImageURL(data.data.image);
       });
     }
   }, []);
@@ -48,6 +46,7 @@ function AddUpdateSubCategory() {
       const temp = data.data.map((value) => {
         return { name: value.name, id: value._id };
       });
+
       setCategories(temp);
     });
   }, []);
@@ -75,6 +74,7 @@ function AddUpdateSubCategory() {
   async function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
+    console.log(Array.from(formData.entries()));
     try {
       if (isAdd) {
         await addSubCategory(formData);

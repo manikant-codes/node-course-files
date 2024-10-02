@@ -5,19 +5,30 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-function CategoriesListItem({ category, handleDelete, handleEdit }) {
+function CommonListItem({
+  item,
+  fields,
+  showSubTitle,
+  handleEdit,
+  handleDelete,
+}) {
   return (
     <div className="flex items-center gap-4 border-b py-4">
       <div>
-        <Avatar alt={category.name} src={category.image} />
+        <Avatar alt={item[fields.title]} src={item[fields.image]} />
       </div>
       <div className="grow-[1]">
-        <Typography>{category.name}</Typography>
+        <Typography>{item[fields.title]}</Typography>
+        {(fields.subTitle || showSubTitle) && (
+          <Typography variant="body2" color="textDisabled">
+            {showSubTitle ? showSubTitle(item) : item[fields.subTitle]}
+          </Typography>
+        )}
       </div>
       <div>
         <IconButton
           onClick={() => {
-            handleEdit(category._id);
+            handleEdit(item._id);
           }}
           aria-label="delete"
         >
@@ -25,7 +36,7 @@ function CategoriesListItem({ category, handleDelete, handleEdit }) {
         </IconButton>
         <IconButton
           onClick={() => {
-            handleDelete(category._id);
+            handleDelete(item._id);
           }}
           aria-label="delete"
           color="error"
@@ -37,4 +48,4 @@ function CategoriesListItem({ category, handleDelete, handleEdit }) {
   );
 }
 
-export default CategoriesListItem;
+export default CommonListItem;

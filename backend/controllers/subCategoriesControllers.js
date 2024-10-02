@@ -6,7 +6,7 @@ const {
 
 const getAllSubCategories = async (req, res) => {
   try {
-    const subCategories = await SubCategory.find();
+    const subCategories = await SubCategory.find().populate("category");
     res.status(200).json({ success: true, data: subCategories });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
