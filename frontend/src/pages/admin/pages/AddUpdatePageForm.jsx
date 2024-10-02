@@ -22,8 +22,10 @@ import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import MyFileUpload from "../../../components/admin/common/MyFileUpload";
 import TransferList from "../../../components/admin/common/TransferList";
 import {
+  addPage,
   getAllCategories,
   getAllSubCategories,
+  updatePage,
 } from "../../../services/apiServices";
 
 function renderList(list, handleChange) {
@@ -204,15 +206,15 @@ function AddUpdatePageForm() {
     }
     console.log(Array.from(formData.entries()));
     try {
-      //   if (isAdd) {
-      //     await addProduct(formData);
-      //     alert("Product added!");
-      //     navigate("/admin/products");
-      //   } else {
-      //     await updateProduct(id, formData);
-      //     alert("Product updated!");
-      //     navigate("/admin/products");
-      //   }
+      if (isAdd) {
+        await addPage(formData);
+        alert("Page added!");
+        navigate("/admin/pages");
+      } else {
+        await updatePage(id, formData);
+        alert("Page updated!");
+        navigate("/admin/pages");
+      }
     } catch (error) {
       alert(error.message);
     }

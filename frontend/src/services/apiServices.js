@@ -123,6 +123,48 @@ async function deleteProduct(id) {
 }
 // End Products
 
+// Pages
+
+async function getAllPages() {
+  const response = await fetch(`${BASE_URL}/pages`);
+  const data = await response.json();
+  return data;
+}
+
+async function getPage(id) {
+  const response = await fetch(`${BASE_URL}/pages/${id}`);
+  const data = await response.json();
+  return data;
+}
+
+async function addPage(body) {
+  const response = await fetch(`${BASE_URL}/pages`, {
+    method: "POST",
+    body: body,
+  });
+  const data = await response.json();
+  return data;
+}
+
+async function updatePage(id, body) {
+  const response = await fetch(`${BASE_URL}/pages/${id}`, {
+    method: "PATCH",
+    body: body,
+  });
+  const data = await response.json();
+  return data;
+}
+
+async function deletePage(id) {
+  const response = await fetch(`${BASE_URL}/pages/${id}`, {
+    method: "DELETE",
+  });
+  const data = await response.json();
+  return data;
+}
+
+// End Page
+
 export {
   getAllCategories,
   getCategory,
@@ -139,4 +181,9 @@ export {
   addProduct,
   updateProduct,
   deleteProduct,
+  getAllPages,
+  getPage,
+  addPage,
+  updatePage,
+  deletePage,
 };
