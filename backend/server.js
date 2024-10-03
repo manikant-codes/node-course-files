@@ -4,6 +4,7 @@ const connectToDB = require("./db/connect");
 const categoriesRouter = require("./routes/categoriesRoutes");
 const cors = require("cors");
 const subCategoriesRouter = require("./routes/subCategoriesRoutes");
+const productsRouter = require("./routes/productsRoutes");
 require("dotenv").config();
 
 const server = express();
@@ -15,6 +16,7 @@ server.use(express.json());
 
 server.use("/categories", categoriesRouter);
 server.use("/subCategories", subCategoriesRouter);
+server.use("/products", productsRouter);
 
 const start = async () => {
   try {

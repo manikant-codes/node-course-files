@@ -8,7 +8,6 @@ import {
 
 function SubCategoriesList() {
   function showSubTitle(item) {
-    // console.log("item asd", item);
     return item.category.name;
   }
   return (
