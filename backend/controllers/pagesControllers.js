@@ -1,5 +1,5 @@
 const Page = require("../models/Page");
-const { addFiles, deleteFiles } = require("../utils/fileUtils");
+const { addFiles, deleteFiles, addSingleFile } = require("../utils/fileUtils");
 const {
   successDataRes,
   errorMsgRes,
@@ -21,7 +21,27 @@ const getPage = async (req, res) => {
   try {
     const { id } = req.params;
 
+    console.log("id", id);
+
     const page = await Page.findById(id);
+
+    if (!page) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "No such page found!" });
+    }
+
+    res.status(200).json({ success: true, data: page });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+const getPageBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const page = await Page.findOne({ slug: slug }).populate("subCategories");
 
     if (!page) {
       return res
@@ -112,4 +132,11 @@ const deletePage = async (req, res) => {
   }
 };
 
-module.exports = { getAllPages, getPage, addPage, updatePage, deletePage };
+module.exports = {
+  getAllPages,
+  getPage,
+  getPageBySlug,
+  addPage,
+  updatePage,
+  deletePage,
+};

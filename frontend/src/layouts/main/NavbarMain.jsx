@@ -1,6 +1,5 @@
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
-import MenuIcon from "@mui/icons-material/Menu";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
@@ -16,8 +15,9 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { COMPANY_NAME } from "../../consts/consts";
+import { getAllPages } from "../../services/apiServices";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -62,7 +62,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function NavbarMain() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [pages, setPages] = useState([]);
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    getAllPages().then((data) => {
+      const temp = data.data?.map((value) => {
+        return { name: value.name, link: `category/${value.slug}` };
+      });
+      setPages(temp);
+    });
+  }, []);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -172,15 +182,7 @@ function NavbarMain() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
+          {/* Logo */}
           <Typography
             variant="h1"
             noWrap
@@ -189,6 +191,17 @@ function NavbarMain() {
           >
             {COMPANY_NAME}
           </Typography>
+          <ul className="ml-8 flex items-center gap-4">
+            {pages.map((value) => {
+              return (
+                <li>
+                  <Link to={value.link}>{value.name}</Link>
+                </li>
+              );
+            })}
+          </ul>
+          <Box sx={{ flexGrow: 1 }} />
+          {/* Search */}
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -198,7 +211,7 @@ function NavbarMain() {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          <Box sx={{ flexGrow: 1 }} />
+
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
               size="large"

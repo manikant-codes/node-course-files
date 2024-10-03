@@ -137,6 +137,12 @@ async function getPage(id) {
   return data;
 }
 
+async function getPageBySlug(slug) {
+  const response = await fetch(`${BASE_URL}/pages/single/${slug}`);
+  const data = await response.json();
+  return data;
+}
+
 async function addPage(body) {
   const response = await fetch(`${BASE_URL}/pages`, {
     method: "POST",
@@ -183,6 +189,7 @@ export {
   deleteProduct,
   getAllPages,
   getPage,
+  getPageBySlug,
   addPage,
   updatePage,
   deletePage,

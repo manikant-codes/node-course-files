@@ -25,6 +25,7 @@ import {
   addPage,
   getAllCategories,
   getAllSubCategories,
+  getPage,
   updatePage,
 } from "../../../services/apiServices";
 
@@ -147,6 +148,15 @@ function AddUpdatePageForm() {
       });
   }, []);
 
+  useEffect(() => {
+    if (!isAdd) {
+      getPage(id).then((data) => {
+        setFormState(data.data);
+        setImagesURL(data.data.images);
+      });
+    }
+  }, []);
+
   function handleImagesUpload(e) {
     const tempURLs = [];
     for (const file of e.target.files) {
@@ -220,7 +230,10 @@ function AddUpdatePageForm() {
     }
   }
 
-  if (!formState || !categories || !setCategories) return null;
+  console.log("formState", formState);
+  console.log("categories", categories);
+
+  if (!formState || !categories) return null;
 
   return (
     <div>

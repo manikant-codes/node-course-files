@@ -63,7 +63,7 @@ const deleteFiles = async (images, folderName, bodyImages = null) => {
     for (const image of images) {
       const name = path.parse(image).base;
       if (filesInFolder.includes(name)) {
-        await fs.unlink(path.join(filesInFolder, name));
+        await fs.unlink(path.join(pathToFolder, name));
       }
     }
   }
