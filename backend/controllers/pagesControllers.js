@@ -23,7 +23,7 @@ const getPage = async (req, res) => {
 
     console.log("id", id);
 
-    const page = await Page.findById(id);
+    const page = await Page.findById(id).populate("subCategories");
 
     if (!page) {
       return res

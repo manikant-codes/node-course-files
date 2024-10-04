@@ -12,6 +12,18 @@ const getAllSubCategories = async (req, res) => {
   }
 };
 
+const getAllSubCategoriesByCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const subCategories = await SubCategory.find({ categoryId: id }).populate(
+      "categoryId"
+    );
+    res.status(200).json({ success: true, data: subCategories });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
 const getSubCategory = async (req, res) => {
   try {
     const { id } = req.params;
@@ -146,6 +158,7 @@ const deleteSubCategory = async (req, res) => {
 
 module.exports = {
   getAllSubCategories,
+  getAllSubCategoriesByCategory,
   getSubCategory,
   addSubCategory,
   updateSubCategory,

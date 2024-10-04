@@ -4,33 +4,26 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
-  FormLabel,
   InputLabel,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   MenuItem,
   Paper,
   Select,
   TextField,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import MyFileUpload from "../../../components/admin/common/MyFileUpload";
-import TransferList from "../../../components/admin/common/TransferList";
+import MyTransferList from "../../../components/admin/common/MyTransferList";
 import {
   addPage,
   getAllCategories,
-  getAllSubCategories,
+  getAllSubCategoriesByCategory,
   getPage,
   updatePage,
 } from "../../../services/apiServices";
 
 function renderList(list, handleChange) {
-  console.log("list", list);
   return (
     <div className="flex flex-col">
       {list?.map((value) => {
@@ -83,7 +76,6 @@ function setListRight(
   setListLeft,
   setCheckedList
 ) {
-  console.log("listRight asd", listRight);
   setListRight({
     ...formState,
     subCategories: [...listRight, ...listCheckedLeft],
@@ -118,6 +110,9 @@ function AddUpdatePageForm() {
   const [imagesURL, setImagesURL] = useState([]);
   const [categories, setCategories] = useState(null);
   const [subCategories, setSubCategories] = useState(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
+
+  console.log("selectedCategoryId", selectedCategoryId);
 
   useEffect(() => {
     getAllCategories()
@@ -131,64 +126,58 @@ function AddUpdatePageForm() {
       .catch((error) => {
         console.log("Error: ", error.message);
       });
-    getAllSubCategories()
-      .then((result) => {
-        const { data } = result;
-        const temp = data.map((value) => {
-          return {
-            value: value._id,
-            name: value.name,
-            category: value.categoryId._id,
-          };
-        });
-        setSubCategories(temp);
-      })
-      .catch((error) => {
-        console.log("Error: ", error.message);
-      });
   }, []);
+
+  useEffect(() => {
+    if (formState?.subCategories) {
+      getAllSubCategoriesByCategory(selectedCategoryId)
+        .then((result) => {
+          const { data } = result;
+          let temp = data.map((value) => {
+            return {
+              value: value._id,
+              name: value.name,
+              category: value.categoryId._id,
+            };
+          });
+          temp = temp.filter((value) => {
+            const found = formState.subCategories.find((subCategory) => {
+              return subCategory._id === value.value;
+            });
+            if (!found) return true;
+            return false;
+          });
+          console.log("formState?.subCategories", formState?.subCategories);
+          console.log("temp", temp);
+          setSubCategories(temp);
+        })
+        .catch((error) => {
+          console.log("Error: ", error.message);
+        });
+    }
+  }, [selectedCategoryId]);
 
   useEffect(() => {
     if (!isAdd) {
       getPage(id).then((data) => {
         setFormState(data.data);
         setImagesURL(data.data.images);
+        setSelectedCategoryId(data.data.subCategories[0].categoryId);
       });
     }
   }, []);
 
-  function handleImagesUpload(e) {
-    const tempURLs = [];
-    for (const file of e.target.files) {
-      tempURLs.push(URL.createObjectURL(file));
-    }
-    setImagesURL([...imagesURL, ...tempURLs]);
-    setFormState({
-      ...formState,
-      images: [...formState.images, ...Array.from(e.target.files)],
-    });
-  }
-
-  function handleImagesRemove(index) {
-    const newImagesURL = [...imagesURL];
-    newImagesURL.splice(index, 1);
-    const newImages = [...formState.images];
-    newImages.splice(index, 1);
-
-    setImagesURL(newImagesURL);
-    setFormState({
-      ...formState,
-      images: newImages,
-    });
-  }
-
   function handleChange(e) {
     if (e.target.name === "name") {
+      const selectedCategory = categories.find((category) => {
+        return category.name === e.target.value;
+      });
       setFormState({
         ...formState,
         [e.target.name]: e.target.value,
         slug: e.target.value.toLowerCase().replaceAll(" ", "-"),
       });
+      setSelectedCategoryId(selectedCategory.value);
     } else {
       setFormState({
         ...formState,
@@ -214,7 +203,7 @@ function AddUpdatePageForm() {
         formData.append(key, formState[key]);
       }
     }
-    console.log(Array.from(formData.entries()));
+
     try {
       if (isAdd) {
         await addPage(formData);
@@ -229,9 +218,6 @@ function AddUpdatePageForm() {
       alert(error.message);
     }
   }
-
-  console.log("formState", formState);
-  console.log("categories", categories);
 
   if (!formState || !categories) return null;
 
@@ -269,7 +255,7 @@ function AddUpdatePageForm() {
               >
                 {categories?.map((category) => {
                   return (
-                    <MenuItem key={category.value} value={category.name}>
+                    <MenuItem key={category.name} value={category.name}>
                       {category.name}
                     </MenuItem>
                   );
@@ -292,7 +278,7 @@ function AddUpdatePageForm() {
             onChange={handleChange}
             value={formState.title}
           />
-          <TransferList
+          <MyTransferList
             listLeft={subCategories}
             listRight={formState.subCategories}
             setListLeft={(checkList, setCheckedList) => {

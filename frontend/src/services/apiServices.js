@@ -50,6 +50,12 @@ async function getAllSubCategories() {
   return data;
 }
 
+async function getAllSubCategoriesByCategory(id) {
+  const response = await fetch(`${BASE_URL}/subCategories/category/${id}`);
+  const data = await response.json();
+  return data;
+}
+
 async function getSubCategory(id) {
   const response = await fetch(`${BASE_URL}/subCategories/${id}`);
   const data = await response.json();
@@ -178,6 +184,7 @@ export {
   updateCategory,
   deleteCategory,
   getAllSubCategories,
+  getAllSubCategoriesByCategory,
   getSubCategory,
   addSubCategory,
   updateSubCategory,
