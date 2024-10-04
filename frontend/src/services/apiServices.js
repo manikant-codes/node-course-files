@@ -97,6 +97,53 @@ async function deleteSubCategory(id) {
   return data;
 }
 
+// Products
+async function getAllProducts() {
+  const response = await fetch(`${process.env.REACT_APP_BASE_URL}/products`);
+  const data = await response.json();
+  return data;
+}
+
+async function getProduct(id) {
+  const response = await fetch(
+    `${process.env.REACT_APP_BASE_URL}/products/${id}`
+  );
+  const data = await response.json();
+  return data;
+}
+
+async function addProduct(body) {
+  const response = await fetch(`${process.env.REACT_APP_BASE_URL}/products`, {
+    method: "POST",
+    body: body,
+  });
+  const data = await response.json();
+  return data;
+}
+
+async function updateProduct(id, body) {
+  const response = await fetch(
+    `${process.env.REACT_APP_BASE_URL}/products/${id}`,
+    {
+      method: "PATCH",
+      body: body,
+    }
+  );
+  const data = await response.json();
+  return data;
+}
+
+async function deleteProduct(id) {
+  const response = await fetch(
+    `${process.env.REACT_APP_BASE_URL}/products/${id}`,
+    {
+      method: "DELETE",
+    }
+  );
+  const data = await response.json();
+  return data;
+}
+
 export {
   getAllCategories,
   getCategory,
@@ -108,4 +155,9 @@ export {
   addSubCategory,
   updateSubCategory,
   deleteSubCategory,
+  getAllProducts,
+  getProduct,
+  addProduct,
+  updateProduct,
+  deleteProduct,
 };

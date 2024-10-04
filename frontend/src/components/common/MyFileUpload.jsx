@@ -1,5 +1,6 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
@@ -21,6 +22,26 @@ function MyFileUpload({
   name,
   btnTxt = "Upload Files",
 }) {
+  if (multiple) {
+    return (
+      <Button
+        component="label"
+        role={undefined}
+        variant="outlined"
+        tabIndex={-1}
+        startIcon={<AddCircleOutlineIcon className="!h-10 !w-10" />}
+        fullWidth
+        className="h-[150px]"
+      >
+        <VisuallyHiddenInput
+          name={name}
+          type="file"
+          onChange={onChange}
+          multiple={multiple}
+        />
+      </Button>
+    );
+  }
   return (
     <Button
       component="label"
