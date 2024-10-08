@@ -5,7 +5,6 @@ import { deleteProduct, getAllProducts } from "../../../services/apiServices";
 
 function ProductsList() {
   function renderImage(item) {
-    console.log(item);
     return item.images[0];
   }
 

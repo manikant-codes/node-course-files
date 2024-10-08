@@ -17,7 +17,7 @@ async function getCategory(id) {
 async function addCategory(body) {
   const response = await fetch("http://localhost:5000/categories", {
     method: "POST",
-    body: body,
+    body: body
   });
   const data = await response.json();
   return data;
@@ -26,7 +26,7 @@ async function addCategory(body) {
 async function updateCategory(id, body) {
   const response = await fetch(`http://localhost:5000/categories/${id}`, {
     method: "PATCH",
-    body: body,
+    body: body
   });
   const data = await response.json();
   return data;
@@ -34,7 +34,7 @@ async function updateCategory(id, body) {
 
 async function deleteCategory(id) {
   const response = await fetch(`${BASE_URL}/categories/${id}`, {
-    method: "DELETE",
+    method: "DELETE"
   });
   const data = await response.json();
   return data;
@@ -65,7 +65,7 @@ async function getSubCategory(id) {
 async function addSubCategory(body) {
   const response = await fetch(`${BASE_URL}/subCategories`, {
     method: "POST",
-    body: body,
+    body: body
   });
   const data = await response.json();
   return data;
@@ -74,7 +74,7 @@ async function addSubCategory(body) {
 async function updateSubCategory(id, body) {
   const response = await fetch(`${BASE_URL}/subCategories/${id}`, {
     method: "PATCH",
-    body: body,
+    body: body
   });
   const data = await response.json();
   return data;
@@ -82,7 +82,7 @@ async function updateSubCategory(id, body) {
 
 async function deleteSubCategory(id) {
   const response = await fetch(`${BASE_URL}/subCategories/${id}`, {
-    method: "DELETE",
+    method: "DELETE"
   });
   const data = await response.json();
   return data;
@@ -91,8 +91,26 @@ async function deleteSubCategory(id) {
 // End SubCategories
 
 // Products
-async function getAllProducts() {
-  const response = await fetch(`${BASE_URL}/products`);
+async function getAllProducts(filters = {}) {
+  let url = `${BASE_URL}/products?`;
+
+  let queryParams = [];
+
+  if (filters.category) {
+    queryParams.push(`category=${filters.category}`);
+  }
+
+  if (filters.subCategory) {
+    queryParams.push(`subCategory=${filters.subCategory}`);
+  }
+
+  if (queryParams.length) {
+    queryParams = queryParams.join("&");
+  }
+
+  url += queryParams;
+
+  const response = await fetch(url);
   const data = await response.json();
   return data;
 }
@@ -105,7 +123,7 @@ async function getProduct(id) {
 async function addProduct(body) {
   const response = await fetch(`${BASE_URL}/products`, {
     method: "POST",
-    body: body,
+    body: body
   });
   const data = await response.json();
   return data;
@@ -114,7 +132,7 @@ async function addProduct(body) {
 async function updateProduct(id, body) {
   const response = await fetch(`${BASE_URL}/products/${id}`, {
     method: "PATCH",
-    body: body,
+    body: body
   });
   const data = await response.json();
   return data;
@@ -122,7 +140,7 @@ async function updateProduct(id, body) {
 
 async function deleteProduct(id) {
   const response = await fetch(`${BASE_URL}/products/${id}`, {
-    method: "DELETE",
+    method: "DELETE"
   });
   const data = await response.json();
   return data;
@@ -152,7 +170,7 @@ async function getPageBySlug(slug) {
 async function addPage(body) {
   const response = await fetch(`${BASE_URL}/pages`, {
     method: "POST",
-    body: body,
+    body: body
   });
   const data = await response.json();
   return data;
@@ -161,7 +179,7 @@ async function addPage(body) {
 async function updatePage(id, body) {
   const response = await fetch(`${BASE_URL}/pages/${id}`, {
     method: "PATCH",
-    body: body,
+    body: body
   });
   const data = await response.json();
   return data;
@@ -169,7 +187,7 @@ async function updatePage(id, body) {
 
 async function deletePage(id) {
   const response = await fetch(`${BASE_URL}/pages/${id}`, {
-    method: "DELETE",
+    method: "DELETE"
   });
   const data = await response.json();
   return data;
@@ -199,5 +217,5 @@ export {
   getPageBySlug,
   addPage,
   updatePage,
-  deletePage,
+  deletePage
 };

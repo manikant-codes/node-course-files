@@ -8,7 +8,7 @@ import AddUpdateCategoryForm from "./pages/admin/categories/AddUpdateCategoryFor
 import CategoriesList from "./pages/admin/categories/CategoriesList";
 import LayoutAdmin from "./layouts/admin/LayoutAdmin";
 import SubCategoriesList from "./pages/admin/subCategories/SubCategoriesList";
-import ProductsList from "./pages/admin/products/ProductsList";
+
 import OrdersList from "./pages/admin/orders/OrdersList";
 import UsersList from "./pages/admin/users/UsersList";
 import AddUpdateSubCategoryForm from "./pages/admin/subCategories/AddUpdateSubCategoryForm";
@@ -17,20 +17,22 @@ import Dashboard from "./pages/admin/Dashboard";
 import PagesList from "./pages/admin/pages/PagesList";
 import AddUpdatePageForm from "./pages/admin/pages/AddUpdatePageForm";
 import Page from "./pages/main/Page";
+import ProductsList from "./pages/main/ProductsList";
+import AdminProductsList from "./pages/admin/products/ProductsList";
 
 function App() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: purple[500],
+        main: grey[900]
       },
       secondary: {
-        main: grey[800],
+        main: grey[800]
       },
       text: {
-        main: grey[700],
-      },
-    },
+        main: grey[700]
+      }
+    }
   });
 
   return (
@@ -40,6 +42,10 @@ function App() {
           <Route path="/" element={<LayoutMain />}>
             <Route index element={<Home />} />
             <Route path="category/:slug" element={<Page />} />
+            <Route
+              path="category/:slug/:slugSubCategory"
+              element={<ProductsList />}
+            />
           </Route>
           <Route path="/admin" element={<LayoutAdmin />}>
             <Route index element={<Dashboard />} />
@@ -50,7 +56,7 @@ function App() {
               path="subCategories/:id"
               element={<AddUpdateSubCategoryForm />}
             />
-            <Route path="products" element={<ProductsList />} />
+            <Route path="products" element={<AdminProductsList />} />
             <Route path="products/:id" element={<AddUpdateProductForm />} />
             <Route path="pages" element={<PagesList />} />
             <Route path="pages/:id" element={<AddUpdatePageForm />} />

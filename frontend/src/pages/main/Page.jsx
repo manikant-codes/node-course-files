@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { useParams } from "react-router-dom";
 import { getPageBySlug } from "../../services/apiServices";
 import { Paper } from "@mui/material";
+import SubCategoryCard from "../../components/main/page/SubCategoryCard";
 
 function Page() {
   const { slug } = useParams();
@@ -21,10 +22,8 @@ function Page() {
     infinite: true,
     speed: 500,
     slidesToShow: 1,
-    slidesToScroll: 1,
+    slidesToScroll: 1
   };
-
-  console.log(page);
 
   if (!page) return null;
 
@@ -48,14 +47,7 @@ function Page() {
         <h2 className="text-center mt-10 text-3xl">{page.title}</h2>
         <div className="grid grid-cols-4 gap-2 mt-4">
           {page.subCategories.map((value) => {
-            return (
-              <Paper variant="outlined" className="!rounded-lg overflow-hidden">
-                <img src={value.image} alt="" />
-                <div className="p-2">
-                  <h3>{value.name}</h3>
-                </div>
-              </Paper>
-            );
+            return <SubCategoryCard subCategory={value} />;
           })}
         </div>
       </div>

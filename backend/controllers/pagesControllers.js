@@ -3,7 +3,7 @@ const { addFiles, deleteFiles, addSingleFile } = require("../utils/fileUtils");
 const {
   successDataRes,
   errorMsgRes,
-  successMsgRes,
+  successMsgRes
 } = require("../utils/responseUtils");
 const pageValidator = require("../validators/pagesValidators");
 const path = require("path");
@@ -87,23 +87,26 @@ const updatePage = async (req, res) => {
       req.body.images = [req.body.images];
     }
 
-    const images = [];
+    let images = [];
 
     if (req.files?.images) {
       if (Array.isArray(req.files.images)) {
         const urls = await addFiles(req.files.images, "pages");
-        images.concat(urls);
+        // images = images.concat(urls);
+        images = [...urls];
       } else {
         const url = await addSingleFile(req.files.images, "pages");
         images.push(url);
       }
     }
 
+    console.log("images", images);
+
     await deleteFiles(existingPage.images, "pages", req.body.images);
 
     const updatedPage = await Page.findByIdAndUpdate(id, {
       ...req.body,
-      images: [...images, ...req.body.images],
+      images: [...images, ...req.body.images]
     });
 
     successDataRes(res, updatedPage);
@@ -138,5 +141,5 @@ module.exports = {
   getPageBySlug,
   addPage,
   updatePage,
-  deletePage,
+  deletePage
 };

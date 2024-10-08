@@ -8,7 +8,7 @@ import {
   MenuItem,
   Paper,
   Select,
-  TextField,
+  TextField
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -20,7 +20,7 @@ import {
   getAllCategories,
   getAllSubCategoriesByCategory,
   getPage,
-  updatePage,
+  updatePage
 } from "../../../services/apiServices";
 
 function renderList(list, handleChange) {
@@ -62,7 +62,7 @@ function setListLeft(
   });
   setListRight({
     ...formState,
-    subCategories: temp,
+    subCategories: temp
   });
   setCheckedList([]);
 }
@@ -78,7 +78,7 @@ function setListRight(
 ) {
   setListRight({
     ...formState,
-    subCategories: [...listRight, ...listCheckedLeft],
+    subCategories: [...listRight, ...listCheckedLeft]
   });
   const temp = listLeft.filter((value) => {
     const found = listCheckedLeft.find((v) => {
@@ -102,7 +102,7 @@ function AddUpdatePageForm() {
           slug: "",
           title: "",
           subCategories: [],
-          images: [],
+          images: []
         }
       : null
   );
@@ -111,8 +111,6 @@ function AddUpdatePageForm() {
   const [categories, setCategories] = useState(null);
   const [subCategories, setSubCategories] = useState(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
-
-  console.log("selectedCategoryId", selectedCategoryId);
 
   useEffect(() => {
     getAllCategories()
@@ -137,12 +135,12 @@ function AddUpdatePageForm() {
             return {
               value: value._id,
               name: value.name,
-              category: value.categoryId._id,
+              category: value.categoryId._id
             };
           });
           temp = temp.filter((value) => {
             const found = formState.subCategories.find((subCategory) => {
-              return subCategory._id === value.value;
+              return subCategory.value === value.value;
             });
             if (!found) return true;
             return false;
@@ -160,7 +158,14 @@ function AddUpdatePageForm() {
   useEffect(() => {
     if (!isAdd) {
       getPage(id).then((data) => {
-        setFormState(data.data);
+        let temp = data.data.subCategories.map((value) => {
+          return {
+            value: value._id,
+            name: value.name,
+            category: value.categoryId._id
+          };
+        });
+        setFormState({ ...data.data, subCategories: temp });
         setImagesURL(data.data.images);
         setSelectedCategoryId(data.data.subCategories[0].categoryId);
       });
@@ -175,16 +180,18 @@ function AddUpdatePageForm() {
       setFormState({
         ...formState,
         [e.target.name]: e.target.value,
-        slug: e.target.value.toLowerCase().replaceAll(" ", "-"),
+        slug: e.target.value.toLowerCase().replaceAll(" ", "-")
       });
       setSelectedCategoryId(selectedCategory.value);
     } else {
       setFormState({
         ...formState,
-        [e.target.name]: e.target.value,
+        [e.target.name]: e.target.value
       });
     }
   }
+
+  console.log("formState", formState);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -203,6 +210,8 @@ function AddUpdatePageForm() {
         formData.append(key, formState[key]);
       }
     }
+
+    console.log(Array.from(formData.entries()));
 
     try {
       if (isAdd) {

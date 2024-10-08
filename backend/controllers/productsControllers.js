@@ -5,15 +5,44 @@ const {
   checkAndCreateDir,
   addFiles,
   deleteFiles,
-  addSingleFile,
+  addSingleFile
 } = require("../utils/fileUtils");
 const { productValidator } = require("../validators/productsValidators");
 const { successDataRes, errorMsgRes } = require("../utils/responseUtils");
 const { minTwoFilesValidator } = require("../validators/commonValidators");
+const Category = require("../models/Category");
+const SubCategory = require("../models/SubCategory");
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate(["category", "subCategory"]);
+    // const filters = req.query;
+    const { category, subCategory } = req.query;
+
+    console.log("category", category);
+    console.log("subCategory", subCategory);
+
+    const filters = {};
+
+    if (category) {
+      const foundCategory = await Category.findOne({ slug: category });
+      if (foundCategory) {
+        filters.category = foundCategory._id;
+      }
+    }
+
+    if (subCategory) {
+      const foundSubCategory = await SubCategory.findOne({ slug: subCategory });
+      if (foundSubCategory) {
+        filters.subCategory = foundSubCategory._id;
+      }
+    }
+
+    console.log("filters", filters);
+
+    const products = await Product.find(filters).populate([
+      "category",
+      "subCategory"
+    ]);
     res.status(200).json({ success: true, data: products });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
@@ -66,13 +95,13 @@ const updateProduct = async (req, res) => {
       req.body.images = [req.body.images];
     }
 
-    const images = [];
+    let images = [];
 
     // If there are file save them in uploads/products and push their url in images array.
     if (req.files?.images) {
       if (Array.isArray(req.files.images)) {
         const urls = await addFiles(req.files.images, "products");
-        images.concat(urls);
+        images = images.concat(urls);
       } else {
         const url = await addSingleFile(req.files.images, "products");
         images.push(url);
@@ -84,7 +113,7 @@ const updateProduct = async (req, res) => {
 
     const updatedProduct = await Product.findByIdAndUpdate(id, {
       ...req.body,
-      images: [...images, ...req.body.images],
+      images: [...images, ...req.body.images]
     });
 
     successDataRes(res, updatedProduct);
@@ -122,5 +151,5 @@ module.exports = {
   getProduct,
   addProduct,
   updateProduct,
-  deleteProduct,
+  deleteProduct
 };
