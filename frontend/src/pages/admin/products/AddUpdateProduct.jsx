@@ -3,9 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import TitleAdmin from "../../../components/admin/common/TitleAdmin";
 import SendIcon from "@mui/icons-material/Send";
 import {
+  addProduct,
   getAllCategories,
   getAllSubCategories,
   getProduct,
+  updateProduct
 } from "../../../services/apiServices";
 import {
   Button,
@@ -16,7 +18,7 @@ import {
   MenuItem,
   Paper,
   Select,
-  TextField,
+  TextField
 } from "@mui/material";
 import MyFileUpload from "../../../components/common/MyFileUpload";
 
@@ -39,7 +41,7 @@ function AddUpdateProduct() {
           taxPercentage: "",
           colors: "",
           sizes: "",
-          isTrending: "",
+          isTrending: ""
         }
       : null
   );
@@ -82,42 +84,57 @@ function AddUpdateProduct() {
       urls.push(URL.createObjectURL(file));
     }
     setImagesURL(urls);
-    // setImagesURL(URL.createObjectURL(e.target.files[0]));
-    // setFormState({ ...formState, images: e.target.files[0] });
+    setFormState({ ...formState, images: e.target.files });
   }
 
   function handleChange(e) {
+    console.log("asd asd", e.target.name, e.target.checked);
     if (e.target.name === "name") {
       setFormState({
         ...formState,
         [e.target.name]: e.target.value,
-        slug: e.target.value.toLowerCase().replaceAll(" ", "-"),
+        slug: e.target.value.toLowerCase().replaceAll(" ", "-")
+      });
+    } else if (e.target.name === "isTrending") {
+      setFormState({
+        ...formState,
+        [e.target.name]: e.target.checked
       });
     } else {
       setFormState({
         ...formState,
-        [e.target.name]: e.target.value,
+        [e.target.name]: e.target.value
       });
     }
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const formData = new FormData(e.target);
+
+    const formData = new FormData();
+
+    for (const key in formState) {
+      if (key === "images") {
+        for (const value of formState.images) {
+          formData.append("images", value);
+        }
+      } else {
+        formData.append(key, formState[key]);
+      }
+    }
+
     console.log(Array.from(formData.entries()));
-    // try {
-    //   if (isAdd) {
-    //     await addSubCategory(formData);
-    //   } else {
-    //     if (typeof formState.image === "string") {
-    //       formData.append("image", formState.image);
-    //     }
-    //     await updateSubCategory(id, formData);
-    //   }
-    //   navigate("/admin/subCategories");
-    // } catch (error) {
-    //   console.log(error.message);
-    // }
+
+    try {
+      if (isAdd) {
+        await addProduct(formData);
+      } else {
+        await updateProduct(id, formData);
+      }
+      navigate("/admin/products");
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   if (!formState) return null;
@@ -267,6 +284,7 @@ function AddUpdateProduct() {
           <FormControlLabel
             control={
               <Checkbox
+                name="isTrending"
                 checked={formState.isTrending}
                 onChange={handleChange}
               />
