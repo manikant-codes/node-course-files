@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import ProductCard from "../../components/main/common/ProductCard";
 import { getAllProducts } from "../../services/apiServices";
 import { useParams } from "react-router-dom";
+import SizesFilter from "../../components/main/productsList/SizesFilter";
+import ColorsFilter from "../../components/main/productsList/ColorsFilter";
+import PriceFilter from "../../components/main/productsList/PriceFilter";
 
 function ProductsList() {
   const params = useParams();
@@ -20,9 +23,18 @@ function ProductsList() {
   }, []);
 
   return (
-    <div className="grid grid-cols-[250px_1fr] gap-4">
-      <div>filters</div>
+    <div className="grid grid-cols-[250px_1fr] gap-4 relative">
       <div>
+        <div className="sticky top-0 left-0">
+          <h2 className="text-lg font-bold mb-4">Filters</h2>
+          <div className="flex flex-col gap-4">
+            <SizesFilter />
+            <ColorsFilter />
+            <PriceFilter />
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-3 gap-4">
         {products.map((product) => {
           return <ProductCard product={product} />;
         })}

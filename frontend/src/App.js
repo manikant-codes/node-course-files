@@ -19,6 +19,7 @@ import AddUpdatePageForm from "./pages/admin/pages/AddUpdatePageForm";
 import Page from "./pages/main/Page";
 import ProductsList from "./pages/main/ProductsList";
 import AdminProductsList from "./pages/admin/products/ProductsList";
+import ProductDetails from "./pages/main/ProductDetails";
 
 function App() {
   const theme = createTheme({
@@ -45,6 +46,10 @@ function App() {
             <Route
               path="category/:slug/:slugSubCategory"
               element={<ProductsList />}
+            />
+            <Route
+              path="category/:slug/:slugSubCategory/:slugProduct"
+              element={<ProductDetails />}
             />
           </Route>
           <Route path="/admin" element={<LayoutAdmin />}>

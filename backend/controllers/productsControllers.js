@@ -62,6 +62,19 @@ const getProduct = async (req, res) => {
   }
 };
 
+const getProductBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const product = await Product.findOne({ slug });
+    if (!product) {
+      res.status(404).json({ success: false, msg: "No such product found!" });
+    }
+    res.status(200).json({ success: true, data: product });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
 const addProduct = async (req, res) => {
   try {
     await productValidator(req.body);
@@ -149,6 +162,7 @@ const deleteProduct = async (req, res) => {
 module.exports = {
   getAllProducts,
   getProduct,
+  getProductBySlug,
   addProduct,
   updateProduct,
   deleteProduct

@@ -114,8 +114,15 @@ async function getAllProducts(filters = {}) {
   const data = await response.json();
   return data;
 }
+
 async function getProduct(id) {
   const response = await fetch(`${BASE_URL}/products/${id}`);
+  const data = await response.json();
+  return data;
+}
+
+async function getProductBySlug(slug) {
+  const response = await fetch(`${BASE_URL}/products/single/${slug}`);
   const data = await response.json();
   return data;
 }
@@ -209,6 +216,7 @@ export {
   deleteSubCategory,
   getAllProducts,
   getProduct,
+  getProductBySlug,
   addProduct,
   updateProduct,
   deleteProduct,
