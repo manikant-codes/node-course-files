@@ -9,13 +9,17 @@ function CommonListItem({
   item,
   fields,
   showSubTitle,
+  showImage,
   handleEdit,
-  handleDelete,
+  handleDelete
 }) {
   return (
     <div className="flex items-center gap-4 border-b py-4">
       <div>
-        <Avatar alt={item[fields.title]} src={item[fields.image]} />
+        <Avatar
+          alt={item[fields.title]}
+          src={showImage ? showImage(item) : item[fields.image]}
+        />
       </div>
       <div className="grow-[1]">
         <Typography>{item[fields.title]}</Typography>

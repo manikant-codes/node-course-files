@@ -8,6 +8,7 @@ function CommonList({
   partOfURL,
   fields,
   showSubTitle,
+  showImage
 }) {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
@@ -52,6 +53,7 @@ function CommonList({
             handleEdit={handleEdit}
             handleDelete={handleDelete}
             showSubTitle={showSubTitle}
+            showImage={showImage}
           />
         );
       })}

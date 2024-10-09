@@ -1,7 +1,7 @@
 const { addFile, deleteFile } = require("../helpers/fileHelpers");
 const SubCategory = require("../models/SubCategory");
 const {
-  subCategoryValidator,
+  subCategoryValidator
 } = require("../validators/subCategoriesValidators");
 
 const getAllSubCategories = async (req, res) => {
@@ -105,5 +105,5 @@ module.exports = {
   getSubCategory,
   addSubCategory,
   updateSubCategory,
-  deleteSubCategory,
+  deleteSubCategory
 };

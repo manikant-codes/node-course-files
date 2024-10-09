@@ -41,7 +41,7 @@ function AddUpdateProduct() {
           taxPercentage: "",
           colors: "",
           sizes: "",
-          isTrending: ""
+          isTrending: false
         }
       : null
   );
@@ -131,7 +131,7 @@ function AddUpdateProduct() {
       } else {
         await updateProduct(id, formData);
       }
-      navigate("/admin/products");
+      // navigate("/admin/products");`
     } catch (error) {
       console.log(error.message);
     }

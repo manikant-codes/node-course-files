@@ -11,16 +11,16 @@ const productSchema = new mongoose.Schema({
       validator: (value) => {
         return minLengthOneValidator(value);
       },
-      message: "At least one image is required!",
-    },
+      message: "At least one image is required!"
+    }
   },
   category: { type: mongoose.Types.ObjectId, ref: "Category", required: true },
   subCategory: {
     type: mongoose.Types.ObjectId,
     ref: "SubCategory",
-    required: true,
+    required: true
   },
-  quantity: { type: Number, min: 0, required: true },
+  quantity: { type: Number, min: 0, default: 0 },
   price: { type: Number, min: 0, required: true },
   deliveryCharges: { type: Number, min: 0, default: 0 },
   discountPercentage: { type: Number, min: 0, max: 100, default: 0 },
@@ -58,7 +58,7 @@ const productSchema = new mongoose.Schema({
   //     message: "Invalid sizes!",
   //   },
   // },
-  isTrending: { type: Boolean, default: false },
+  isTrending: { type: Boolean, default: false }
 });
 
 const Product = mongoose.model("Product", productSchema);
