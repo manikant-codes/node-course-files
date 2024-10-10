@@ -1,14 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import TitleAdmin from "../../../components/admin/common/TitleAdmin";
 import SendIcon from "@mui/icons-material/Send";
-import {
-  addProduct,
-  getAllCategories,
-  getAllSubCategories,
-  getProduct,
-  updateProduct
-} from "../../../services/apiServices";
 import {
   Button,
   Checkbox,
@@ -20,7 +10,17 @@ import {
   Select,
   TextField
 } from "@mui/material";
-import MyFileUpload from "../../../components/common/MyFileUpload";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import MultipleFileUpload from "../../../components/admin/common/MultipleFileUpload";
+import TitleAdmin from "../../../components/admin/common/TitleAdmin";
+import {
+  addProduct,
+  getAllCategories,
+  getAllSubCategories,
+  getProduct,
+  updateProduct
+} from "../../../services/apiServices";
 
 function AddUpdateProduct() {
   const { id } = useParams();
@@ -48,6 +48,9 @@ function AddUpdateProduct() {
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const navigate = useNavigate();
+
+  console.log("imagesURL", imagesURL);
+  console.log("formState", formState);
 
   useEffect(() => {
     if (!isAdd) {
@@ -77,15 +80,6 @@ function AddUpdateProduct() {
       setSubCategories(temp);
     });
   }, []);
-
-  function handleFileUpload(e) {
-    const urls = [];
-    for (const file of e.target.files) {
-      urls.push(URL.createObjectURL(file));
-    }
-    setImagesURL(urls);
-    setFormState({ ...formState, images: e.target.files });
-  }
 
   function handleChange(e) {
     console.log("asd asd", e.target.name, e.target.checked);
@@ -131,7 +125,7 @@ function AddUpdateProduct() {
       } else {
         await updateProduct(id, formData);
       }
-      // navigate("/admin/products");`
+      navigate("/admin/products");
     } catch (error) {
       console.log(error.message);
     }
@@ -148,25 +142,14 @@ function AddUpdateProduct() {
         className="mt-8 p-4 flex flex-col gap-4"
         onSubmit={handleSubmit}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
-          {imagesURL.map((imageURL) => {
-            return (
-              <Paper variant="outlined" className="h-[150px] overflow-hidden">
-                <img
-                  src={imageURL}
-                  alt=""
-                  className="h-full w-full object-cover"
-                />
-              </Paper>
-            );
-          })}
-          <MyFileUpload
-            onChange={handleFileUpload}
-            btnTxt="Upload Category Image"
-            name="image"
-            multiple={true}
-          />
-        </div>
+        <MultipleFileUpload
+          imagesURL={imagesURL}
+          setImagesURL={setImagesURL}
+          formState={formState}
+          setFormState={setFormState}
+          name="images"
+        />
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           <TextField
             id="name"

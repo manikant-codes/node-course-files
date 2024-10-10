@@ -16,7 +16,7 @@ async function getCategory(id) {
 async function addCategory(body) {
   const response = await fetch(`${process.env.REACT_APP_BASE_URL}/categories`, {
     method: "POST",
-    body: body,
+    body: body
   });
   const data = await response.json();
   return data;
@@ -27,7 +27,7 @@ async function updateCategory(id, body) {
     `${process.env.REACT_APP_BASE_URL}/categories/${id}`,
     {
       method: "PATCH",
-      body: body,
+      body: body
     }
   );
   const data = await response.json();
@@ -38,7 +38,7 @@ async function deleteCategory(id) {
   const response = await fetch(
     `${process.env.REACT_APP_BASE_URL}/categories/${id}`,
     {
-      method: "DELETE",
+      method: "DELETE"
     }
   );
   const data = await response.json();
@@ -67,7 +67,7 @@ async function addSubCategory(body) {
     `${process.env.REACT_APP_BASE_URL}/subCategories`,
     {
       method: "POST",
-      body: body,
+      body: body
     }
   );
   const data = await response.json();
@@ -79,7 +79,7 @@ async function updateSubCategory(id, body) {
     `${process.env.REACT_APP_BASE_URL}/subCategories/${id}`,
     {
       method: "PATCH",
-      body: body,
+      body: body
     }
   );
   const data = await response.json();
@@ -90,7 +90,7 @@ async function deleteSubCategory(id) {
   const response = await fetch(
     `${process.env.REACT_APP_BASE_URL}/subCategories/${id}`,
     {
-      method: "DELETE",
+      method: "DELETE"
     }
   );
   const data = await response.json();
@@ -115,7 +115,7 @@ async function getProduct(id) {
 async function addProduct(body) {
   const response = await fetch(`${process.env.REACT_APP_BASE_URL}/products`, {
     method: "POST",
-    body: body,
+    body: body
   });
   const data = await response.json();
   return data;
@@ -126,7 +126,7 @@ async function updateProduct(id, body) {
     `${process.env.REACT_APP_BASE_URL}/products/${id}`,
     {
       method: "PATCH",
-      body: body,
+      body: body
     }
   );
   const data = await response.json();
@@ -137,7 +137,7 @@ async function deleteProduct(id) {
   const response = await fetch(
     `${process.env.REACT_APP_BASE_URL}/products/${id}`,
     {
-      method: "DELETE",
+      method: "DELETE"
     }
   );
   const data = await response.json();
@@ -159,5 +159,5 @@ export {
   getProduct,
   addProduct,
   updateProduct,
-  deleteProduct,
+  deleteProduct
 };

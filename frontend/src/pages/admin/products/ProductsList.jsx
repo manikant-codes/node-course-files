@@ -16,7 +16,7 @@ function ProductsList() {
         to="/admin/products/add"
       />
       <CommonList
-        partOfURL={"subCategories"}
+        partOfURL={"products"}
         getAllData={getAllProducts}
         deleteData={deleteProduct}
         fields={{
