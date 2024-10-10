@@ -1,15 +1,7 @@
 import React from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-
-const colors = [
-  { hex: "#000000", name: "Black" },
-  { hex: "#ffffff", name: "White" },
-  { hex: "#fcbe03", name: "Yellow" },
-  { hex: "#fc2803", name: "Red" },
-  { hex: "#057df5", name: "Blue" },
-  { hex: "#f505b1", name: "Pink" }
-];
+import { colors } from "../../../consts/consts";
 
 function ColorsFilter() {
   return (

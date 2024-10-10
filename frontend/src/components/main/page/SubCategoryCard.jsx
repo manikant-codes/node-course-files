@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 function SubCategoryCard({ subCategory }) {
   const navigate = useNavigate();
-  const params = useParams();
 
   function goToListPage() {
     navigate(`${subCategory.slug}`);

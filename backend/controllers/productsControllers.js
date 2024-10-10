@@ -16,10 +16,7 @@ const SubCategory = require("../models/SubCategory");
 const getAllProducts = async (req, res) => {
   try {
     // const filters = req.query;
-    const { category, subCategory } = req.query;
-
-    console.log("category", category);
-    console.log("subCategory", subCategory);
+    const { category, subCategory, trending } = req.query;
 
     const filters = {};
 
@@ -37,7 +34,9 @@ const getAllProducts = async (req, res) => {
       }
     }
 
-    console.log("filters", filters);
+    if (trending) {
+      filters.isTrending = true;
+    }
 
     const products = await Product.find(filters).populate([
       "category",

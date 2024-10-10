@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { getPageBySlug } from "../../services/apiServices";
 import { Paper } from "@mui/material";
 import SubCategoryCard from "../../components/main/page/SubCategoryCard";
+import TrendingProducts from "../../components/main/page/TrendingProducts";
 
 function Page() {
   const { slug } = useParams();
@@ -51,6 +52,7 @@ function Page() {
           })}
         </div>
       </div>
+      <TrendingProducts />
     </div>
   );
 }

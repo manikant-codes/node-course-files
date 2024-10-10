@@ -104,6 +104,10 @@ async function getAllProducts(filters = {}) {
     queryParams.push(`subCategory=${filters.subCategory}`);
   }
 
+  if (filters.trending) {
+    queryParams.push(`trending=${filters.trending}`);
+  }
+
   if (queryParams.length) {
     queryParams = queryParams.join("&");
   }

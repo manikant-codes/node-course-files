@@ -1,24 +1,26 @@
 import SendIcon from "@mui/icons-material/Send";
 import {
   Button,
+  Checkbox,
   FormControl,
+  FormControlLabel,
   InputLabel,
   MenuItem,
   Paper,
   Select,
-  TextField,
+  TextField
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
+import MyFileUpload from "../../../components/admin/common/MyFileUpload";
 import {
   addProduct,
   getAllCategories,
   getAllSubCategories,
   getProduct,
-  updateProduct,
+  updateProduct
 } from "../../../services/apiServices";
-import MyFileUpload from "../../../components/admin/common/MyFileUpload";
 
 function AddUpdateProductForm() {
   const { id } = useParams();
@@ -38,6 +40,7 @@ function AddUpdateProductForm() {
           category: "",
           subCategory: "",
           qty: "",
+          isTrending: false
         }
       : null
   );
@@ -74,7 +77,7 @@ function AddUpdateProductForm() {
           return {
             value: value._id,
             name: value.name,
-            category: value.categoryId._id,
+            category: value.categoryId._id
           };
         });
         setSubCategories(temp);
@@ -89,12 +92,17 @@ function AddUpdateProductForm() {
       setFormState({
         ...formState,
         [e.target.name]: e.target.value,
-        slug: e.target.value.toLowerCase().replaceAll(" ", "-"),
+        slug: e.target.value.toLowerCase().replaceAll(" ", "-")
+      });
+    } else if (e.target.name === "isTrending") {
+      setFormState({
+        ...formState,
+        [e.target.name]: e.target.checked
       });
     } else {
       setFormState({
         ...formState,
-        [e.target.name]: e.target.value,
+        [e.target.name]: e.target.value
       });
     }
   }
@@ -271,6 +279,18 @@ function AddUpdateProductForm() {
               onChange={handleChange}
               value={formState.shippingFee}
               type="number"
+            />
+          </div>
+          <div>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="isTrending"
+                  checked={formState.isTrending}
+                  onChange={handleChange}
+                />
+              }
+              label="Is Trending"
             />
           </div>
           <Button type="submit" variant="contained" endIcon={<SendIcon />}>

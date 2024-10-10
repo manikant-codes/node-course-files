@@ -27,6 +27,7 @@ function PriceFilter() {
     <Box className="w-full">
       <p className="text-lg">Price</p>
       <Slider
+        className="!w-[80%] ml-2"
         value={value}
         onChange={handleChange}
         disableSwap

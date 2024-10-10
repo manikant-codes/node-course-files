@@ -1,8 +1,7 @@
-import React from "react";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-
-const sizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+import FormControlLabel from "@mui/material/FormControlLabel";
+import React from "react";
+import { sizes } from "../../../consts/consts";
 
 function SizesFilter() {
   return (
