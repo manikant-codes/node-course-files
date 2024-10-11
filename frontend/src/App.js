@@ -42,13 +42,13 @@ function App() {
         <Routes>
           <Route path="/" element={<LayoutMain />}>
             <Route index element={<Home />} />
-            <Route path="category/:slug" element={<Page />} />
+            <Route path="category/:categorySlug" element={<Page />} />
             <Route
-              path="category/:slug/:slugSubCategory"
+              path="category/:categorySlug/:subCategorySlug"
               element={<ProductsList />}
             />
             <Route
-              path="category/:slug/:slugSubCategory/:slugProduct"
+              path="category/:categorySlug/:subCategorySlug/:productSlug"
               element={<ProductDetails />}
             />
           </Route>

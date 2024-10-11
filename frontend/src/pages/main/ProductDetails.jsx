@@ -1,23 +1,24 @@
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import LocalMallIcon from "@mui/icons-material/LocalMall";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProductBySlug } from "../../services/apiServices";
-import { getDiscountedPrice } from "../../helpers/priceHelper";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import LocalMallIcon from "@mui/icons-material/LocalMall";
 
 import { Button } from "@mui/material";
+import ColorSelect from "../../components/main/common/ColorSelect";
 import DiscountedPrice from "../../components/main/common/DiscountedPrice";
 import Rating from "../../components/main/common/Rating";
 import SizeSelect from "../../components/main/common/SizeSelect";
-import ColorSelect from "../../components/main/common/ColorSelect";
 import TrendingProducts from "../../components/main/page/TrendingProducts";
 
 function ProductDetails() {
-  const { slugProduct } = useParams();
+  const { productSlug } = useParams();
   const [product, setProduct] = useState(null);
+  const [size, setSize] = useState("");
+  const [color, setColor] = useState("");
 
   useEffect(() => {
-    getProductBySlug(slugProduct)
+    getProductBySlug(productSlug)
       .then((data) => {
         setProduct(data.data);
       })
@@ -30,7 +31,7 @@ function ProductDetails() {
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12">
         <div className="grid grid-cols-2 gap-2">
           {product.images.map((image) => {
             return (
@@ -50,14 +51,18 @@ function ProductDetails() {
           <p className="">{product.desc}</p>
           <DiscountedPrice product={product} />
           <div className="flex gap-4">
-            <SizeSelect />
-            <ColorSelect />
+            <SizeSelect size={size} setSize={setSize} />
+            <ColorSelect color={color} setColor={setColor} />
           </div>
           <div className="flex gap-2 items-center">
             <Button startIcon={<FavoriteBorderIcon />} variant="outlined">
               Wishlist
             </Button>
-            <Button startIcon={<LocalMallIcon />} variant="contained">
+            <Button
+              disabled={!size || !color}
+              startIcon={<LocalMallIcon />}
+              variant="contained"
+            >
               Add to Cart
             </Button>
           </div>

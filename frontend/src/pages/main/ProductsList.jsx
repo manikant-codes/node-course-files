@@ -14,8 +14,8 @@ function ProductsList() {
 
   useEffect(() => {
     const filters = {
-      category: params.slug,
-      subCategory: params.slugSubCategory
+      category: params.categorySlug,
+      subCategory: params.subCategorySlug
     };
     getAllProducts(filters).then((data) => {
       setProducts(data.data);

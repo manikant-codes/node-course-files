@@ -6,9 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { colors } from "../../../consts/consts";
 
-function ColorSelect() {
-  const [color, setColor] = React.useState("");
-
+function ColorSelect({ color, setColor }) {
   const handleChange = (event) => {
     setColor(event.target.value);
   };

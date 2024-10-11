@@ -1,5 +1,6 @@
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
@@ -24,15 +25,15 @@ const Search = styled("div")(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: alpha(theme.palette.common.white, 0.25)
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
   width: "100%",
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
-    width: "auto",
-  },
+    width: "auto"
+  }
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -42,7 +43,7 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   pointerEvents: "none",
   display: "flex",
   alignItems: "center",
-  justifyContent: "center",
+  justifyContent: "center"
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -54,12 +55,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
+      width: "20ch"
+    }
+  }
 }));
 
-function NavbarMain() {
+function NavbarMain({ toggleCart }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [pages, setPages] = useState([]);
@@ -101,13 +102,13 @@ function NavbarMain() {
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "right"
       }}
       id={menuId}
       keepMounted
       transformOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "right"
       }}
       open={isMenuOpen}
       onClose={handleMenuClose}
@@ -132,13 +133,13 @@ function NavbarMain() {
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "right"
       }}
       id={mobileMenuId}
       keepMounted
       transformOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "right"
       }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
@@ -146,10 +147,10 @@ function NavbarMain() {
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="error">
-            <MailIcon />
+            <ShoppingBagIcon />
           </Badge>
         </IconButton>
-        <p>Messages</p>
+        <p>Cart</p>
       </MenuItem>
       <MenuItem>
         <IconButton
@@ -214,12 +215,13 @@ function NavbarMain() {
 
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
+              onClick={toggleCart}
               size="large"
-              aria-label="show 4 new mails"
+              aria-label=""
               color="inherit"
             >
               <Badge badgeContent={4} color="error">
-                <MailIcon />
+                <ShoppingBagIcon />
               </Badge>
             </IconButton>
             <IconButton

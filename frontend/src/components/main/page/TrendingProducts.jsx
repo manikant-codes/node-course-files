@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react";
 import { getAllProducts } from "../../../services/apiServices";
 import { useParams } from "react-router-dom";
 import ProductCard from "../common/ProductCard";
+import PageRowTitle from "../common/PageRowTitle";
 
 function TrendingProducts() {
-  const { slug } = useParams();
+  const { categorySlug } = useParams();
   const [trending, setTrending] = useState(null);
 
   useEffect(() => {
     getAllProducts({
-      category: slug,
+      category: categorySlug,
       trending: true
     })
       .then((data) => {
@@ -18,13 +19,13 @@ function TrendingProducts() {
       .catch((err) => {
         console.log("Error: ", err);
       });
-  }, [slug]);
+  }, [categorySlug]);
 
   if (!trending || !trending.length) return null;
 
   return (
     <div>
-      <h2 className="text-center mt-10 text-3xl">Trending Products</h2>
+      <PageRowTitle title={"Trending Products"} />
       <div className="grid grid-cols-4 gap-2 mt-4">
         {trending.map((product) => {
           return <ProductCard product={product} />;

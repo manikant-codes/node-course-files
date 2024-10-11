@@ -6,9 +6,7 @@ import Select from "@mui/material/Select";
 import * as React from "react";
 import { sizes } from "../../../consts/consts";
 
-function SizeSelect() {
-  const [size, setSize] = React.useState("");
-
+function SizeSelect({ size, setSize }) {
   const handleChange = (event) => {
     setSize(event.target.value);
   };

@@ -1,16 +1,18 @@
-import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
+import DiscountedPrice from "./DiscountedPrice";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
 
   function goToDetailsPage() {
-    navigate(`${product.slug}`);
+    navigate(
+      `/category/${product.category.slug}/${product.subCategory.slug}/${product.slug}`
+    );
   }
 
   return (
@@ -24,12 +26,7 @@ function ProductCard({ product }) {
         <Typography gutterBottom variant="h5" component="p">
           {product.name}
         </Typography>
-
-        <div className="flex items-center justify-between">
-          <Typography gutterBottom variant="h6" component="p" className="!mb-0">
-            ₹{product.price.toLocaleString("en-in")}
-          </Typography>
-        </div>
+        <DiscountedPrice product={product} />
       </CardContent>
     </Card>
   );

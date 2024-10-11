@@ -7,7 +7,7 @@ import {
   MenuItem,
   Paper,
   Select,
-  TextField,
+  TextField
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
@@ -17,7 +17,7 @@ import {
   addSubCategory,
   getAllCategories,
   getSubCategory,
-  updateSubCategory,
+  updateSubCategory
 } from "../../../services/apiServices";
 
 const VisuallyHiddenInput = styled("input")({
@@ -29,7 +29,7 @@ const VisuallyHiddenInput = styled("input")({
   bottom: 0,
   left: 0,
   whiteSpace: "nowrap",
-  width: 1,
+  width: 1
 });
 
 function AddUpdateSubCategoryForm() {
@@ -43,7 +43,7 @@ function AddUpdateSubCategoryForm() {
           name: "",
           slug: "",
           image: null,
-          categoryId: "",
+          categoryId: ""
         }
       : null
   );
@@ -72,7 +72,7 @@ function AddUpdateSubCategoryForm() {
     setFormState({
       ...formState,
       name: e.target.value,
-      slug: e.target.value.toLowerCase().replaceAll(" ", "-"),
+      slug: e.target.value.toLowerCase().replaceAll(" ", "-")
     });
   }
 

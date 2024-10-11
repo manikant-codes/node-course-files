@@ -14,7 +14,7 @@ function LayoutAdmin() {
   return (
     <>
       <NavbarAdmin toggleDrawer={toggleDrawer} />
-      <Toolbar />
+      {/* <Toolbar /> */}
       <div className="flex">
         <DrawerAdmin open={open} toggleDrawer={toggleDrawer} />
         <div className="p-8 grow-[1]">
