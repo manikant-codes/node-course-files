@@ -22,13 +22,13 @@ const path = require("path");
 // join();
 // console.log(
 //   "join",
-//   path.join(__dirname, "../uploads", "/product-images", "img.txt")
+//   path.join(__dirname, "../uploads", "/products", "trending-products", "products.csv")
 // );
 
 // resolve()
 // console.log(
 //   "resolve",
-//   path.resolve(__dirname, "../uploads", "product-images", "img.txt")
+//   path.resolve(__dirname, "../uploads", "/products", "trending-products", "products.csv")
 // );
 
 // extname()
@@ -43,8 +43,8 @@ const path = require("path");
 // console.log(
 //   "relative",
 //   path.relative(
-//     path.join(__dirname, "uploads", "products-images", "trending-products"),
-//     path.join(__dirname, "uploads", "users-images")
+//     path.join(__dirname, "uploads", "products", "trending-products"),
+//     path.join(__dirname, "uploads", "users")
 //   )
 // );
 
