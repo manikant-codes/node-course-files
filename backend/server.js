@@ -5,6 +5,7 @@ const categoriesRouter = require("./routes/categoriesRoutes");
 const cors = require("cors");
 const subCategoriesRouter = require("./routes/subCategoriesRoutes");
 const productsRouter = require("./routes/productsRoutes");
+const pagesRouter = require("./routes/pagesRoutes");
 require("dotenv").config();
 
 const server = express();
@@ -17,6 +18,7 @@ server.use(express.json());
 server.use("/categories", categoriesRouter);
 server.use("/subCategories", subCategoriesRouter);
 server.use("/products", productsRouter);
+server.use("/pages", pagesRouter);
 
 const start = async () => {
   try {

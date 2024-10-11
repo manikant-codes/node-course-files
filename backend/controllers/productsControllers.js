@@ -1,7 +1,6 @@
 const {
   addMultipleFiles,
   addFile,
-  deleteFile,
   deleteMultipleFiles
 } = require("../helpers/fileHelpers");
 const Product = require("../models/Product");
@@ -73,7 +72,7 @@ const updateProduct = async (req, res) => {
     if (!product) {
       return res
         .status(404)
-        .json({ success: false, msg: "No such sub-category found!" });
+        .json({ success: false, msg: "No such product found!" });
     }
 
     if (!req.body.images) {

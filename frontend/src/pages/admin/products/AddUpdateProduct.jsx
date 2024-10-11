@@ -32,7 +32,7 @@ function AddUpdateProduct() {
           name: "",
           slug: "",
           desc: "",
-          images: null,
+          images: [],
           category: "",
           subCategory: "",
           price: "",
@@ -45,12 +45,10 @@ function AddUpdateProduct() {
         }
       : null
   );
+
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const navigate = useNavigate();
-
-  console.log("imagesURL", imagesURL);
-  console.log("formState", formState);
 
   useEffect(() => {
     if (!isAdd) {
@@ -72,14 +70,21 @@ function AddUpdateProduct() {
   }, []);
 
   useEffect(() => {
-    getAllSubCategories().then((data) => {
-      const temp = data.data.map((value) => {
-        return { name: value.name, id: value._id };
-      });
+    if (formState?.category) {
+      getAllSubCategories().then((data) => {
+        const temp = [];
 
-      setSubCategories(temp);
-    });
-  }, []);
+        console.log("subCategory", data.data);
+        for (const subCategory of data.data) {
+          if (subCategory.category._id === formState.category) {
+            temp.push({ name: subCategory.name, id: subCategory._id });
+          }
+        }
+
+        setSubCategories(temp);
+      });
+    }
+  }, [formState?.category]);
 
   function handleChange(e) {
     console.log("asd asd", e.target.name, e.target.checked);
@@ -207,6 +212,7 @@ function AddUpdateProduct() {
               name="subCategory"
               value={formState.subCategory}
               onChange={handleChange}
+              disabled={!formState.category}
             >
               {subCategories.map((value) => {
                 return <MenuItem value={value.id}>{value.name}</MenuItem>;

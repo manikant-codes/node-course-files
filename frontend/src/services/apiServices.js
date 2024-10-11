@@ -1,3 +1,5 @@
+import { generateAPIServices } from "../utils/apiServices";
+
 // Categories
 async function getAllCategories() {
   const response = await fetch(`${process.env.REACT_APP_BASE_URL}/categories`);
@@ -143,6 +145,10 @@ async function deleteProduct(id) {
   const data = await response.json();
   return data;
 }
+
+// Pages
+export const { getAllPages, getPage, addPage, updatePage, deletePage } =
+  generateAPIServices("pages");
 
 export {
   getAllCategories,
