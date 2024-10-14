@@ -10,12 +10,15 @@ import DiscountedPrice from "../../components/main/common/DiscountedPrice";
 import Rating from "../../components/main/common/Rating";
 import SizeSelect from "../../components/main/common/SizeSelect";
 import TrendingProducts from "../../components/main/page/TrendingProducts";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/slices/cartSlice";
 
 function ProductDetails() {
   const { productSlug } = useParams();
   const [product, setProduct] = useState(null);
   const [size, setSize] = useState("");
   const [color, setColor] = useState("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getProductBySlug(productSlug)
@@ -26,6 +29,10 @@ function ProductDetails() {
         console.log("Error: ", error);
       });
   }, []);
+
+  function handleAddToCart() {
+    dispatch(addToCart(product));
+  }
 
   if (!product) return null;
 
@@ -62,6 +69,7 @@ function ProductDetails() {
               disabled={!size || !color}
               startIcon={<LocalMallIcon />}
               variant="contained"
+              onClick={handleAddToCart}
             >
               Add to Cart
             </Button>

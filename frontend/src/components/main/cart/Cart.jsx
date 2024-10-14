@@ -1,25 +1,19 @@
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import CategoryIcon from "@mui/icons-material/Category";
-import NoteAddIcon from "@mui/icons-material/NoteAdd";
-import GroupIcon from "@mui/icons-material/Group";
-import Inventory2Icon from "@mui/icons-material/Inventory2";
-import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-import { Toolbar } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { IconButton, Typography, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
-import { useTheme } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
-import { NavLink } from "react-router-dom";
+import CartItem from "./CartItem";
+import { useSelector } from "react-redux";
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -67,29 +61,22 @@ const Drawer = styled(MuiDrawer, {
   ]
 }));
 
-const links = [
-  { icon: <DashboardIcon />, text: "Dashboard", to: "/admin" },
-  { icon: <CategoryIcon />, text: "Categories", to: "/admin/categories" },
-  {
-    icon: <CategoryIcon />,
-    text: "Subcategories",
-    to: "/admin/subCategories"
-  },
-  { icon: <Inventory2Icon />, text: "Products", to: "/admin/products" },
-  { icon: <NoteAddIcon />, text: "Pages", to: "/admin/pages" },
-  { icon: <GroupIcon />, text: "Users", to: "/admin/users" },
-  { icon: <ReceiptLongIcon />, text: "Orders", to: "/admin/orders" }
-];
-const extraLinks = [
-  {
-    icon: <PowerSettingsNewIcon />,
-    text: "Logout",
-    to: ""
-  }
-];
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  padding: theme.spacing(0, 2),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+  justifyContent: "space-between"
+}));
 
 export default function Cart({ open, toggleCart }) {
   const theme = useTheme();
+
+  const { cartItems, total } = useSelector((store) => {
+    return store.cart;
+  });
+
   return (
     <>
       <Drawer
@@ -98,43 +85,35 @@ export default function Cart({ open, toggleCart }) {
         open={open}
         onClose={toggleCart}
       >
-        <Toolbar />
+        <DrawerHeader className="border-b border-b-gray-200">
+          <div className="flex items-center gap-1">
+            <ShoppingCartIcon />
+            <Typography variant="h6" component="h2">
+              Cart
+            </Typography>
+          </div>
+          <IconButton onClick={toggleCart}>
+            <CloseIcon />
+          </IconButton>
+        </DrawerHeader>
         <Box>
           <List>
-            {links.map((link, index) => (
-              <ListItem
-                component={NavLink}
-                end
-                to={link.to}
-                key={index}
-                disablePadding
-                style={({ isActive }) => {
-                  return isActive
-                    ? {
-                        color: theme.palette.primary.main
-                      }
-                    : {};
-                }}
-              >
-                <ListItemButton>
-                  <ListItemIcon style={{ color: "inherit" }}>
-                    {link.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={link.text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <List>
-            {extraLinks.map((link, index) => (
-              <ListItem key={index} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>{link.icon}</ListItemIcon>
-                  <ListItemText primary={link.text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
+            {cartItems.map((cartItem, index) => {
+              return <CartItem key={index} cartItem={cartItem} index={index} />;
+            })}
+            <Divider />
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemText
+                  primary={
+                    <span className="inline-flex w-full items-center justify-between">
+                      <span>Total</span>
+                      <span>₹{total}</span>
+                    </span>
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
           </List>
         </Box>
       </Drawer>

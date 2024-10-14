@@ -1,9 +1,8 @@
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import MailIcon from "@mui/icons-material/Mail";
-import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AppBar from "@mui/material/AppBar";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
@@ -147,7 +146,7 @@ function NavbarMain({ toggleCart }) {
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="error">
-            <ShoppingBagIcon />
+            <ShoppingCartIcon />
           </Badge>
         </IconButton>
         <p>Cart</p>
@@ -221,7 +220,7 @@ function NavbarMain({ toggleCart }) {
               color="inherit"
             >
               <Badge badgeContent={4} color="error">
-                <ShoppingBagIcon />
+                <ShoppingCartIcon />
               </Badge>
             </IconButton>
             <IconButton
