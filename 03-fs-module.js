@@ -75,10 +75,10 @@ const fs = require("fs");
 
 // unlink (To delete folders.)
 // --------------------------------------------------
-fs.rmdirSync("./files/backup");
-fs.rmdir("./files/backup", (error) => {
-  if (error) {
-    return console.log("Error: ", error);
-  }
-  console.log("File deleted!");
-});
+// fs.rmdirSync("./files/backup");
+// fs.rmdir("./files/backup", (error) => {
+//   if (error) {
+//     return console.log("Error: ", error);
+//   }
+//   console.log("File deleted!");
+// });
