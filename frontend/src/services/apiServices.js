@@ -148,7 +148,7 @@ async function deleteProduct(id) {
 
 // Pages
 export const { getAllPages, getPage, addPage, updatePage, deletePage } =
-  generateAPIServices("pages");
+  generateAPIServices("pages", "page");
 
 export {
   getAllCategories,

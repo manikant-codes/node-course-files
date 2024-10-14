@@ -14,6 +14,8 @@ import AddUpdateSubCategory from "./pages/admin/subCategories/AddUpdateSubCatego
 import AddUpdateProduct from "./pages/admin/products/AddUpdateProduct";
 import UpdateOrder from "./pages/admin/orders/UpdateOrder";
 import UpdateUser from "./pages/admin/users/UpdateUser";
+import PagesList from "./pages/admin/pages/PagesList";
+import AddUpdatePage from "./pages/admin/pages/AddUpdatePage";
 
 function App() {
   return (
@@ -30,6 +32,8 @@ function App() {
           <Route path="subCategories/:id" element={<AddUpdateSubCategory />} />
           <Route path="products" element={<ProductsList />} />
           <Route path="products/:id" element={<AddUpdateProduct />} />
+          <Route path="pages" element={<PagesList />} />
+          <Route path="pages/:id" element={<AddUpdatePage />} />
           <Route path="orders" element={<OrdersList />} />
           <Route path="orders/:id" element={<UpdateOrder />} />
           <Route path="users" element={<UsersList />} />

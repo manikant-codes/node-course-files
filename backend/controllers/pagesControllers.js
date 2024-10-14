@@ -40,6 +40,10 @@ const getPage = async (req, res) => {
 
 const addPage = async (req, res) => {
   try {
+    if (req.body.subCategories && !Array.isArray(req.body.subCategories)) {
+      req.body.subCategories = [req.body.subCategories];
+    }
+
     pagesValidator(req.files, req.body);
 
     if (Array.isArray(req.files?.images)) {
@@ -62,7 +66,11 @@ const addPage = async (req, res) => {
 
 const updatePage = async (req, res) => {
   try {
-    pageValidator(req.files, req.body);
+    if (req.body.subCategories && !Array.isArray(req.body.subCategories)) {
+      req.body.subCategories = [req.body.subCategories];
+    }
+
+    pagesValidator(req.files, req.body);
     const { id } = req.params;
 
     const page = await Page.findById(id);

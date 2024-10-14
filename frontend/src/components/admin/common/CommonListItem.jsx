@@ -5,6 +5,11 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
+const field = {
+  name: "name",
+  image: "images"
+};
+
 function CommonListItem({
   item,
   fields,

@@ -15,46 +15,52 @@ import Toolbar from "@mui/material/Toolbar";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import NoteAddIcon from "@mui/icons-material/NoteAdd";
 
 const primaryLinks = [
   {
     icon: <DashboardIcon />,
     text: "Dashboard",
-    to: "/admin/dashboard",
+    to: "/admin/dashboard"
   },
   {
     icon: <CategoryIcon />,
     text: "Categories",
-    to: "/admin/categories",
+    to: "/admin/categories"
   },
   {
     icon: <CategoryIcon />,
     text: "Sub-Categories",
-    to: "/admin/subCategories",
+    to: "/admin/subCategories"
   },
   {
     icon: <Inventory2Icon />,
     text: "Products",
-    to: "/admin/products",
+    to: "/admin/products"
+  },
+  {
+    icon: <NoteAddIcon />,
+    text: "Pages",
+    to: "/admin/pages"
   },
   {
     icon: <ReceiptLongIcon />,
     text: "Orders",
-    to: "/admin/orders",
+    to: "/admin/orders"
   },
   {
     icon: <GroupIcon />,
     text: "Users",
-    to: "/admin/users",
-  },
+    to: "/admin/users"
+  }
 ];
 
 const secondaryLinks = [
   {
     icon: <PowerSettingsNewIcon />,
     text: "Log Out",
-    to: "#",
-  },
+    to: "#"
+  }
 ];
 
 const drawerWidth = 240;
@@ -69,8 +75,8 @@ function SidebarAdmin() {
         flexShrink: 0,
         [`& .MuiDrawer-paper`]: {
           width: drawerWidth,
-          boxSizing: "border-box",
-        },
+          boxSizing: "border-box"
+        }
       }}
     >
       <Toolbar />

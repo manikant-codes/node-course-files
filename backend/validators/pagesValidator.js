@@ -1,3 +1,5 @@
+const { MyError } = require("../helpers/errorHelper");
+
 const pagesValidator = (files, body) => {
   if (!files && !body.images) {
     throw new MyError("Images are required!", 404);
