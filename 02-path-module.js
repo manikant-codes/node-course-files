@@ -22,13 +22,13 @@ const path = require("path");
 // join();
 // console.log(
 //   "join",
-//   path.join(__dirname, "../uploads", "/products", "trending-products", "products.csv")
+//   path.join(__dirname, "../files", "/products", "trending-products", "products.csv")
 // );
 
 // resolve()
 // console.log(
 //   "resolve",
-//   path.resolve(__dirname, "../uploads", "/products", "trending-products", "products.csv")
+//   path.resolve(__dirname, "../files", "/products", "trending-products", "products.csv")
 // );
 
 // extname()
@@ -43,11 +43,11 @@ const path = require("path");
 // console.log(
 //   "relative",
 //   path.relative(
-//     path.join(__dirname, "uploads", "products", "trending-products"),
-//     path.join(__dirname, "uploads", "users")
+//     path.join(__dirname, "files", "products", "trending-products"),
+//     path.join(__dirname, "files", "users")
 //   )
 // );
 
 // win32
-// console.log("join", path.join(__dirname, "uploads"));
-// console.log("win32 join", path.win32.join(__dirname, "uploads"));
+// console.log("join", path.join(__dirname, "files"));
+// console.log("win32 join", path.win32.join(__dirname, "files"));
