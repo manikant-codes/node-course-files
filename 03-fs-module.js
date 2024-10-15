@@ -1,4 +1,5 @@
-const fs = require("fs");
+// const fs = require("fs");
+const fs = require("fs/promises");
 
 // readFile
 // --------------------------------------------------
@@ -82,3 +83,31 @@ const fs = require("fs");
 //   }
 //   console.log("File deleted!");
 // });
+
+// readdir (To list contents of a folder.)
+// --------------------------------------------------
+// const contents = fs.readdirSync("./notes");
+// console.log("contents", contents);
+// fs.readdir("./notes", {}, (error, contents) => {
+//   if (error) {
+//     return console.log("Error: ", error);
+//   }
+//   console.log("contents", contents);
+// });
+
+// readdir (Promises) (To list contents of a folder.)
+// --------------------------------------------------
+// fs.readdir("./notes")
+//   .then((data) => {
+//     console.log("data", data);
+//   })
+//   .catch((error) => {
+//     console.log("Error: ", error);
+//   });
+
+// async function readFolder() {
+//   const contents = await fs.readdir("./notes");
+//   console.log("contents", contents);
+// }
+
+// readFolder();
