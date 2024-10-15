@@ -28,7 +28,7 @@ function ProductDetails() {
       .catch((error) => {
         console.log("Error: ", error);
       });
-  }, []);
+  }, [productSlug]);
 
   function handleAddToCart() {
     dispatch(addToCart(product));

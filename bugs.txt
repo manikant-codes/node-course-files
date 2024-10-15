@@ -1,3 +1,6 @@
 1. Add colors and sizes fields in products.
 2. Fix transfer-list.
+3. Remove toolbar padding.
+4. Carousel nav buttons.
+5. 
 

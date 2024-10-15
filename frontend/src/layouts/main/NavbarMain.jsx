@@ -18,6 +18,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { COMPANY_NAME } from "../../consts/consts";
 import { getAllPages } from "../../services/apiServices";
+import { useSelector } from "react-redux";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -64,6 +65,9 @@ function NavbarMain({ toggleCart }) {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [pages, setPages] = useState([]);
   const navigate = useNavigate();
+  const { cartItems } = useSelector((store) => {
+    return store.cart;
+  });
 
   React.useEffect(() => {
     getAllPages().then((data) => {
@@ -219,7 +223,7 @@ function NavbarMain({ toggleCart }) {
               aria-label=""
               color="inherit"
             >
-              <Badge badgeContent={4} color="error">
+              <Badge badgeContent={cartItems.length} color="error">
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>

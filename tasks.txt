@@ -1,0 +1,6 @@
+1. Make home page.
+2. Cart local storage.
+3. Authentication.
+4. Payment.
+5. Reviews.
+6. Wishlish.

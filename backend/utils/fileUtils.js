@@ -20,7 +20,15 @@ const addSingleFile = async (image, folderName) => {
   return `${baseURL}/${uniqueName}`;
 };
 
-const deleteSingleFile = () => {};
+const deleteSingleFile = async (image, folderName) => {
+  const pathToFolder = path.join(__dirname, `../uploads/${folderName}`);
+  const name = path.parse(image).base;
+  const filesInFolder = await fs.readdir(pathToFolder);
+
+  if (filesInFolder.includes(name)) {
+    await fs.unlink(path.join(pathToFolder, name));
+  }
+};
 
 const addFiles = async (images, folderName) => {
   // Check if at least 2 images are there.
@@ -74,5 +82,5 @@ module.exports = {
   addSingleFile,
   deleteSingleFile,
   addFiles,
-  deleteFiles,
+  deleteFiles
 };

@@ -11,14 +11,25 @@ import {
 import React from "react";
 import { useDispatch } from "react-redux";
 import { getDiscountedPrice } from "../../../helpers/priceHelper";
-import { removeFromCart } from "../../../redux/slices/cartSlice";
+import {
+  decreaseQty,
+  increaseQty,
+  removeFromCart
+} from "../../../redux/slices/cartSlice";
 
 function CartItem({ cartItem, index }) {
-  console.log(cartItem);
   const dispatch = useDispatch();
 
   function handleDelete() {
     dispatch(removeFromCart(index));
+  }
+
+  function handleIncreaseQty() {
+    dispatch(increaseQty(index));
+  }
+
+  function handleDecreaseQty() {
+    dispatch(decreaseQty(index));
   }
 
   return (
@@ -39,7 +50,7 @@ function CartItem({ cartItem, index }) {
           primary={<span className="ml-[2px]">{cartItem.name}</span>}
           secondary={
             <span className="inline-flex items-center gap-1">
-              <IconButton sx={{ padding: 0 }}>
+              <IconButton onClick={handleDecreaseQty} sx={{ padding: 0 }}>
                 <RemoveCircleOutlineIcon />
               </IconButton>
               <span>
@@ -50,7 +61,7 @@ function CartItem({ cartItem, index }) {
                 )}{" "}
                 x {cartItem.qty}
               </span>
-              <IconButton sx={{ padding: 0 }}>
+              <IconButton onClick={handleIncreaseQty} sx={{ padding: 0 }}>
                 <AddCircleOutlineIcon />
               </IconButton>
             </span>
