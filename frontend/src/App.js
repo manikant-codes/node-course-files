@@ -16,6 +16,7 @@ import UpdateOrder from "./pages/admin/orders/UpdateOrder";
 import UpdateUser from "./pages/admin/users/UpdateUser";
 import PagesList from "./pages/admin/pages/PagesList";
 import AddUpdatePage from "./pages/admin/pages/AddUpdatePage";
+import Page from "./pages/main/Page";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LayoutMain />}>
           <Route index element={<Home />} />
+          <Route path="page/:categorySlug" element={<Page />} />
         </Route>
         <Route path="/admin" element={<LayoutAdmin />}>
           <Route path="dashboard" element={<Dashboard />} />

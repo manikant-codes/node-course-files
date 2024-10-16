@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import TitleAdmin from "../../../components/admin/common/TitleAdmin";
-import { useNavigate, useParams } from "react-router-dom";
-import { Button, Paper, TextField } from "@mui/material";
-import MyFileUpload from "../../../components/common/MyFileUpload";
 import SendIcon from "@mui/icons-material/Send";
+import { Button, Paper, TextField } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import TitleAdmin from "../../../components/admin/common/TitleAdmin";
+import MyFileUpload from "../../../components/common/MyFileUpload";
 import {
   addSubCategory,
   getAllCategories,
   getSubCategory,
-  updateSubCategory,
+  updateSubCategory
 } from "../../../services/apiServices";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 
 function AddUpdateSubCategory() {
   const { id } = useParams();
@@ -25,7 +25,7 @@ function AddUpdateSubCategory() {
           image: null,
           name: "",
           slug: "",
-          category: "",
+          category: ""
         }
       : null
   );
@@ -61,12 +61,12 @@ function AddUpdateSubCategory() {
       setFormState({
         ...formState,
         [e.target.name]: e.target.value,
-        slug: e.target.value.toLowerCase().replaceAll(" ", "-"),
+        slug: e.target.value.toLowerCase().replaceAll(" ", "-")
       });
     } else {
       setFormState({
         ...formState,
-        [e.target.name]: e.target.value,
+        [e.target.name]: e.target.value
       });
     }
   }
@@ -74,7 +74,6 @@ function AddUpdateSubCategory() {
   async function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    console.log(Array.from(formData.entries()));
     try {
       if (isAdd) {
         await addSubCategory(formData);
@@ -140,7 +139,11 @@ function AddUpdateSubCategory() {
               onChange={handleChange}
             >
               {categories.map((value) => {
-                return <MenuItem value={value.id}>{value.name}</MenuItem>;
+                return (
+                  <MenuItem key={value.id} value={value.id}>
+                    {value.name}
+                  </MenuItem>
+                );
               })}
             </Select>
           </FormControl>

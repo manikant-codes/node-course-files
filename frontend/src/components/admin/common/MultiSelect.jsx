@@ -18,8 +18,15 @@ const MenuProps = {
   }
 };
 
-function MultiSelect({ options, fieldName, formState, setFormState, label }) {
-  const [selectedOptions, setSelectedOptions] = React.useState([]);
+function MultiSelect({
+  options,
+  selected,
+  fieldName,
+  formState,
+  setFormState,
+  label
+}) {
+  const [selectedOptions, setSelectedOptions] = React.useState(selected || []);
 
   const isObject = typeof options[0] === "object";
 
@@ -67,8 +74,7 @@ function MultiSelect({ options, fieldName, formState, setFormState, label }) {
                       const found = selectedOptions.find((item) => {
                         return item.id === value.id;
                       });
-
-                      console.log("found", found);
+                      return found;
                     }
                     return selectedOptions.includes(value);
                   })()}

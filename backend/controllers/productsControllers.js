@@ -64,9 +64,6 @@ const updateProduct = async (req, res) => {
     productValidator(req.files, req.body);
     const { id } = req.params;
 
-    console.log("req.files", req.files);
-    console.log("req.body", req.body);
-
     const product = await Product.findById(id);
 
     if (!product) {

@@ -6,8 +6,6 @@ const addFile = async (file, folderName) => {
   const baseURL = `${process.env.BASE_URL}/uploads/${folderName}`;
   const uniqueName = Date.now() + "-" + file.name;
 
-  console.log("file", file);
-
   await file.mv(path.join(folderPath, uniqueName));
 
   return `${baseURL}/${uniqueName}`;

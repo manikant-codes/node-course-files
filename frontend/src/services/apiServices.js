@@ -150,6 +150,14 @@ async function deleteProduct(id) {
 export const { getAllPages, getPage, addPage, updatePage, deletePage } =
   generateAPIServices("pages", "page");
 
+export async function getPageBySlug(slug) {
+  const response = await fetch(
+    `${process.env.REACT_APP_BASE_URL}/pages/slug/${slug}`
+  );
+  const data = await response.json();
+  return data;
+}
+
 export {
   getAllCategories,
   getCategory,

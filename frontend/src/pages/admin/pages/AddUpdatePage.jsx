@@ -37,7 +37,11 @@ function AddUpdatePage() {
   const [imagesURL, setImagesURL] = useState([]);
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const [selectedSubCategories, setSelectedSubCategories] = useState(null);
   const navigate = useNavigate();
+
+  console.log("formState", formState);
+  console.log("selectedSubCategories", selectedSubCategories);
 
   useEffect(() => {
     if (!isAdd) {
@@ -61,13 +65,23 @@ function AddUpdatePage() {
     if (formState?.name) {
       getAllSubCategories().then((data) => {
         const temp = [];
+        const selectedSubCategoriesTemp = [];
+
         for (const subCategory of data.data) {
           if (subCategory.category.slug === formState.slug) {
             temp.push({ name: subCategory.name, id: subCategory._id });
           }
+
+          if (formState.subCategories.includes(subCategory._id)) {
+            selectedSubCategoriesTemp.push({
+              id: subCategory._id,
+              name: subCategory.name
+            });
+          }
         }
 
         setSubCategories(temp);
+        setSelectedSubCategories(selectedSubCategoriesTemp);
       });
     }
   }, [formState?.name]);
@@ -107,9 +121,6 @@ function AddUpdatePage() {
       }
     }
 
-    console.log(Array.from(formData.entries()));
-    console.log(addPage);
-
     try {
       if (isAdd) {
         await addPage(formData);
@@ -122,9 +133,8 @@ function AddUpdatePage() {
     }
   }
 
-  console.log("formState", formState);
-
   if (!formState) return null;
+  if (!isAdd && !selectedSubCategories) return null;
 
   return (
     <div>
@@ -155,7 +165,11 @@ function AddUpdatePage() {
               onChange={handleChange}
             >
               {categories.map((value) => {
-                return <MenuItem value={value.name}>{value.name}</MenuItem>;
+                return (
+                  <MenuItem key={value.id} value={value.name}>
+                    {value.name}
+                  </MenuItem>
+                );
               })}
             </Select>
           </FormControl>
@@ -169,28 +183,13 @@ function AddUpdatePage() {
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          {/* <FormControl fullWidth>
-            <InputLabel id="sub-category-label">Sub-Category</InputLabel>
-            <Select
-              labelId="sub-category-label"
-              id="subCategory"
-              label="Sub-Category"
-              name="subCategory"
-              value={formState.subCategories}
-              onChange={handleChange}
-              disabled={!formState.name}
-            >
-              {subCategories.map((value) => {
-                return <MenuItem value={value.id}>{value.name}</MenuItem>;
-              })}
-            </Select>
-          </FormControl> */}
           <MultiSelect
             options={subCategories}
             formState={formState}
             setFormState={setFormState}
             label="Sub-Categories"
             fieldName="subCategories"
+            selected={selectedSubCategories}
           />
         </div>
         <Button type="submit" variant="contained" endIcon={<SendIcon />}>

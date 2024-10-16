@@ -74,7 +74,6 @@ function AddUpdateProduct() {
       getAllSubCategories().then((data) => {
         const temp = [];
 
-        console.log("subCategory", data.data);
         for (const subCategory of data.data) {
           if (subCategory.category._id === formState.category) {
             temp.push({ name: subCategory.name, id: subCategory._id });
@@ -87,7 +86,6 @@ function AddUpdateProduct() {
   }, [formState?.category]);
 
   function handleChange(e) {
-    console.log("asd asd", e.target.name, e.target.checked);
     if (e.target.name === "name") {
       setFormState({
         ...formState,
@@ -121,8 +119,6 @@ function AddUpdateProduct() {
         formData.append(key, formState[key]);
       }
     }
-
-    console.log(Array.from(formData.entries()));
 
     try {
       if (isAdd) {
@@ -199,7 +195,11 @@ function AddUpdateProduct() {
               onChange={handleChange}
             >
               {categories.map((value) => {
-                return <MenuItem value={value.id}>{value.name}</MenuItem>;
+                return (
+                  <MenuItem key={value.id} value={value.id}>
+                    {value.name}
+                  </MenuItem>
+                );
               })}
             </Select>
           </FormControl>
@@ -215,7 +215,11 @@ function AddUpdateProduct() {
               disabled={!formState.category}
             >
               {subCategories.map((value) => {
-                return <MenuItem value={value.id}>{value.name}</MenuItem>;
+                return (
+                  <MenuItem key={value.id} value={value.id}>
+                    {value.name}
+                  </MenuItem>
+                );
               })}
             </Select>
           </FormControl>

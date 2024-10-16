@@ -36,6 +36,7 @@ function MultipleFileUpload({
       {imagesURL.map((url, index) => {
         return (
           <Paper
+            key={index}
             variant="outlined"
             className="h-[150px] overflow-hidden relative"
           >

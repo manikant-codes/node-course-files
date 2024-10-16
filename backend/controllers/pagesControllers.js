@@ -38,6 +38,26 @@ const getPage = async (req, res) => {
   }
 };
 
+const getPageBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const page = await Page.findOne({ slug }).populate("subCategories");
+
+    if (!page) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "No such page found!" });
+    }
+
+    res.status(200).json({ success: true, data: page });
+  } catch (error) {
+    res
+      .status(error.status || 500)
+      .json({ success: false, msg: error.message });
+  }
+};
+
 const addPage = async (req, res) => {
   try {
     if (req.body.subCategories && !Array.isArray(req.body.subCategories)) {
@@ -136,6 +156,7 @@ const deletePage = async (req, res) => {
 module.exports = {
   getAllPages,
   getPage,
+  getPageBySlug,
   addPage,
   updatePage,
   deletePage
