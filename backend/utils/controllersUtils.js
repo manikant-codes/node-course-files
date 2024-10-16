@@ -9,10 +9,10 @@ const getBasicContollers = (
   pluralName,
   singularName,
   Model,
-  populateFields,
   imageField,
-  isImageRequered,
-  isMultipleImages
+  isImageRequired,
+  isMultipleImages,
+  populateFields
 ) => {
   const capitailzedPluralName = pluralName[0].toUpperCase + pluralName.slice(1);
   const capitailzedSingularName =
@@ -33,10 +33,17 @@ const getBasicContollers = (
       }
     },
 
-    [`getSingle${capitailzedSingularName}`]: async (req, res) => {
+    [`get${capitailzedSingularName}`]: async (req, res) => {
       try {
         const { id } = req.params;
-        const data = await Model.findById(id);
+
+        let data;
+
+        if (populateFields) {
+          data = await Model.findById(id).populate(populateFields);
+        } else {
+          data = await Model.findById(id);
+        }
 
         if (!data) {
           return res
@@ -52,21 +59,24 @@ const getBasicContollers = (
 
     [`add${capitailzedSingularName}`]: async (req, res) => {
       try {
-        const image = req.files[imageField];
+        let image = req.files && req.files[imageField];
 
-        if (isImageRequered && !image) {
+        if (isImageRequired && !image) {
           return res
             .status(400)
             .json({ success: false, msg: `${imageField} is required!` });
         }
 
         if (isMultipleImages) {
+          if (!Array.isArray(image)) {
+            image = [image];
+          }
           req.body[imageField] = await addFiles(image, singularName);
         } else {
           req.body[imageField] = await addSingleFile(image, singularName);
         }
 
-        const data = await SubCategory.create(req.body);
+        const data = await Model.create(req.body);
         res.status(200).json({ success: true, data });
       } catch (error) {
         res.status(500).json({ success: false, msg: error.message });
@@ -76,7 +86,6 @@ const getBasicContollers = (
     [`update${capitailzedSingularName}`]: async (req, res) => {
       try {
         const { id } = req.params;
-        let body = req.body;
 
         const data = await Model.findById(id);
 
@@ -87,35 +96,23 @@ const getBasicContollers = (
         }
 
         if (req.files) {
-          // Image is updated.
           const image = req.files[imageField];
-          const fileToBeDeleted = path.parse(data.image).base;
-          const filesInSubCategories = await fs.readdir(
-            path.join(__dirname, "../uploads/subCategories")
-          );
-          if (filesInSubCategories.includes(fileToBeDeleted)) {
-            await fs.unlink(
-              path.join(__dirname, "../uploads/subCategories", fileToBeDeleted)
+
+          if (isMultipleImages) {
+            await deleteFiles(
+              data[imageField],
+              singularName,
+              req.body[imageField]
             );
+            req.body[imageField] = await addFiles(image, singularName);
+          } else {
+            await deleteSingleFile(data[imageField], singularName);
+            req.body[imageField] = await addSingleFile(image, singularName);
           }
-          const uniqueFileName = Date.now() + "-" + image.name;
-          const uploadPath = path.join(
-            __dirname,
-            "../uploads/subCategories",
-            uniqueFileName
-          );
-          await image.mv(uploadPath);
-          body = {
-            ...body,
-            image: `${process.env.BASE_URL}/uploads/subCategories/${uniqueFileName}`
-          };
         }
 
-        const updatedSubCategory = await SubCategory.findByIdAndUpdate(
-          id,
-          body
-        );
-        res.status(200).json({ success: true, data: updatedSubCategory });
+        const updatedData = await Model.findByIdAndUpdate(id, body);
+        res.status(200).json({ success: true, data: updatedData });
       } catch (error) {
         res.status(500).json({ success: false, msg: error.message });
       }
@@ -133,9 +130,8 @@ const getBasicContollers = (
             .json({ success: false, msg: `No such ${singularName} found!` });
         }
 
-        if (Array.isArray(data[imageField])) {
+        if (isMultipleImages) {
           await deleteFiles(data[imageField], singularName);
-          await Model.findByIdAndDelete(id);
         } else {
           await deleteSingleFile(data[imageField], singularName);
         }

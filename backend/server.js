@@ -7,6 +7,7 @@ const cors = require("cors");
 const subCategoriesRouter = require("./routes/subCategoriesRoutes");
 const productsRouter = require("./routes/productsRoutes");
 const pagesRouter = require("./routes/pagesRoutes");
+const usersRouter = require("./routes/usersRoutes");
 const server = express();
 
 server.use(cors());
@@ -18,6 +19,7 @@ server.use("/categories", categoriesRouter);
 server.use("/subCategories", subCategoriesRouter);
 server.use("/products", productsRouter);
 server.use("/pages", pagesRouter);
+server.use("/users", usersRouter);
 
 const start = async () => {
   try {
