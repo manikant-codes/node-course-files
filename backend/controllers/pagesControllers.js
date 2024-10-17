@@ -4,7 +4,6 @@ const {
   deleteMultipleFiles
 } = require("../helpers/fileHelpers");
 const Page = require("../models/Page");
-const Product = require("../models/Product");
 const { pagesValidator } = require("../validators/pagesValidator");
 
 const getAllPages = async (req, res) => {
@@ -91,12 +90,15 @@ const updatePage = async (req, res) => {
     }
 
     pagesValidator(req.files, req.body);
+
     const { id } = req.params;
 
     const page = await Page.findById(id);
 
     if (!page) {
-      return res.status(404).json({ success: false, msg: "No such page!" });
+      return res
+        .status(404)
+        .json({ success: false, msg: "No such page found!" });
     }
 
     if (!req.body.images) {

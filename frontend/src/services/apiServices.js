@@ -48,10 +48,12 @@ async function deleteCategory(id) {
 }
 
 // Sub-Categories
-async function getAllSubCategories() {
-  const response = await fetch(
-    `${process.env.REACT_APP_BASE_URL}/subCategories`
-  );
+async function getAllSubCategories(categoryId) {
+  let url = `${process.env.REACT_APP_BASE_URL}/subCategories`;
+  if (categoryId) {
+    url += `?category=${categoryId}`;
+  }
+  const response = await fetch(url);
   const data = await response.json();
   return data;
 }

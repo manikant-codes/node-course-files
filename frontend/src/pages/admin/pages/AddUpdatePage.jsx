@@ -11,6 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import MultipleFileUpload from "../../../components/admin/common/MultipleFileUpload";
+import MultiSelect from "../../../components/admin/common/MultiSelect";
 import TitleAdmin from "../../../components/admin/common/TitleAdmin";
 import {
   addPage,
@@ -19,7 +20,6 @@ import {
   getPage,
   updatePage
 } from "../../../services/apiServices";
-import MultiSelect from "../../../components/admin/common/MultiSelect";
 
 function AddUpdatePage() {
   const { id } = useParams();
@@ -37,6 +37,8 @@ function AddUpdatePage() {
   const [imagesURL, setImagesURL] = useState([]);
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
+  // Fix This
   const [selectedSubCategories, setSelectedSubCategories] = useState(null);
   const navigate = useNavigate();
 
@@ -54,16 +56,16 @@ function AddUpdatePage() {
 
   useEffect(() => {
     getAllCategories().then((data) => {
-      const temp = data.data.map((value) => {
-        return { name: value.name, id: value._id };
+      const modifiedCategories = data.data.map((value) => {
+        return { id: value._id, name: value.name };
       });
-      setCategories(temp);
+      setCategories(modifiedCategories);
     });
   }, []);
 
   useEffect(() => {
     if (formState?.name) {
-      getAllSubCategories().then((data) => {
+      getAllSubCategories(selectedCategoryId).then((data) => {
         const temp = [];
         const selectedSubCategoriesTemp = [];
 
@@ -162,7 +164,16 @@ function AddUpdatePage() {
               label="Name"
               name="name"
               value={formState.name}
-              onChange={handleChange}
+              onChange={(e) => {
+                handleChange(e);
+                // console.log("categories", categories);
+                // console.log("e.target.value", e.target.value);
+                const foundCategory = categories.find((category) => {
+                  return category.name === e.target.value;
+                });
+                // console.log("foundCategory", foundCategory);
+                setSelectedCategoryId(foundCategory.id);
+              }}
             >
               {categories.map((value) => {
                 return (

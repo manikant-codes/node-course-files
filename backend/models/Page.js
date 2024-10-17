@@ -8,7 +8,8 @@ const pageSchema = new mongoose.Schema({
     type: [String],
     validate: {
       validator: (value) => {
-        return minLengthOneValidator(value);
+        const isValid = minLengthOneValidator(value);
+        return isValid;
       },
       message: "At least one image is required!"
     }
