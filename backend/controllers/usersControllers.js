@@ -28,7 +28,9 @@ const signUp = async (req, res) => {
 
     res.status(200).json({ success: true, data: user });
   } catch (error) {
-    res.status(500).json({ success: false, msg: error.message });
+    res
+      .status(error.status || 500)
+      .json({ success: false, msg: error.message });
   }
 };
 
@@ -48,7 +50,7 @@ const signIn = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         success: false,
-        msg: "Invalid email or password are required!"
+        msg: "Invalid email or password!"
       });
     }
 
@@ -59,15 +61,28 @@ const signIn = async (req, res) => {
         lname: user.lname,
         email: user.email
       },
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1d"
+      }
     );
 
     res.status(200).json({ success: true, token });
   } catch (error) {
-    res.status(500).json({ success: false, msg: error.message });
+    res
+      .status(error.status || 500)
+      .json({ success: false, msg: error.message });
   }
 };
 
 const signOut = async (req, res) => {};
 
-module.exports = { getAllUsers, getUser, addUser, updateUser, deleteUser };
+module.exports = {
+  signUp,
+  signIn,
+  signOut,
+  getAllUsers,
+  getUser,
+  updateUser,
+  deleteUser
+};

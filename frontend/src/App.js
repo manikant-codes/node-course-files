@@ -22,6 +22,8 @@ import ProductDetails from "./pages/main/ProductDetails";
 import ProductsList from "./pages/main/ProductsList";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import SignIn from "./pages/main/SignIn";
+import SignUp from "./pages/main/SignUp";
 
 function App() {
   const theme = createTheme({
@@ -54,6 +56,8 @@ function App() {
                 path="category/:categorySlug/:subCategorySlug/:productSlug"
                 element={<ProductDetails />}
               />
+              <Route path="signup" element={<SignUp />} />
+              <Route path="signin" element={<SignIn />} />
             </Route>
 
             <Route path="/admin" element={<LayoutAdmin />}>

@@ -206,6 +206,63 @@ async function deletePage(id) {
 
 // End Page
 
+// Users
+
+export async function signUp(body) {
+  const response = await fetch(`${BASE_URL}/users/signup`, {
+    method: "POST",
+    body: body
+  });
+  const data = await response.json();
+  return data;
+}
+
+export async function signIn(body) {
+  const response = await fetch(`${BASE_URL}/users/signin`, {
+    method: "POST",
+    body: body
+  });
+  const data = await response.json();
+  return data;
+}
+
+export async function signOut() {
+  const response = await fetch(`${BASE_URL}/users/signout`);
+  const data = await response.json();
+  return data;
+}
+
+export async function getAllUsers() {
+  const response = await fetch(`${BASE_URL}/users`);
+  const data = await response.json();
+  return data;
+}
+
+export async function getUser(id) {
+  const response = await fetch(`${BASE_URL}/users/${id}`);
+  const data = await response.json();
+  return data;
+}
+
+export async function updateUser(id, body) {
+  const response = await fetch(`${BASE_URL}/users/${id}`, {
+    method: "PATCH",
+    body: body
+  });
+  const data = await response.json();
+  return data;
+}
+
+export async function deleteUser(id) {
+  const response = await fetch(`${BASE_URL}/users/${id}`, {
+    method: "DELETE"
+  });
+  const data = await response.json();
+  return data;
+}
+
+// End Users
+
 export {
   getAllCategories,
   getCategory,

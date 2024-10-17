@@ -51,7 +51,7 @@ const addCategory = async (req, res) => {
 
     const addedCategory = await Category.create({
       ...req.body,
-      image: `${process.env.BASE_URL}/uploads/categories/${uniqueFileName}`,
+      image: `${process.env.BASE_URL}/uploads/categories/${uniqueFileName}`
     });
     res.status(200).json({ success: true, data: addedCategory });
   } catch (error) {
@@ -91,7 +91,7 @@ const updateCategory = async (req, res) => {
       await image.mv(uploadPath);
       body = {
         ...body,
-        image: `${process.env.BASE_URL}/uploads/categories/${uniqueFileName}`,
+        image: `${process.env.BASE_URL}/uploads/categories/${uniqueFileName}`
       };
     }
 
@@ -120,7 +120,7 @@ const deleteCategory = async (req, res) => {
     if (product || subCategory) {
       return res.status(400).json({
         success: false,
-        msg: "Cannot delete this category as it is being used in other products or sub-categories!",
+        msg: "Cannot delete this category as it is being used in other products or sub-categories!"
       });
     }
 
@@ -149,5 +149,5 @@ module.exports = {
   getCategory,
   addCategory,
   updateCategory,
-  deleteCategory,
+  deleteCategory
 };

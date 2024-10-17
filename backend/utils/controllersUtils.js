@@ -14,9 +14,10 @@ const getBasicContollers = (
   isMultipleImages,
   populateFields
 ) => {
-  const capitailzedPluralName = pluralName[0].toUpperCase + pluralName.slice(1);
+  const capitailzedPluralName =
+    pluralName[0].toUpperCase() + pluralName.slice(1);
   const capitailzedSingularName =
-    singularName[0].toUpperCase + singularName.slice(1);
+    singularName[0].toUpperCase() + singularName.slice(1);
 
   return {
     [`getAll${capitailzedPluralName}`]: async (req, res) => {

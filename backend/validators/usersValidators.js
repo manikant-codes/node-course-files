@@ -5,9 +5,9 @@ const userValidator = async (body, files) => {
     throw new MyError("First name is required!", 400);
   }
 
-  if (!body.fname.trim().length < 2) {
+  if (body.fname.trim().length < 2) {
     throw new MyError(
-      "First must be greater than or equal to 2 characters!",
+      "First name must be greater than or equal to 2 characters!",
       400
     );
   }
