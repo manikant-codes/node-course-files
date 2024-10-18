@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-commerce Home</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      nav {
+        background-color: #333;
+        color: #fff;
+        display: flex;
+        justify-content: space-around;
+        padding: 15px;
+      }
+      nav a {
+        color: white;
+        text-decoration: none;
+        padding: 8px;
+      }
+      nav a:hover {
+        background-color: #575757;
+      }
+      .carousel {
+        position: relative;
+        width: 100%;
+        height: 300px;
+        overflow: hidden;
+      }
+      .carousel img {
+        position: absolute;
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+      }
+      .carousel button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+      }
+      .carousel button.prev {
+        left: 10px;
+      }
+      .carousel button.next {
+        right: 10px;
+      }
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        padding: 20px;
+      }
+      .product-card {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+      }
+      .product-card img {
+        width: 100%;
+        height: auto;
+      }
+      .product-card .rating,
+      .product-card .price {
+        margin: 10px 0;
+      }
+      footer {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+      }
+      footer a {
+        color: white;
+        text-decoration: none;
+        padding: 8px;
+      }
+      footer a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 768px) {
+        .product-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 480px) {
+        .product-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="carousel">
+      <img
+        src="https://images.unsplash.com/photo-1585079542300-bfce3157a5b3"
+        alt="Slide 1"
+      />
+      <img
+        src="https://images.unsplash.com/photo-1539874754764-5a9655913141"
+        alt="Slide 2"
+      />
+      <img
+        src="https://images.unsplash.com/photo-1517265438340-36ce1305d336"
+        alt="Slide 3"
+      />
+      <button class="prev" onclick="showPrevImage()">&#10094;</button>
+      <button class="next" onclick="showNextImage()">&#10095;</button>
+    </div>
+
+    <div class="product-grid">
+      <div class="product-card">
+        <img
+          src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42"
+          alt="Product 1"
+        />
+        <h3>Product 1</h3>
+        <div class="rating">⭐⭐⭐⭐</div>
+        <div class="price">$10.00</div>
+      </div>
+      <div class="product-card">
+        <img
+          src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f"
+          alt="Product 2"
+        />
+        <h3>Product 2</h3>
+        <div class="rating">⭐⭐⭐⭐⭐</div>
+        <div class="price">$20.00</div>
+      </div>
+      <div class="product-card">
+        <img
+          src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f"
+          alt="Product 3"
+        />
+        <h3>Product 3</h3>
+        <div class="rating">⭐⭐⭐</div>
+        <div class="price">$15.00</div>
+      </div>
+      <div class="product-card">
+        <img
+          src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42"
+          alt="Product 4"
+        />
+        <h3>Product 4</h3>
+        <div class="rating">⭐⭐⭐⭐</div>
+        <div class="price">$25.00</div>
+      </div>
+    </div>
+
+    <footer>
+      <span>Company Name</span>
+      <div>
+        <a href="#privacy">Privacy Policy</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </footer>
+
+    <script>
+      let currentIndex = 0;
+      const carouselImages = document.querySelectorAll(".carousel img");
+
+      function showNextImage() {
+        carouselImages[currentIndex].style.display = "none";
+        currentIndex = (currentIndex + 1) % carouselImages.length;
+        carouselImages[currentIndex].style.display = "block";
+      }
+
+      function showPrevImage() {
+        carouselImages[currentIndex].style.display = "none";
+        currentIndex =
+          (currentIndex - 1 + carouselImages.length) % carouselImages.length;
+        carouselImages[currentIndex].style.display = "block";
+      }
+
+      setInterval(showNextImage, 3000); // Change image every 3 seconds
+      carouselImages.forEach((img, index) => {
+        img.style.display = index === 0 ? "block" : "none";
+      });
+    </script>
+  </body>
+</html>
