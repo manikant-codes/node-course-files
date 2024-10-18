@@ -26,7 +26,7 @@ const signUp = async (req, res) => {
 
     const user = await User.create(req.body);
 
-    res.status(200).json({ success: true, data: user });
+    res.status(200).json({ success: true, msg: "Sign-up successful!" });
   } catch (error) {
     res
       .status(error.status || 500)
@@ -59,7 +59,8 @@ const signIn = async (req, res) => {
         userId: user._id,
         fname: user.fname,
         lname: user.lname,
-        email: user.email
+        email: user.email,
+        role: user.role
       },
       process.env.JWT_SECRET,
       {

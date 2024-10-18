@@ -3,6 +3,7 @@ const Product = require("../models/Product");
 const SubCategory = require("../models/SubCategory");
 const fs = require("fs/promises");
 const path = require("path");
+const jwt = require("jsonwebtoken");
 
 const getAllCategories = async (req, res) => {
   try {
@@ -32,28 +33,36 @@ const getCategory = async (req, res) => {
 
 const addCategory = async (req, res) => {
   try {
-    const image = req.files.image;
+    // const image = req.files.image;
 
-    if (!image) {
-      return res
-        .status(400)
-        .json({ success: false, msg: "Image is required!" });
+    const token = req.headers.authorization.split(" ")[1];
+
+    try {
+      const userData = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+      console.log("error", error.message);
     }
 
-    const uniqueFileName = Date.now() + "-" + image.name;
-    const uploadPath = path.join(
-      __dirname,
-      "../uploads/categories",
-      uniqueFileName
-    );
+    // if (!image) {
+    //   return res
+    //     .status(400)
+    //     .json({ success: false, msg: "Image is required!" });
+    // }
 
-    await image.mv(uploadPath);
+    // const uniqueFileName = Date.now() + "-" + image.name;
+    // const uploadPath = path.join(
+    //   __dirname,
+    //   "../uploads/categories",
+    //   uniqueFileName
+    // );
 
-    const addedCategory = await Category.create({
-      ...req.body,
-      image: `${process.env.BASE_URL}/uploads/categories/${uniqueFileName}`
-    });
-    res.status(200).json({ success: true, data: addedCategory });
+    // await image.mv(uploadPath);
+
+    // const addedCategory = await Category.create({
+    //   ...req.body,
+    //   image: `${process.env.BASE_URL}/uploads/categories/${uniqueFileName}`
+    // });
+    // res.status(200).json({ success: true, data: addedCategory });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }

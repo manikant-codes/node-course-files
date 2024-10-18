@@ -7,13 +7,14 @@ const {
   deleteProduct,
   getProductBySlug
 } = require("../controllers/productsControllers");
+const { authenticateAdmin } = require("../middlewares/authentication");
 const productsRouter = express.Router();
 
 productsRouter.get("/", getAllProducts);
 productsRouter.get("/:id", getProduct);
 productsRouter.get("/single/:slug", getProductBySlug);
-productsRouter.post("/", addProduct);
-productsRouter.patch("/:id", updateProduct);
-productsRouter.delete("/:id", deleteProduct);
+productsRouter.post("/", authenticateAdmin, addProduct);
+productsRouter.patch("/:id", authenticateAdmin, updateProduct);
+productsRouter.delete("/:id", authenticateAdmin, deleteProduct);
 
 module.exports = productsRouter;

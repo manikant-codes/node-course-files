@@ -5,16 +5,17 @@ const {
   addSubCategory,
   updateSubCategory,
   deleteSubCategory,
-  getAllSubCategoriesByCategory,
+  getAllSubCategoriesByCategory
 } = require("../controllers/subCategoriesControllers");
+const { authenticateAdmin } = require("../middlewares/authentication");
 
 const subCategoriesRouter = express.Router();
 
 subCategoriesRouter.get("/", getAllSubCategories);
 subCategoriesRouter.get("/category/:id", getAllSubCategoriesByCategory);
 subCategoriesRouter.get("/:id", getSubCategory);
-subCategoriesRouter.post("/", addSubCategory);
-subCategoriesRouter.patch("/:id", updateSubCategory);
-subCategoriesRouter.delete("/:id", deleteSubCategory);
+subCategoriesRouter.post("/", authenticateAdmin, addSubCategory);
+subCategoriesRouter.patch("/:id", authenticateAdmin, updateSubCategory);
+subCategoriesRouter.delete("/:id", authenticateAdmin, deleteSubCategory);
 
 module.exports = subCategoriesRouter;

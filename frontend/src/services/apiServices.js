@@ -17,7 +17,10 @@ async function getCategory(id) {
 async function addCategory(body) {
   const response = await fetch("http://localhost:5000/categories", {
     method: "POST",
-    body: body
+    body: body,
+    headers: {
+      authorization: `Bearer ${localStorage.getItem("token")}`
+    }
   });
   const data = await response.json();
   return data;

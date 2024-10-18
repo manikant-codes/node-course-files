@@ -5,15 +5,16 @@ const {
   addPage,
   updatePage,
   deletePage,
-  getPageBySlug,
+  getPageBySlug
 } = require("../controllers/pagesControllers");
+const { authenticateAdmin } = require("../middlewares/authentication");
 const pagesRouter = express.Router();
 
 pagesRouter.get("/", getAllPages);
 pagesRouter.get("/:id", getPage);
 pagesRouter.get("/single/:slug", getPageBySlug);
-pagesRouter.post("/", addPage);
-pagesRouter.patch("/:id", updatePage);
-pagesRouter.delete("/:id", deletePage);
+pagesRouter.post("/", authenticateAdmin, addPage);
+pagesRouter.patch("/:id", authenticateAdmin, updatePage);
+pagesRouter.delete("/:id", authenticateAdmin, deletePage);
 
 module.exports = pagesRouter;
