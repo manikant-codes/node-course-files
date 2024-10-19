@@ -17,16 +17,18 @@ import * as React from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { COMPANY_NAME } from "../../consts/consts";
+import { handleLogout } from "../../helpers/authHelper";
+import { useDispatch } from "react-redux";
 
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
+  shouldForwardProp: (prop) => prop !== "open"
 })(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
+    duration: theme.transitions.duration.leavingScreen
   }),
   variants: [
     {
@@ -36,17 +38,18 @@ const AppBar = styled(MuiAppBar, {
         width: `calc(100% - ${drawerWidth}px)`,
         transition: theme.transitions.create(["width", "margin"], {
           easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-      },
-    },
-  ],
+          duration: theme.transitions.duration.enteringScreen
+        })
+      }
+    }
+  ]
 }));
 
 function NavbarAdmin({ toggleDrawer }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -75,13 +78,13 @@ function NavbarAdmin({ toggleDrawer }) {
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "right"
       }}
       id={menuId}
       keepMounted
       transformOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "right"
       }}
       open={isMenuOpen}
       onClose={handleMenuClose}
@@ -94,7 +97,13 @@ function NavbarAdmin({ toggleDrawer }) {
       >
         Home
       </MenuItem>
-      <MenuItem onClick={handleMenuClose}>Log Out</MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleLogout(dispatch);
+        }}
+      >
+        Log Out
+      </MenuItem>
     </Menu>
   );
 
@@ -105,13 +114,13 @@ function NavbarAdmin({ toggleDrawer }) {
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "right"
       }}
       id={mobileMenuId}
       keepMounted
       transformOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "right"
       }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}

@@ -24,6 +24,9 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 import SignIn from "./pages/main/SignIn";
 import SignUp from "./pages/main/SignUp";
+import AuthGuard from "./guards/AuthGuard";
+import AuthGuardAdmin from "./guards/AuthGuardAdmin";
+import UpdateUserForm from "./pages/admin/users/UpdateUserForm";
 
 function App() {
   const theme = createTheme({
@@ -60,7 +63,14 @@ function App() {
               <Route path="signin" element={<SignIn />} />
             </Route>
 
-            <Route path="/admin" element={<LayoutAdmin />}>
+            <Route
+              path="/admin"
+              element={
+                <AuthGuardAdmin>
+                  <LayoutAdmin />
+                </AuthGuardAdmin>
+              }
+            >
               <Route index element={<Dashboard />} />
               <Route path="categories" element={<CategoriesList />} />
               <Route
@@ -78,6 +88,7 @@ function App() {
               <Route path="pages/:id" element={<AddUpdatePageForm />} />
               <Route path="orders" element={<OrdersList />} />
               <Route path="users" element={<UsersList />} />
+              <Route path="users/:id" element={<UpdateUserForm />} />
             </Route>
           </Routes>
         </BrowserRouter>

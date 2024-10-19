@@ -1,12 +1,15 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import { Button, Paper } from "@mui/material";
+import TextField from "@mui/material/TextField";
+import { jwtDecode } from "jwt-decode";
+import React from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setUser } from "../../redux/slices/userSlice";
 import { signIn } from "../../services/apiServices";
 
 function SignIn() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   function goToSignUp() {
     navigate("/signup");
@@ -19,6 +22,9 @@ function SignIn() {
       const result = await signIn(formData);
       if (result.token) {
         localStorage.setItem("token", result.token);
+        const user = jwtDecode(result.token);
+        localStorage.setItem("user", JSON.stringify(user));
+        dispatch(setUser(user));
         navigate("/");
       } else {
         alert("Log-in failed!");
