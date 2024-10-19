@@ -8,7 +8,9 @@ import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 
 const ITEM_HEIGHT = 48;
+
 const ITEM_PADDING_TOP = 8;
+
 const MenuProps = {
   PaperProps: {
     style: {
@@ -28,12 +30,15 @@ function MultiSelect({
 }) {
   const [selectedOptions, setSelectedOptions] = React.useState(selected || []);
 
+  // console.log("options", options);
+  console.log("selectedOptions", selectedOptions);
+
   const isObject = typeof options[0] === "object";
 
   const handleChange = (event) => {
-    const {
-      target: { value }
-    } = event;
+    const { value } = event.target;
+
+    console.log("value", value);
 
     const temp = typeof value === "string" ? value.split(",") : value;
 

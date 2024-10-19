@@ -20,6 +20,7 @@ import {
   getPage,
   updatePage
 } from "../../../services/apiServices";
+import CustomMultiSelect from "../../../components/admin/common/CustomMultiSelect";
 
 function AddUpdatePage() {
   const { id } = useParams();
@@ -194,13 +195,17 @@ function AddUpdatePage() {
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          <MultiSelect
+          {/* <MultiSelect
             options={subCategories}
             formState={formState}
             setFormState={setFormState}
             label="Sub-Categories"
             fieldName="subCategories"
             selected={selectedSubCategories}
+          /> */}
+          <CustomMultiSelect
+            options={subCategories}
+            selectedOptions={selectedSubCategories}
           />
         </div>
         <Button type="submit" variant="contained" endIcon={<SendIcon />}>
