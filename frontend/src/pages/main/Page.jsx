@@ -10,8 +10,6 @@ function Page() {
   const { categorySlug } = useParams();
   const [page, setPage] = useState(null);
 
-  console.log(page);
-
   useEffect(() => {
     getPageBySlug(categorySlug)
       .then((data) => {
@@ -19,6 +17,8 @@ function Page() {
       })
       .catch((error) => {});
   }, [categorySlug]);
+
+  console.log("page", page);
 
   if (!page) return null;
 

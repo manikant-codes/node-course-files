@@ -195,17 +195,9 @@ function AddUpdatePage() {
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          {/* <MultiSelect
-            options={subCategories}
-            formState={formState}
-            setFormState={setFormState}
-            label="Sub-Categories"
-            fieldName="subCategories"
-            selected={selectedSubCategories}
-          /> */}
           <CustomMultiSelect
             options={subCategories}
-            selectedOptions={selectedSubCategories}
+            preSelected={selectedSubCategories.map((value) => value.id)}
           />
         </div>
         <Button type="submit" variant="contained" endIcon={<SendIcon />}>

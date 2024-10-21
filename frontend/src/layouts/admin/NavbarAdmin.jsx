@@ -46,26 +46,31 @@ function NavbarAdmin() {
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "right"
       }}
       id={menuId}
       keepMounted
       transformOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "right"
       }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem
-        onClick={() => {
-          navigate("/admin/dashboard");
-          handleMenuClose();
+        onClick={(e) => {
+          navigate("/");
+          handleMenuClose(e);
         }}
       >
-        Dashboard
+        Home
+      </MenuItem>
+      <MenuItem
+        onClick={(e) => {
+          handleMenuClose(e);
+        }}
+      >
+        Logout
       </MenuItem>
     </Menu>
   );
@@ -76,13 +81,13 @@ function NavbarAdmin() {
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "right"
       }}
       id={mobileMenuId}
       keepMounted
       transformOrigin={{
         vertical: "top",
-        horizontal: "right",
+        horizontal: "right"
       }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
