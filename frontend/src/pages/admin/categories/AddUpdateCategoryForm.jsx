@@ -8,8 +8,10 @@ import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import {
   addCategory,
   getCategory,
-  updateCategory,
+  updateCategory
 } from "../../../services/apiServices";
+import { clearToken } from "../../../helpers/authHelper";
+import { useDispatch } from "react-redux";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -20,7 +22,7 @@ const VisuallyHiddenInput = styled("input")({
   bottom: 0,
   left: 0,
   whiteSpace: "nowrap",
-  width: 1,
+  width: 1
 });
 
 function AddUpdateCategoryForm() {
@@ -32,11 +34,12 @@ function AddUpdateCategoryForm() {
       ? {
           name: "",
           slug: "",
-          image: null,
+          image: null
         }
       : null
   );
   const [imageURL, setImageURL] = useState("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isAdd) {
@@ -51,7 +54,7 @@ function AddUpdateCategoryForm() {
     setFormState({
       ...formState,
       name: e.target.value,
-      slug: e.target.value.toLowerCase().replaceAll(" ", "-"),
+      slug: e.target.value.toLowerCase().replaceAll(" ", "-")
     });
   }
 

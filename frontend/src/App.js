@@ -63,19 +63,30 @@ function App() {
               <Route path="signin" element={<SignIn />} />
             </Route>
 
-            <Route
-              path="/admin"
-              element={
-                <AuthGuardAdmin>
-                  <LayoutAdmin />
-                </AuthGuardAdmin>
-              }
-            >
-              <Route index element={<Dashboard />} />
-              <Route path="categories" element={<CategoriesList />} />
+            <Route path="/admin" element={<LayoutAdmin />}>
+              <Route
+                index
+                element={
+                  <AuthGuardAdmin>
+                    <Dashboard />
+                  </AuthGuardAdmin>
+                }
+              />
+              <Route
+                path="categories"
+                element={
+                  <AuthGuardAdmin>
+                    <CategoriesList />
+                  </AuthGuardAdmin>
+                }
+              />
               <Route
                 path="categories/:id"
-                element={<AddUpdateCategoryForm />}
+                element={
+                  <AuthGuardAdmin>
+                    <AddUpdateCategoryForm />
+                  </AuthGuardAdmin>
+                }
               />
               <Route path="subCategories" element={<SubCategoriesList />} />
               <Route

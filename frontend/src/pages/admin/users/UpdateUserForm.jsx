@@ -1,4 +1,5 @@
 import {
+  Button,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -11,6 +12,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getUser } from "../../../services/apiServices";
+import SendIcon from "@mui/icons-material/Send";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 
 function UpdateUserForm() {
@@ -95,6 +97,9 @@ function UpdateUserForm() {
               control={<Checkbox name="isVerified" onChange={handleChange} />}
               label="Is Verified"
             />
+            <Button type="submit" variant="contained" endIcon={<SendIcon />}>
+              Send
+            </Button>
           </form>
         </Paper>
       </Paper>

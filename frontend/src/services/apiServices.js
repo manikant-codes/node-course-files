@@ -110,6 +110,16 @@ export async function getPageBySlug(slug) {
 
 // Users
 
+export async function checkUser() {
+  const response = await fetch(`${BASE_URL}/users/checkUser`, {
+    headers: {
+      authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  });
+  const data = await response.json();
+  return data;
+}
+
 export async function signUp(body) {
   const response = await fetch(`${BASE_URL}/users/signup`, {
     method: "POST",

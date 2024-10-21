@@ -2,6 +2,8 @@ const User = require("../models/User");
 const { getBasicContollers } = require("../utils/controllersUtils");
 const userValidator = require("../validators/usersValidators");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const ExpiredToken = require("../models/ExpiredToken");
 
 const { getAllUsers, getUser, addUser, updateUser, deleteUser } =
   getBasicContollers("users", "user", User, "avatar", true, false);
@@ -24,6 +26,9 @@ const signUp = async (req, res) => {
       req.body.role = "admin";
     }
 
+    const salt = bcrypt.genSaltSync(10);
+    req.body.password = bcrypt.hashSync(req.body.password, salt);
+
     const user = await User.create(req.body);
 
     res.status(200).json({ success: true, msg: "Sign-up successful!" });
@@ -43,14 +48,22 @@ const signIn = async (req, res) => {
     }
 
     const user = await User.findOne({
-      email: req.body.email,
-      password: req.body.password
+      email: req.body.email
     });
 
     if (!user) {
       return res.status(400).json({
         success: false,
-        msg: "Invalid email or password!"
+        msg: "Invalid email!"
+      });
+    }
+
+    const isPasswordSame = bcrypt.compareSync(req.body.password, user.password);
+
+    if (!isPasswordSame) {
+      return res.status(400).json({
+        success: false,
+        msg: "Invalid password!"
       });
     }
 
@@ -64,7 +77,7 @@ const signIn = async (req, res) => {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1d"
+        expiresIn: "60s"
       }
     );
 
@@ -76,7 +89,36 @@ const signIn = async (req, res) => {
   }
 };
 
-const signOut = async (req, res) => {};
+const signOut = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId);
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        msg: "No such user exists!"
+      });
+    }
+
+    await ExpiredToken.create({ token: req.token });
+
+    res.status(200).json({ success: true, msg: "Sign-out successful!" });
+  } catch (error) {
+    res
+      .status(error.status || 500)
+      .json({ success: false, msg: error.message });
+  }
+};
+
+const checkUser = async (req, res) => {
+  try {
+    res.status(200).json({ success: true, msg: "Token is valid!" });
+  } catch (error) {
+    res
+      .status(error.status || 500)
+      .json({ success: false, msg: error.message });
+  }
+};
 
 module.exports = {
   signUp,
@@ -85,5 +127,6 @@ module.exports = {
   getAllUsers,
   getUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  checkUser
 };

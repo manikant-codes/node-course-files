@@ -1,20 +1,29 @@
 const jwt = require("jsonwebtoken");
+const ExpiredToken = require("../models/ExpiredToken");
 
-const authenticate = (req, res, next, isAdminOnly) => {
+const authenticate = async (req, res, next, isAdminOnly) => {
   try {
     let token = req.headers.authorization;
 
     if (!token || !token.startsWith("Bearer ")) {
-      return res
-        .status(401)
-        .json({ success: false, msg: "No token provided!" });
+      return res.status(401).json({
+        success: false,
+        invalidToken: true,
+        msg: "No token provided!"
+      });
     }
 
     token = token.split(" ")[1];
 
-    console.log("token", token);
-
     const user = jwt.verify(token, process.env.JWT_SECRET);
+
+    const alreadyExpired = await ExpiredToken.findOne({ token });
+
+    if (alreadyExpired) {
+      return res
+        .status(401)
+        .json({ success: false, invalidToken: true, msg: "Token expired!" });
+    }
 
     if (isAdminOnly && user.role !== "admin") {
       return res
@@ -23,11 +32,14 @@ const authenticate = (req, res, next, isAdminOnly) => {
     }
 
     req.user = user;
+    req.token = token;
 
     next();
   } catch (error) {
     console.log(error.message);
-    res.status(401).json({ success: false, msg: "Invalid token!" });
+    res
+      .status(401)
+      .json({ success: false, invalidToken: true, msg: error.message });
   }
 };
 

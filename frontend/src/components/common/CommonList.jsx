@@ -8,7 +8,7 @@ function CommonList({
   entity,
   fields,
   renderImage,
-  renderSubtitle,
+  renderSubtitle
 }) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
@@ -49,7 +49,7 @@ function CommonList({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "32px",
+          padding: "32px"
         }}
       >
         <CircularProgress />
@@ -60,7 +60,7 @@ function CommonList({
   return (
     <div>
       <ul className="flex flex-col [&>li]:border-b [&>li]:border-b-gray-300 [&>li:last-child]:border-b-0">
-        {data.map((item) => {
+        {data?.map((item) => {
           return (
             <CommonListItem
               key={item._id}
