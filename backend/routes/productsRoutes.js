@@ -4,11 +4,12 @@ const {
   getProduct,
   addProduct,
   updateProduct,
-  deleteProduct,
+  deleteProduct
 } = require("../controllers/productsControllers");
 const productsRouter = express.Router();
 
 productsRouter.get("/", getAllProducts);
+productsRouter.get("/slug/:slug", getAllProducts);
 productsRouter.get("/:id", getProduct);
 productsRouter.post("/", addProduct);
 productsRouter.patch("/:id", updateProduct);

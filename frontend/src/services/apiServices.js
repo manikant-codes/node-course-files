@@ -102,8 +102,24 @@ async function deleteSubCategory(id) {
 }
 
 // Products
-async function getAllProducts() {
-  const response = await fetch(`${process.env.REACT_APP_BASE_URL}/products`);
+async function getAllProducts(filters = {}) {
+  let url = `${process.env.REACT_APP_BASE_URL}/products?`;
+
+  let temp = [];
+
+  if (filters.category) {
+    temp.push(`category=${filters.category}`);
+  }
+
+  if (filters.subCategory) {
+    temp.push(`subCategory=${filters.subCategory}`);
+  }
+
+  temp = temp.join("&");
+
+  url += temp;
+
+  const response = await fetch(url);
   const data = await response.json();
   return data;
 }
@@ -111,6 +127,14 @@ async function getAllProducts() {
 async function getProduct(id) {
   const response = await fetch(
     `${process.env.REACT_APP_BASE_URL}/products/${id}`
+  );
+  const data = await response.json();
+  return data;
+}
+
+export async function getProductBySlug(slug) {
+  const response = await fetch(
+    `${process.env.REACT_APP_BASE_URL}/products/${slug}`
   );
   const data = await response.json();
   return data;

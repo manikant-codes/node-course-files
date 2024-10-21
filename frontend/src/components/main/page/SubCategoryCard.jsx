@@ -1,8 +1,19 @@
 import React from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 function SubCategoryCard({ subCategory }) {
+  const navigate = useNavigate();
+  const { categorySlug } = useParams();
+
+  function goToListPage() {
+    navigate(`/page/${categorySlug}/${subCategory.slug}`);
+  }
+
   return (
-    <div className="flex flex-col gap-2 border rounded-lg overflow-hidden cursor-pointer">
+    <div
+      onClick={goToListPage}
+      className="flex flex-col gap-2 border rounded-lg overflow-hidden cursor-pointer"
+    >
       <div className="h-[250px]">
         <img
           src={subCategory.image}

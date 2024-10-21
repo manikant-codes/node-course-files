@@ -3,12 +3,35 @@ const {
   addFile,
   deleteMultipleFiles
 } = require("../helpers/fileHelpers");
+const Category = require("../models/Category");
 const Product = require("../models/Product");
+const SubCategory = require("../models/SubCategory");
 const { productValidator } = require("../validators/productsValidator");
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate(["category", "subCategory"]);
+    const filters = { category: 123, subCategory: 465 };
+
+    if (req.query.category) {
+      const category = await Category.findOne({ slug: req.query.category });
+      if (category) {
+        filters.category = category._id;
+      }
+    }
+
+    if (req.query.subCategory) {
+      const subCategory = await SubCategory.findOne({
+        slug: req.query.subCategory
+      });
+      if (subCategory) {
+        filters.subCategory = subCategory._id;
+      }
+    }
+
+    const products = await Product.find(filters).populate([
+      "category",
+      "subCategory"
+    ]);
     res.status(200).json({ success: true, data: products });
   } catch (error) {
     res
@@ -22,6 +45,26 @@ const getProduct = async (req, res) => {
     const { id } = req.params;
 
     const product = await Product.findById(id);
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "No such product found!" });
+    }
+
+    res.status(200).json({ success: true, data: product });
+  } catch (error) {
+    res
+      .status(error.status || 500)
+      .json({ success: false, msg: error.message });
+  }
+};
+
+const getProductBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const product = await Product.findOne({ slug });
 
     if (!product) {
       return res
@@ -130,6 +173,7 @@ const deleteProduct = async (req, res) => {
 
 module.exports = {
   getAllProducts,
+  getProductBySlug,
   getProduct,
   addProduct,
   updateProduct,
