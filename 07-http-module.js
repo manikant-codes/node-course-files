@@ -21,6 +21,40 @@ const server = http.createServer(function (req, res) {
       res.write(data);
       res.end();
     });
+  } else if (req.url === "/css/index.css") {
+    res.writeHead(200, { "Content-Type": "text/css" });
+    const readStream = fs.createReadStream("./pages/css/index.css", {
+      highWaterMark: 1024,
+      encoding: "utf-8"
+    });
+
+    let data = "";
+
+    readStream.on("data", function (chunk) {
+      data += chunk;
+    });
+
+    readStream.on("end", function () {
+      res.write(data);
+      res.end();
+    });
+  } else if (req.url === "/js/index.js") {
+    res.writeHead(200, { "Content-Type": "text/javascript" });
+    const readStream = fs.createReadStream("./pages/js/index.js", {
+      highWaterMark: 1024,
+      encoding: "utf-8"
+    });
+
+    let data = "";
+
+    readStream.on("data", function (chunk) {
+      data += chunk;
+    });
+
+    readStream.on("end", function () {
+      res.write(data);
+      res.end();
+    });
   } else if (req.url === "/about") {
     res.writeHead(200, { "Content-Type": "text/html" });
     res.write("<h1>About Page</h1>");
@@ -35,5 +69,7 @@ const server = http.createServer(function (req, res) {
     res.end();
   }
 });
+
+
 
 server.listen(5000);
