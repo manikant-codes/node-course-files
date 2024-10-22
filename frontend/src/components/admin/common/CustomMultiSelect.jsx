@@ -1,16 +1,13 @@
-import { Checkbox, FormControlLabel } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-function CustomMultiSelect({ options, preSelected = [] }) {
+function CustomMultiSelect({
+  options,
+  preSelected = [],
+  formState,
+  setFormState,
+  field
+}) {
   const [selectedOptions, setSelectedOptions] = useState(preSelected);
-
-  useEffect(() => {
-    setSelectedOptions(preSelected);
-  }, [preSelected]);
-
-  console.log("preSelected", preSelected);
-  console.log("selectedOptions", selectedOptions);
-  console.log("options", options);
 
   const handleToggle = (id) => {
     const newSelection = selectedOptions.includes(id)
@@ -18,7 +15,10 @@ function CustomMultiSelect({ options, preSelected = [] }) {
       : [...selectedOptions, id];
 
     setSelectedOptions(newSelection);
+    setFormState({ ...formState, [field]: newSelection });
   };
+
+  console.log("selectedOptions", selectedOptions);
 
   if (!preSelected) return null;
 

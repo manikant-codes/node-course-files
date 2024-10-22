@@ -10,8 +10,8 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import CustomMultiSelect from "../../../components/admin/common/CustomMultiSelect";
 import MultipleFileUpload from "../../../components/admin/common/MultipleFileUpload";
-import MultiSelect from "../../../components/admin/common/MultiSelect";
 import TitleAdmin from "../../../components/admin/common/TitleAdmin";
 import {
   addPage,
@@ -20,7 +20,6 @@ import {
   getPage,
   updatePage
 } from "../../../services/apiServices";
-import CustomMultiSelect from "../../../components/admin/common/CustomMultiSelect";
 
 function AddUpdatePage() {
   const { id } = useParams();
@@ -39,12 +38,8 @@ function AddUpdatePage() {
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
-  // Fix This
   const [selectedSubCategories, setSelectedSubCategories] = useState(null);
   const navigate = useNavigate();
-
-  console.log("formState", formState);
-  console.log("selectedSubCategories", selectedSubCategories);
 
   useEffect(() => {
     if (!isAdd) {
@@ -96,8 +91,8 @@ function AddUpdatePage() {
         [e.target.name]: e.target.value,
         slug: e.target.value.toLowerCase().replaceAll(" ", "-")
       });
+      setSelectedCategoryId("");
     } else {
-      // May need to change this.
       setFormState({
         ...formState,
         [e.target.name]: e.target.value
@@ -167,12 +162,9 @@ function AddUpdatePage() {
               value={formState.name}
               onChange={(e) => {
                 handleChange(e);
-                // console.log("categories", categories);
-                // console.log("e.target.value", e.target.value);
                 const foundCategory = categories.find((category) => {
                   return category.name === e.target.value;
                 });
-                // console.log("foundCategory", foundCategory);
                 setSelectedCategoryId(foundCategory.id);
               }}
             >
@@ -198,6 +190,9 @@ function AddUpdatePage() {
           <CustomMultiSelect
             options={subCategories}
             preSelected={selectedSubCategories.map((value) => value.id)}
+            formState={formState}
+            setFormState={setFormState}
+            field={"subCategories"}
           />
         </div>
         <Button type="submit" variant="contained" endIcon={<SendIcon />}>
