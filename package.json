@@ -1,13 +1,15 @@
 {
-  "name": "my-first-node-project",
+  "name": "express-basics",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node --watch index.js"
   },
-  "type": "commonjs",
   "keywords": [],
-  "author": "",
+  "author": "Manikant Jha",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
 }
