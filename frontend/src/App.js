@@ -27,6 +27,7 @@ import SignUp from "./pages/main/SignUp";
 import AuthGuard from "./guards/AuthGuard";
 import AuthGuardAdmin from "./guards/AuthGuardAdmin";
 import UpdateUserForm from "./pages/admin/users/UpdateUserForm";
+import VerifyEmail from "./pages/main/VerifyEmail";
 
 function App() {
   const theme = createTheme({
@@ -61,6 +62,7 @@ function App() {
               />
               <Route path="signup" element={<SignUp />} />
               <Route path="signin" element={<SignIn />} />
+              <Route path="verifyEmail" element={<VerifyEmail />} />
             </Route>
 
             <Route path="/admin" element={<LayoutAdmin />}>

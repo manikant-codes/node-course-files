@@ -1,6 +1,7 @@
 1. Make home page.
 2. Cart local storage.
-3. Authentication.
-4. Payment.
-5. Reviews.
+3. Authentication. (Email Verification Pending)
+4. User Account Pages (Orders, Profile)
+4. Order and Payment. ()
 6. Wishlish.
+5. Reviews.

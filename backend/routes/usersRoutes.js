@@ -7,7 +7,8 @@ const {
   signUp,
   signIn,
   signOut,
-  checkUser
+  checkUser,
+  verifyEmail
 } = require("../controllers/usersControllers");
 const {
   authenticateUser,
@@ -19,6 +20,7 @@ const usersRouter = express.Router();
 usersRouter.post("/signin", signIn);
 usersRouter.post("/signup", signUp);
 usersRouter.get("/signout", authenticateUser, signOut);
+usersRouter.get("/verifyEmail", verifyEmail);
 usersRouter.get("/checkUser", authenticateUser, checkUser);
 usersRouter.get("/", authenticateAdmin, getAllUsers);
 usersRouter.get("/:id", authenticateUser, getUser);

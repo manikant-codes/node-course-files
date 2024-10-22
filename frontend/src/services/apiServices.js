@@ -120,6 +120,14 @@ export async function checkUser() {
   return data;
 }
 
+export async function verifyEmail(userId, token) {
+  const response = await fetch(
+    `${BASE_URL}/users/verifyEmail?token=${token}&userId=${userId}`
+  );
+  const data = await response.json();
+  return data;
+}
+
 export async function signUp(body) {
   const response = await fetch(`${BASE_URL}/users/signup`, {
     method: "POST",
