@@ -2,24 +2,32 @@ const express = require("express");
 const path = require("path");
 const server = express();
 
-server.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "pages", "index.html"));
-});
+server.use(express.static("pages"));
 
-server.get("/css/index.css", (req, res) => {
-  res.sendFile(path.join(__dirname, "pages", "css", "index.css"));
-});
-
-server.get("/js/index.js", (req, res) => {
-  res.sendFile(path.join(__dirname, "pages", "js", "index.js"));
-});
+// server.get("/", (req, res) => {
+// res.status(200);
+// res.send("<h1>Hello World!</h1>");
+// OR;
+// res.status(200).send("<h1>Hello World!</h1>");
+// res.status(200);
+// res.sendFile(path.join(__dirname, "pages", "index.html"));
+// OR;
+// res.status(200).sendFile(path.join(__dirname, "pages", "index.html"));
+// res.status(200);
+// res.json({ name: "Ram", roll: 10 });
+// OR;
+// res.status(200).json({ name: "Ram", roll: 10 });
+// res.sendStatus(500);
+// res.download("./info.txt");
+// res.redirect("/about");
+// });
 
 server.get("/about", (req, res) => {
-  res.send("<h1>About Page</h1>");
+  res.sendFile(path.join(__dirname, "pages", "about.html"));
 });
 
 server.get("/contact", (req, res) => {
-  res.send("<h1>Contact Page</h1>");
+  res.sendFile(path.join(__dirname, "pages", "contact.html"));
 });
 
 server.all("*", (req, res) => {
