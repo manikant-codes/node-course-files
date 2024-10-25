@@ -1,8 +1,8 @@
-const express = require("express");
-const path = require("path");
-const server = express();
+// const express = require("express");
+// const path = require("path");
+// const server = express();
 
-server.use(express.static("pages"));
+// server.use(express.static("pages"));
 
 // server.get("/", (req, res) => {
 // res.status(200);
@@ -22,18 +22,18 @@ server.use(express.static("pages"));
 // res.redirect("/about");
 // });
 
-server.get("/about", (req, res) => {
-  res.sendFile(path.join(__dirname, "pages", "about.html"));
-});
+// server.get("/about", (req, res) => {
+//   res.sendFile(path.join(__dirname, "pages", "about.html"));
+// });
 
-server.get("/contact", (req, res) => {
-  res.sendFile(path.join(__dirname, "pages", "contact.html"));
-});
+// server.get("/contact", (req, res) => {
+//   res.sendFile(path.join(__dirname, "pages", "contact.html"));
+// });
 
-server.all("*", (req, res) => {
-  res.send("<h1>Page Not Found</h1>");
-});
+// server.all("*", (req, res) => {
+//   res.send("<h1>Page Not Found</h1>");
+// });
 
-server.listen(5000, () => {
-  console.log("Server is listening on port 5000!");
-});
+// server.listen(5000, () => {
+//   console.log("Server is listening on port 5000!");
+// });
