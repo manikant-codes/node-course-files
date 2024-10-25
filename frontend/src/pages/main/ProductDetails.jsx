@@ -1,44 +1,50 @@
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
-import React, { useEffect, useState } from "react";
+import Button from "@mui/material/Button";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getProductBySlug } from "../../services/apiServices";
-
-import { Button } from "@mui/material";
+import Loading from "../../components/common/Loading";
+import MessageBox from "../../components/common/MessageBox";
 import ColorSelect from "../../components/main/common/ColorSelect";
 import DiscountedPrice from "../../components/main/common/DiscountedPrice";
 import Rating from "../../components/main/common/Rating";
 import SizeSelect from "../../components/main/common/SizeSelect";
 import TrendingProducts from "../../components/main/page/TrendingProducts";
-import { useDispatch } from "react-redux";
+import useFetch from "../../hooks/useFetch";
 import { addToCart } from "../../redux/slices/cartSlice";
+import { getProductBySlug } from "../../services/apiServices";
 
 function ProductDetails() {
   const { productSlug } = useParams();
-  const [product, setProduct] = useState(null);
   const [size, setSize] = useState("");
   const [color, setColor] = useState("");
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    getProductBySlug(productSlug)
-      .then((data) => {
-        setProduct(data.data);
-      })
-      .catch((error) => {
-        console.log("Error: ", error);
-      });
+  const {
+    loading,
+    data: product,
+    error
+  } = useFetch(() => {
+    return getProductBySlug(productSlug);
   }, [productSlug]);
 
   function handleAddToCart() {
     dispatch(addToCart(product));
   }
 
-  if (!product) return null;
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <MessageBox />;
+  }
 
   return (
-    <div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 p-8 gap-4 mb-12">
+    <div className="p-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12">
+        {/* Product Images */}
         <div className="grid grid-cols-2 gap-2">
           {product.images.map((image) => {
             return (
@@ -52,6 +58,7 @@ function ProductDetails() {
             );
           })}
         </div>
+        {/* Product Description */}
         <div className="flex flex-col gap-4">
           <h2 className="text-3xl font-semibold">{product.name}</h2>
           <Rating product={product} />

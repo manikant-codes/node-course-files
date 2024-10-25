@@ -12,15 +12,15 @@ const pageSchema = new mongoose.Schema({
         }
         return false;
       },
-      message: "At least one image is required!",
-    },
+      message: "At least one image is required!"
+    }
   },
   title: {
     type: String,
     required: true,
-    minLength: 2,
+    minLength: 2
   },
-  subCategories: { type: [mongoose.Types.ObjectId], ref: "SubCategory" },
+  subCategories: { type: [mongoose.Types.ObjectId], ref: "SubCategory" }
 });
 
 const Page = mongoose.model("Page", pageSchema);

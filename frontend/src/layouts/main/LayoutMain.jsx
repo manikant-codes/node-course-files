@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Cart from "../../components/main/cart/Cart";
+import { minHeight } from "../../consts/consts";
 import FooterMain from "./FooterMain";
 import NavbarMain from "./NavbarMain";
 
@@ -14,7 +15,7 @@ function LayoutMain() {
   return (
     <div>
       <NavbarMain toggleCart={toggleCart} />
-      <div className="min-h-[calc(100vh_-_122px)]">
+      <div className={`${minHeight}`}>
         <Cart open={isOpen} toggleCart={toggleCart} />
         <Outlet />
       </div>

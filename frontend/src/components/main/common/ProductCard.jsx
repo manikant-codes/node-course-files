@@ -16,13 +16,18 @@ function ProductCard({ product }) {
   }
 
   return (
-    <Card variant="outlined" sx={{ maxWidth: 345 }} onClick={goToDetailsPage}>
+    <Card
+      variant="outlined"
+      sx={{ maxWidth: 345 }}
+      onClick={goToDetailsPage}
+      className="cursor-pointer"
+    >
       <CardMedia
         sx={{ height: 240 }}
         image={product.images[0]}
         title={product.name}
       />
-      <CardContent className="">
+      <CardContent>
         <Typography gutterBottom variant="h5" component="p">
           {product.name}
         </Typography>

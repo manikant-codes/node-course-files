@@ -1,63 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick-theme.css";
-import "slick-carousel/slick/slick.css";
+import CommonSlider from "../../components/common/CommonSlider";
+import Loading from "../../components/common/Loading";
+import MessageBox from "../../components/common/MessageBox";
 import SubCategoriesRow from "../../components/main/page/SubCategoriesRow";
 import TrendingProducts from "../../components/main/page/TrendingProducts";
+import useFetch from "../../hooks/useFetch";
 import { getPageBySlug } from "../../services/apiServices";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import { IconButton } from "@mui/material";
-
-function NextArrow({ onClick }) {
-  return (
-    <IconButton
-      onClick={onClick}
-      className="!absolute !bg-white z-10 top-[50%] right-[20px] translate-y-[-50%]"
-    >
-      <ArrowForwardIosIcon />
-    </IconButton>
-  );
-}
-
-function PrevArrow({ onClick }) {
-  return (
-    <IconButton
-      onClick={onClick}
-      className="!absolute !bg-white top-[50%] left-[20px] translate-y-[-50%] z-10"
-    >
-      <ArrowBackIosNewIcon />
-    </IconButton>
-  );
-}
 
 function Page() {
   const { categorySlug } = useParams();
-  const [page, setPage] = useState(null);
 
-  useEffect(() => {
-    getPageBySlug(categorySlug).then((data) => {
-      setPage(data.data);
-    });
+  const {
+    loading,
+    data: page,
+    error
+  } = useFetch(() => {
+    return getPageBySlug(categorySlug);
   }, [categorySlug]);
 
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />
-  };
+  if (loading) {
+    return <Loading isFullPage />;
+  }
 
-  if (!page) return null;
+  if (error) {
+    return <MessageBox />;
+  }
 
   return (
-    <div>
-      <div className="mb-14">
-        <Slider {...settings} className="relative">
+    <>
+      <div className="mb-8">
+        <CommonSlider>
           {page.images.map((value) => {
             return (
               <div className="h-[500px] overflow-hidden">
@@ -69,13 +42,13 @@ function Page() {
               </div>
             );
           })}
-        </Slider>
+        </CommonSlider>
       </div>
-      <div className="flex flex-col gap-12 p-8">
+      <div className="flex flex-col gap-8 p-8">
         <SubCategoriesRow page={page} />
         <TrendingProducts />
       </div>
-    </div>
+    </>
   );
 }
 
