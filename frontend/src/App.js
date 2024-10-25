@@ -28,6 +28,7 @@ import AuthGuard from "./guards/AuthGuard";
 import AuthGuardAdmin from "./guards/AuthGuardAdmin";
 import UpdateUserForm from "./pages/admin/users/UpdateUserForm";
 import VerifyEmail from "./pages/main/VerifyEmail";
+import Checkout from "./pages/main/Checkout";
 
 function App() {
   const theme = createTheme({
@@ -63,6 +64,14 @@ function App() {
               <Route path="signup" element={<SignUp />} />
               <Route path="signin" element={<SignIn />} />
               <Route path="verifyEmail" element={<VerifyEmail />} />
+              <Route
+                path="checkout"
+                element={
+                  <AuthGuard>
+                    <Checkout />
+                  </AuthGuard>
+                }
+              />
             </Route>
 
             <Route path="/admin" element={<LayoutAdmin />}>

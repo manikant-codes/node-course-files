@@ -1,10 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getDiscountedPrice } from "../../helpers/priceHelper";
+import { getDiscountedPrice, getTax } from "../../helpers/priceHelper";
 
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
     cartItems: [],
+    subTotal: 0,
+    tax: 0,
+    shippingFee: 0,
     total: 0
   },
   reducers: {
@@ -25,13 +28,19 @@ const cartSlice = createSlice({
         state.cartItems.push(product);
       }
 
-      state.total += getDiscountedPrice(
+      const discountedPrice = getDiscountedPrice(
         action.payload.price,
         action.payload.discountPercentage
       );
+      const tax = getTax(action.payload.price, action.payload.taxPercentage);
+
+      state.subTotal += discountedPrice;
+      state.tax += tax;
+      state.shippingFee += action.payload.shippingFee;
+      state.total += discountedPrice + tax + action.payload.shippingFee;
     },
     removeFromCart: (state, action) => {
-      state.total -= getDiscountedPrice(
+      state.subTotal -= getDiscountedPrice(
         state.cartItems[action.payload].price,
         state.cartItems[action.payload].discountPercentage
       );
@@ -41,7 +50,7 @@ const cartSlice = createSlice({
     increaseQty: (state, action) => {
       if (state.cartItems[action.payload].qty < 10) {
         state.cartItems[action.payload].qty++;
-        state.total += getDiscountedPrice(
+        state.subTotal += getDiscountedPrice(
           state.cartItems[action.payload].price,
           state.cartItems[action.payload].discountPercentage
         );
@@ -50,7 +59,7 @@ const cartSlice = createSlice({
     decreaseQty: (state, action) => {
       if (state.cartItems[action.payload].qty > 1) {
         state.cartItems[action.payload].qty--;
-        state.total -= getDiscountedPrice(
+        state.subTotal -= getDiscountedPrice(
           state.cartItems[action.payload].price,
           state.cartItems[action.payload].discountPercentage
         );

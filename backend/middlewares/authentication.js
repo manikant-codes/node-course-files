@@ -3,6 +3,8 @@ const ExpiredToken = require("../models/ExpiredToken");
 
 const authenticate = async (req, res, next, isAdminOnly) => {
   try {
+    console.log("req req body", req.body);
+
     let token = req.headers.authorization;
 
     if (!token || !token.startsWith("Bearer ")) {

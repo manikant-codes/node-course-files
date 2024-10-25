@@ -8,11 +8,13 @@ const subCategoriesRouter = require("./routes/subCategoriesRoutes");
 const productsRouter = require("./routes/productsRoutes");
 const pagesRouter = require("./routes/pagesRoutes");
 const usersRouter = require("./routes/usersRoutes");
+const ordersRouter = require("./routes/ordersRoutes");
 const server = express();
 
 server.use(cors());
 server.use(express.json());
 server.use(fileUpload());
+
 server.use("/uploads", express.static("uploads"));
 
 server.use("/categories", categoriesRouter);
@@ -20,6 +22,7 @@ server.use("/subCategories", subCategoriesRouter);
 server.use("/products", productsRouter);
 server.use("/pages", pagesRouter);
 server.use("/users", usersRouter);
+server.use("/orders", ordersRouter);
 
 const start = async () => {
   try {

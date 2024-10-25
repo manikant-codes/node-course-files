@@ -1,6 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { IconButton, Typography, useTheme } from "@mui/material";
+import { Button, IconButton, Typography, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
@@ -12,6 +12,7 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import CartItem from "./CartItem";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 280;
 
@@ -73,7 +74,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function Cart({ open, toggleCart }) {
   const theme = useTheme();
 
-  const { cartItems, total } = useSelector((store) => {
+  const { cartItems, subTotal } = useSelector((store) => {
     return store.cart;
   });
 
@@ -102,17 +103,26 @@ export default function Cart({ open, toggleCart }) {
               return <CartItem key={index} cartItem={cartItem} index={index} />;
             })}
             <Divider />
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemText
-                  primary={
-                    <span className="inline-flex w-full items-center justify-between">
-                      <span>Total</span>
-                      <span>₹{total}</span>
-                    </span>
-                  }
-                />
-              </ListItemButton>
+            <ListItem>
+              <ListItemText
+                primary={
+                  <span className="inline-flex w-full items-center justify-between">
+                    <span>Sub-Total</span>
+                    <span>₹{subTotal}</span>
+                  </span>
+                }
+              />
+            </ListItem>
+            <ListItem>
+              <Button
+                disabled={!cartItems.length}
+                variant="contained"
+                className="w-full"
+                LinkComponent={Link}
+                to="/checkout"
+              >
+                Checkout
+              </Button>
             </ListItem>
           </List>
         </Box>
