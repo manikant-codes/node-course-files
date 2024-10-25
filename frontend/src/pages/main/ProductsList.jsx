@@ -23,7 +23,7 @@ function ProductsList() {
   }, []);
 
   return (
-    <div className="grid grid-cols-[250px_1fr] gap-4 relative">
+    <div className="grid grid-cols-[250px_1fr] gap-4 p-8 relative">
       <div>
         <div className="sticky top-0 left-0">
           <h2 className="text-lg font-bold mb-4">Filters</h2>

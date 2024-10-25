@@ -4,8 +4,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { COMPANY_NAME } from "../../consts/consts";
@@ -14,6 +13,7 @@ import Extras from "./navbarMain/Extras";
 import MobileMenu from "./navbarMain/MobileMenu";
 import ProfileMenu from "./navbarMain/ProfileMenu";
 import Search from "./navbarMain/Search";
+import { toast } from "react-toastify";
 
 function NavbarMain({ toggleCart }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -23,13 +23,17 @@ function NavbarMain({ toggleCart }) {
     return store.user.user;
   });
 
-  React.useEffect(() => {
-    getAllPages().then((data) => {
-      const temp = data.data?.map((value) => {
-        return { name: value.name, link: `category/${value.slug}` };
+  useEffect(() => {
+    getAllPages()
+      .then((data) => {
+        const namesAndSlugs = data.data?.map((value) => {
+          return { name: value.name, link: `category/${value.slug}` };
+        });
+        setPages(namesAndSlugs);
+      })
+      .catch((error) => {
+        toast("Failed to load pages!", { type: "error" });
       });
-      setPages(temp);
-    });
   }, []);
 
   const openMobileMenu = (event) => {

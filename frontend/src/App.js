@@ -29,6 +29,9 @@ import AuthGuardAdmin from "./guards/AuthGuardAdmin";
 import UpdateUserForm from "./pages/admin/users/UpdateUserForm";
 import VerifyEmail from "./pages/main/VerifyEmail";
 import Checkout from "./pages/main/Checkout";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import RequestVerificaion from "./pages/main/RequestVerificaion";
 
 function App() {
   const theme = createTheme({
@@ -64,6 +67,10 @@ function App() {
               <Route path="signup" element={<SignUp />} />
               <Route path="signin" element={<SignIn />} />
               <Route path="verifyEmail" element={<VerifyEmail />} />
+              <Route
+                path="requestVerification"
+                element={<RequestVerificaion />}
+              />
               <Route
                 path="checkout"
                 element={
@@ -114,6 +121,7 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+        <ToastContainer />
       </Provider>
     </ThemeProvider>
   );

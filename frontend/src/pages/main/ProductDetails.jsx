@@ -38,7 +38,7 @@ function ProductDetails() {
 
   return (
     <div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 p-8 gap-4 mb-12">
         <div className="grid grid-cols-2 gap-2">
           {product.images.map((image) => {
             return (

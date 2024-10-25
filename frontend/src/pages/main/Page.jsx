@@ -6,6 +6,31 @@ import "slick-carousel/slick/slick.css";
 import SubCategoriesRow from "../../components/main/page/SubCategoriesRow";
 import TrendingProducts from "../../components/main/page/TrendingProducts";
 import { getPageBySlug } from "../../services/apiServices";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import { IconButton } from "@mui/material";
+
+function NextArrow({ onClick }) {
+  return (
+    <IconButton
+      onClick={onClick}
+      className="!absolute !bg-white z-10 top-[50%] right-[20px] translate-y-[-50%]"
+    >
+      <ArrowForwardIosIcon />
+    </IconButton>
+  );
+}
+
+function PrevArrow({ onClick }) {
+  return (
+    <IconButton
+      onClick={onClick}
+      className="!absolute !bg-white top-[50%] left-[20px] translate-y-[-50%] z-10"
+    >
+      <ArrowBackIosNewIcon />
+    </IconButton>
+  );
+}
 
 function Page() {
   const { categorySlug } = useParams();
@@ -22,27 +47,31 @@ function Page() {
     infinite: true,
     speed: 500,
     slidesToShow: 1,
-    slidesToScroll: 1
+    slidesToScroll: 1,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />
   };
 
   if (!page) return null;
 
   return (
     <div>
-      <Slider {...settings} className="mb-14">
-        {page.images.map((value) => {
-          return (
-            <div className="h-[500px] overflow-hidden rounded-2xl">
-              <img
-                className="object-cover h-full w-full rounded-2xl"
-                src={value}
-                alt=""
-              />
-            </div>
-          );
-        })}
-      </Slider>
-      <div className="flex flex-col gap-12">
+      <div className="mb-14">
+        <Slider {...settings} className="relative">
+          {page.images.map((value) => {
+            return (
+              <div className="h-[500px] overflow-hidden">
+                <img
+                  className="h-full w-full object-cover"
+                  src={value}
+                  alt={page.name}
+                />
+              </div>
+            );
+          })}
+        </Slider>
+      </div>
+      <div className="flex flex-col gap-12 p-8">
         <SubCategoriesRow page={page} />
         <TrendingProducts />
       </div>

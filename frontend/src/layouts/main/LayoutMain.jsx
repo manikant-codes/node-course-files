@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import NavbarMain from "./NavbarMain";
-import FooterMain from "./FooterMain";
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Cart from "../../components/main/cart/Cart";
-import { Toolbar } from "@mui/material";
+import FooterMain from "./FooterMain";
+import NavbarMain from "./NavbarMain";
 
 function LayoutMain() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,8 +14,7 @@ function LayoutMain() {
   return (
     <div>
       <NavbarMain toggleCart={toggleCart} />
-      <Toolbar />
-      <div className="p-8">
+      <div className="min-h-[calc(100vh_-_122px)]">
         <Cart open={isOpen} toggleCart={toggleCart} />
         <Outlet />
       </div>

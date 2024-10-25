@@ -2,6 +2,7 @@ import { Button, Paper, TextField } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../../services/apiServices";
+import { toast } from "react-toastify";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -12,17 +13,23 @@ function SignUp() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const objFormData = Object.fromEntries(
-      Array.from(formData.entries(e.target))
-    );
 
-    if (objFormData.password !== objFormData.confirmPassword) {
+    // Check kar rahe hai ke password aur confirmPassword same hai ya nahi.
+    if (e.target["password"].value !== e.target["confirmPassword"].value) {
       alert("Passwords must match!");
       return;
     }
 
-    await signUp(formData);
+    const formData = new FormData(e.target);
+
+    const result = await signUp(formData);
+
+    if (result.success) {
+      toast("Signed-up successfully!", { type: "success" });
+      navigate("/requestVerification");
+    } else {
+      toast(result.msg, { type: "error" });
+    }
   }
 
   return (
