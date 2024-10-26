@@ -9,6 +9,7 @@ const productsRouter = require("./routes/productsRoutes");
 const pagesRouter = require("./routes/pagesRoutes");
 const usersRouter = require("./routes/usersRoutes");
 const ordersRouter = require("./routes/ordersRoutes");
+const filtersRouter = require("./routes/filtersRoutes");
 const server = express();
 
 server.use(cors());
@@ -23,6 +24,7 @@ server.use("/products", productsRouter);
 server.use("/pages", pagesRouter);
 server.use("/users", usersRouter);
 server.use("/orders", ordersRouter);
+server.use("/filters", filtersRouter);
 
 const start = async () => {
   try {

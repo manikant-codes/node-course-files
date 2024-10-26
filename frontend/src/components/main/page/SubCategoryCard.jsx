@@ -1,6 +1,5 @@
 import Paper from "@mui/material/Paper";
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function SubCategoryCard({ subCategory }) {
   const navigate = useNavigate();
@@ -13,7 +12,7 @@ function SubCategoryCard({ subCategory }) {
     <Paper
       onClick={goToListPage}
       variant="outlined"
-      className="!rounded-lg overflow-hidden cursor-pointer"
+      className="overflow-hidden cursor-pointer"
     >
       <div className="h-[250px] overflow-hidden">
         <img
@@ -23,7 +22,7 @@ function SubCategoryCard({ subCategory }) {
         />
       </div>
       <div className="p-2">
-        <h3>{subCategory.name}</h3>
+        <h3 className="font-semibold">{subCategory.name}</h3>
       </div>
     </Paper>
   );

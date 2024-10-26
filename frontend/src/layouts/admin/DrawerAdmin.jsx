@@ -1,21 +1,21 @@
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import CategoryIcon from "@mui/icons-material/Category";
-import NoteAddIcon from "@mui/icons-material/NoteAdd";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import GroupIcon from "@mui/icons-material/Group";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
+import NoteAddIcon from "@mui/icons-material/NoteAdd";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-import { Toolbar } from "@mui/material";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
-import { useTheme } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
+import Toolbar from "@mui/material/Toolbar";
 import * as React from "react";
 import { NavLink } from "react-router-dom";
 
@@ -26,24 +26,24 @@ const openedMixin = (theme) => ({
   overflowX: "hidden",
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
+    duration: theme.transitions.duration.enteringScreen
+  })
 });
 
 const closedMixin = (theme) => ({
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
+    duration: theme.transitions.duration.leavingScreen
   }),
   overflowX: "hidden",
   width: `calc(${theme.spacing(7)} + 1px)`,
   [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
+    width: `calc(${theme.spacing(8)} + 1px)`
+  }
 });
 
 const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop,
+  shouldForwardProp: (prop) => prop
 })(({ theme }) => ({
   width: drawerWidth,
   flexShrink: 0,
@@ -54,17 +54,17 @@ const Drawer = styled(MuiDrawer, {
       props: ({ open }) => open,
       style: {
         ...openedMixin(theme),
-        "& .MuiDrawer-paper": openedMixin(theme),
-      },
+        "& .MuiDrawer-paper": openedMixin(theme)
+      }
     },
     {
       props: ({ open }) => !open,
       style: {
         ...closedMixin(theme),
-        "& .MuiDrawer-paper": closedMixin(theme),
-      },
-    },
-  ],
+        "& .MuiDrawer-paper": closedMixin(theme)
+      }
+    }
+  ]
 }));
 
 const links = [
@@ -73,19 +73,24 @@ const links = [
   {
     icon: <CategoryIcon />,
     text: "Subcategories",
-    to: "/admin/subCategories",
+    to: "/admin/subCategories"
+  },
+  {
+    icon: <FilterListIcon />,
+    text: "Filters",
+    to: "/admin/filters"
   },
   { icon: <Inventory2Icon />, text: "Products", to: "/admin/products" },
   { icon: <NoteAddIcon />, text: "Pages", to: "/admin/pages" },
   { icon: <GroupIcon />, text: "Users", to: "/admin/users" },
-  { icon: <ReceiptLongIcon />, text: "Orders", to: "/admin/orders" },
+  { icon: <ReceiptLongIcon />, text: "Orders", to: "/admin/orders" }
 ];
 const extraLinks = [
   {
     icon: <PowerSettingsNewIcon />,
     text: "Logout",
-    to: "",
-  },
+    to: ""
+  }
 ];
 
 export default function DrawerAdmin({ open, toggleDrawer }) {
@@ -106,7 +111,7 @@ export default function DrawerAdmin({ open, toggleDrawer }) {
                 style={({ isActive }) => {
                   return isActive
                     ? {
-                        color: theme.palette.primary.main,
+                        color: theme.palette.primary.main
                       }
                     : {};
                 }}

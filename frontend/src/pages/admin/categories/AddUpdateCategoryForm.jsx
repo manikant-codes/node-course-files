@@ -3,6 +3,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { Button, Paper, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import {
@@ -10,8 +11,6 @@ import {
   getCategory,
   updateCategory
 } from "../../../services/apiServices";
-import { clearToken } from "../../../helpers/authHelper";
-import { useDispatch } from "react-redux";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",

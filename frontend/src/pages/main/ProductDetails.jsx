@@ -11,6 +11,7 @@ import DiscountedPrice from "../../components/main/common/DiscountedPrice";
 import Rating from "../../components/main/common/Rating";
 import SizeSelect from "../../components/main/common/SizeSelect";
 import TrendingProducts from "../../components/main/page/TrendingProducts";
+import ImageViewer from "../../components/main/productDetails/ImageViewer";
 import useFetch from "../../hooks/useFetch";
 import { addToCart } from "../../redux/slices/cartSlice";
 import { getProductBySlug } from "../../services/apiServices";
@@ -45,19 +46,7 @@ function ProductDetails() {
     <div className="p-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12">
         {/* Product Images */}
-        <div className="grid grid-cols-2 gap-2">
-          {product.images.map((image) => {
-            return (
-              <div className="h-[250px] w-full overflow-hidden rounded-lg border border-slate-200">
-                <img
-                  src={image}
-                  alt=""
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            );
-          })}
-        </div>
+        <ImageViewer images={product.images} />
         {/* Product Description */}
         <div className="flex flex-col gap-4">
           <h2 className="text-3xl font-semibold">{product.name}</h2>

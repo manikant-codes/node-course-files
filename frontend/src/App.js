@@ -1,37 +1,39 @@
-import { grey } from "@mui/material/colors";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import grey from "@mui/material/colors/grey";
+import createTheme from "@mui/material/styles/createTheme";
+import ThemeProvider from "@mui/material/styles/ThemeProvider";
+import { Provider } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import AuthGuard from "./guards/AuthGuard";
+import AuthGuardAdmin from "./guards/AuthGuardAdmin";
 import LayoutAdmin from "./layouts/admin/LayoutAdmin";
 import LayoutMain from "./layouts/main/LayoutMain";
 import AddUpdateCategoryForm from "./pages/admin/categories/AddUpdateCategoryForm";
 import CategoriesList from "./pages/admin/categories/CategoriesList";
-import SubCategoriesList from "./pages/admin/subCategories/SubCategoriesList";
-import Home from "./pages/main/Home";
-
 import Dashboard from "./pages/admin/Dashboard";
+import AddUpdateFilterForm from "./pages/admin/filters/AddUpdateFilterForm";
+import FiltersList from "./pages/admin/filters/FiltersList";
 import OrdersList from "./pages/admin/orders/OrdersList";
 import AddUpdatePageForm from "./pages/admin/pages/AddUpdatePageForm";
 import PagesList from "./pages/admin/pages/PagesList";
 import AddUpdateProductForm from "./pages/admin/products/AddUpdateProductForm";
 import AdminProductsList from "./pages/admin/products/ProductsList";
 import AddUpdateSubCategoryForm from "./pages/admin/subCategories/AddUpdateSubCategoryForm";
+import SubCategoriesList from "./pages/admin/subCategories/SubCategoriesList";
+import UpdateUserForm from "./pages/admin/users/UpdateUserForm";
 import UsersList from "./pages/admin/users/UsersList";
+import Checkout from "./pages/main/Checkout";
+import Home from "./pages/main/Home";
 import Page from "./pages/main/Page";
 import ProductDetails from "./pages/main/ProductDetails";
 import ProductsList from "./pages/main/ProductsList";
-import { Provider } from "react-redux";
-import store from "./redux/store";
+import RequestVerificaion from "./pages/main/RequestVerificaion";
 import SignIn from "./pages/main/SignIn";
 import SignUp from "./pages/main/SignUp";
-import AuthGuard from "./guards/AuthGuard";
-import AuthGuardAdmin from "./guards/AuthGuardAdmin";
-import UpdateUserForm from "./pages/admin/users/UpdateUserForm";
 import VerifyEmail from "./pages/main/VerifyEmail";
-import Checkout from "./pages/main/Checkout";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import RequestVerificaion from "./pages/main/RequestVerificaion";
+import store from "./redux/store";
 
 function App() {
   const theme = createTheme({
@@ -81,31 +83,22 @@ function App() {
               />
             </Route>
 
-            <Route path="/admin" element={<LayoutAdmin />}>
-              <Route
-                index
-                element={
-                  <AuthGuardAdmin>
-                    <Dashboard />
-                  </AuthGuardAdmin>
-                }
-              />
-              <Route
-                path="categories"
-                element={
-                  <AuthGuardAdmin>
-                    <CategoriesList />
-                  </AuthGuardAdmin>
-                }
-              />
+            <Route
+              path="/admin"
+              element={
+                <AuthGuardAdmin>
+                  <LayoutAdmin />
+                </AuthGuardAdmin>
+              }
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="categories" element={<CategoriesList />} />
               <Route
                 path="categories/:id"
-                element={
-                  <AuthGuardAdmin>
-                    <AddUpdateCategoryForm />
-                  </AuthGuardAdmin>
-                }
+                element={<AddUpdateCategoryForm />}
               />
+              <Route path="filters" element={<FiltersList />} />
+              <Route path="filters/:id" element={<AddUpdateFilterForm />} />
               <Route path="subCategories" element={<SubCategoriesList />} />
               <Route
                 path="subCategories/:id"

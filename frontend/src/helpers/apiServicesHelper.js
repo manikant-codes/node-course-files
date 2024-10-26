@@ -27,28 +27,40 @@ export function apiServicesGenerator(pluralName, singularName, tokenFields) {
       const data = await response.json();
       return data;
     },
-    [`add${capSingularName}`]: async function (body) {
+    [`add${capSingularName}`]: async function (body, isJSON) {
+      const headers = {};
+
+      if (tokenFields.add) {
+        headers.authorization = `Bearer ${localStorage.getItem("token")}`;
+      }
+
+      if (isJSON) {
+        headers["Content-Type"] = "application/json";
+      }
+
       const response = await fetch(`${BASE_URL}/${pluralName}`, {
         method: "POST",
-        body: body,
-        headers: {
-          authorization: tokenFields.add
-            ? `Bearer ${localStorage.getItem("token")}`
-            : ""
-        }
+        body: isJSON ? JSON.stringify(body) : body,
+        headers
       });
       const data = await response.json();
       return data;
     },
-    [`update${capSingularName}`]: async function (id, body) {
+    [`update${capSingularName}`]: async function (id, body, isJSON) {
+      const headers = {};
+
+      if (tokenFields.add) {
+        headers.authorization = `Bearer ${localStorage.getItem("token")}`;
+      }
+
+      if (isJSON) {
+        headers["Content-Type"] = "application/json";
+      }
+
       const response = await fetch(`${BASE_URL}/${pluralName}/${id}`, {
         method: "PATCH",
-        body: body,
-        headers: {
-          authorization: tokenFields.update
-            ? `Bearer ${localStorage.getItem("token")}`
-            : ""
-        }
+        body: isJSON ? JSON.stringify(body) : body,
+        headers
       });
       const data = await response.json();
       return data;

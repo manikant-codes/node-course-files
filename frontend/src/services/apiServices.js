@@ -164,4 +164,18 @@ export const { getAllUsers, getUser, addUser, updateUser, deleteUser } =
     delete: true
   });
 
+export const {
+  getAllFilters,
+  getFilter,
+  addFilter,
+  updateFilter,
+  deleteFilter
+} = apiServicesGenerator("filters", "filter", {
+  getAll: false,
+  getSingle: false,
+  add: true,
+  update: true,
+  delete: true
+});
+
 // End Users
