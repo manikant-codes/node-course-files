@@ -27,10 +27,10 @@ server.use(express.static("pages"));
 //   res.status(200).send("<h1>About Page</h1>");
 // });
 
-server.get("/contact", (req, res) => {
-  res.status(200).send("<h1>Contact Page</h1>");
-});
+// server.get("/contact", (req, res) => {
+//   res.status(200).send("<h1>Contact Page</h1>");
+// });
 
-server.listen(5000, () => {
-  console.log("Server is listening on port 5000!");
-});
+// server.listen(5000, () => {
+//   console.log("Server is listening on port 5000!");
+// });
