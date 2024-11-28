@@ -1,7 +1,16 @@
-1. Make home page.
 2. Cart local storage.
-3. Authentication. (Email Verification Pending)
 4. User Account Pages (Orders, Profile)
 4. Order and Payment. ()
 6. Wishlish.
 5. Reviews.
+
+
+Check out karne pe product aur address details backend ko bhejne hai aur ek order ki entry db me create karni hai.
+
+Backend ko sirf ids aur quantity bhejni hai prducts ki, fir backend me products ke details fetch karke total aur baki calculations karne hai.
+
+Order ki entry db me hoojaye uske baad payment ki key grenerate karni hai aur use frontend ko bhejna hai.
+
+Payment ki key frontend pe mile uske baad payment ka form dikhana hai, payment complete hone pe backend me order ka status update karna hai.
+
+id, qty --backend--> findById --DB--> id, qty, price

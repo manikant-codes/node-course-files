@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import AddressForm from "../../components/main/checkout/AddressForm";
 import CartItems from "../../components/main/checkout/CartItems";
+import { createOrder } from "../../services/apiServices";
 
 function Checkout() {
   const [address, setAddress] = useState({
@@ -22,15 +23,7 @@ function Checkout() {
     });
     const shippingAddress = address;
 
-    const result = await fetch("http://localhost:5000/orders", {
-      method: "POST",
-      body: JSON.stringify({ orderItems, shippingAddress }),
-      headers: {
-        authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
-
-    const data = await result.json();
+    const data = await createOrder({ orderItems, shippingAddress });
 
     console.log("data", data);
   }
