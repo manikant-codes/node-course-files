@@ -1,7 +1,7 @@
 const path = require("path");
 
-console.log("__dirname", __dirname);
-console.log("__filename", __filename);
+// console.log("__dirname", __dirname);
+// console.log("__filename", __filename);
 
 // basename()
 // console.log("__dirname", path.basename(__dirname));
@@ -15,7 +15,7 @@ console.log("__filename", __filename);
 // console.log("__dirname", path.parse(__dirname));
 // console.log("__filename", path.parse(__filename));
 
-// format()
+// format();
 // console.log(
 //   "__dirname",
 //   path.format({
@@ -38,10 +38,10 @@ console.log("__filename", __filename);
 // );
 
 // join();
-// console.log("join", path.join(__dirname, "files", "users", "users.txt"));
+// console.log("join", path.join("files", "users", "users.txt"));
 
 // resolve()
-// console.log("resolve", path.resolve(__dirname, "files", "users", "users.txt"));
+// console.log("resolve", path.resolve("files", "users", "users.txt"));
 
 // extname()
 // console.log("__dirname", path.extname(__dirname));
@@ -63,3 +63,5 @@ console.log("__filename", __filename);
 // win32
 // console.log("join", path.join(__dirname, "files"));
 // console.log("win32 join", path.win32.join(__dirname, "files"));
+
+// C:\Users\Lope Multimedia\Desktop\manikant\node-course-files\02-path-module.js
