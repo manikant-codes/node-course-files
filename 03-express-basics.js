@@ -1,4 +1,25 @@
-// const express = require("express");
+const path = require("path");
+const express = require("express");
+const server = express();
+
+server.use(express.static("pages"));
+
+// server.get("/", (req, res) => {
+//   res.sendFile(path.join(__dirname, "pages", "index.html"));
+// });
+
+// server.get("/css/index.css", (req, res) => {
+//   res.sendFile(path.join(__dirname, "pages", "css", "index.css"));
+// });
+
+// server.get("/js/index.js", (req, res) => {
+//   res.sendFile(path.join(__dirname, "pages", "js", "index.js"));
+// });
+
+server.listen(5000, () => {
+  console.log("Server is listening on port 5000!");
+});
+
 // const path = require("path");
 // const server = express();
 

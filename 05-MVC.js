@@ -1,7 +1,7 @@
 const express = require("express");
 const server = express();
 const path = require("path");
-const productsRouter = require("./routes/productsRoutes");
+const productsRouter = require("./routes/productsRouter");
 
 server.use("/products", productsRouter);
 

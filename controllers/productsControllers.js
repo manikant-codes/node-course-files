@@ -1,31 +1,24 @@
-const products = require("../data");
-
 const getAllProducts = (req, res) => {
-  try {
-    res.status(200).json({ success: true, products });
-  } catch (error) {
-    console.log("Error: ", error);
-    res.status(500).json({ success: false, msg: error.message });
-  }
+  res.send("Get All Products");
 };
 
 const getSingleProduct = (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const product = products.find((product) => {
-      return product.id === Number(id);
-    });
-
-    if (product) {
-      return res.status(200).json({ success: true, product });
-    }
-
-    res.status(404).json({ success: false, msg: "Product not found!" });
-  } catch (error) {
-    console.log("Error: ", error);
-    res.status(500).json({ success: false, msg: error.message });
-  }
+  res.send("Get Single Product");
+};
+const addProduct = (req, res) => {
+  res.send("Add Product");
+};
+const updateProduct = (req, res) => {
+  res.send("Update Product");
+};
+const deleteProduct = (req, res) => {
+  res.send("Delete Product");
 };
 
-module.exports = { getAllProducts, getSingleProduct };
+module.exports = {
+  getAllProducts,
+  getSingleProduct,
+  addProduct,
+  updateProduct,
+  deleteProduct
+};
