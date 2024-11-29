@@ -33,24 +33,26 @@ const AddressForm = ({ address, setAddress }) => {
           fullWidth
           margin="normal"
         />
-        <TextField
-          label="State"
-          name="state"
-          value={address.state}
-          onChange={handleChange}
-          required
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Postal Code"
-          name="postalCode"
-          value={address.postalCode}
-          onChange={handleChange}
-          required
-          fullWidth
-          margin="normal"
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <TextField
+            label="State"
+            name="state"
+            value={address.state}
+            onChange={handleChange}
+            required
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Postal Code"
+            name="postalCode"
+            value={address.postalCode}
+            onChange={handleChange}
+            required
+            fullWidth
+            margin="normal"
+          />
+        </div>
       </div>
     </div>
   );

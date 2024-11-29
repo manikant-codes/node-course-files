@@ -1,6 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getDiscountedPrice, getTax } from "../../helpers/priceHelper";
 
+function setPrice(state, payload, isRemove) {
+  const { price, discountPercentage, taxPercentage, shippingFee } = payload;
+  const discountedPrice = getDiscountedPrice(price, discountPercentage);
+  const tax = getTax(discountedPrice, taxPercentage);
+
+  if (isRemove) {
+    state.subTotal -= discountedPrice;
+    state.tax -= tax;
+    state.shippingFee -= shippingFee;
+    state.total -= discountedPrice + tax + shippingFee;
+  } else {
+    state.subTotal += discountedPrice;
+    state.tax += tax;
+    state.shippingFee += shippingFee;
+    state.total += discountedPrice + tax + shippingFee;
+  }
+}
+
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
@@ -28,41 +46,22 @@ const cartSlice = createSlice({
         state.cartItems.push(product);
       }
 
-      const discountedPrice = getDiscountedPrice(
-        action.payload.price,
-        action.payload.discountPercentage
-      );
-      const tax = getTax(action.payload.price, action.payload.taxPercentage);
-
-      state.subTotal += discountedPrice;
-      state.tax += tax;
-      state.shippingFee += action.payload.shippingFee;
-      state.total += discountedPrice + tax + action.payload.shippingFee;
+      setPrice(state, action.payload);
     },
     removeFromCart: (state, action) => {
-      state.subTotal -= getDiscountedPrice(
-        state.cartItems[action.payload].price,
-        state.cartItems[action.payload].discountPercentage
-      );
-
+      setPrice(state, state.cartItems[action.payload], true);
       state.cartItems.splice(action.payload, 1);
     },
     increaseQty: (state, action) => {
       if (state.cartItems[action.payload].qty < 10) {
         state.cartItems[action.payload].qty++;
-        state.subTotal += getDiscountedPrice(
-          state.cartItems[action.payload].price,
-          state.cartItems[action.payload].discountPercentage
-        );
+        setPrice(state, state.cartItems[action.payload]);
       }
     },
     decreaseQty: (state, action) => {
       if (state.cartItems[action.payload].qty > 1) {
         state.cartItems[action.payload].qty--;
-        state.subTotal -= getDiscountedPrice(
-          state.cartItems[action.payload].price,
-          state.cartItems[action.payload].discountPercentage
-        );
+        setPrice(state, state.cartItems[action.payload], true);
       }
     }
   }

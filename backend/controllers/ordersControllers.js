@@ -1,5 +1,19 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product");
+const stripe = require("stripe")(process.env.STRIPE_KEY);
+
+[
+  {
+    price_data: {
+      currency: "usd",
+      unit_amount: 500,
+      product_data: {
+        name: "name of the product"
+      }
+    },
+    quantity: 1
+  }
+];
 
 const createOrder = async (req, res) => {
   try {
@@ -19,6 +33,7 @@ const createOrder = async (req, res) => {
 
     let totalAmount = 0;
     const orderItemsWithPrice = [];
+    const lineItems = [];
 
     for (const item of orderItems) {
       const product = await Product.findById(item.product);
@@ -40,6 +55,17 @@ const createOrder = async (req, res) => {
         price: finalPrice
       });
 
+      lineItems.push({
+        quantity: item.qty,
+        price_data: {
+          currency: "usd",
+          unit_amount: finalPrice * 100,
+          product_data: {
+            name: product.name
+          }
+        }
+      });
+
       totalAmount += finalPrice * item.qty;
     }
 
@@ -50,7 +76,18 @@ const createOrder = async (req, res) => {
       shippingAddress
     });
 
-    res.status(200).json({ success: true, msg: "Order placed successfully!" });
+    const session = await stripe.checkout.sessions.create({
+      ui_mode: "embedded",
+      line_items: lineItems,
+      mode: "payment",
+      return_url: `http://localhost:3000/checkoutCompleted`
+    });
+
+    res.status(200).json({
+      success: true,
+      msg: "Order placed successfully!",
+      clientSecret: session.client_secret
+    });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }
