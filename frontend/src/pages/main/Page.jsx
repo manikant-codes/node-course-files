@@ -18,8 +18,6 @@ function Page() {
       .catch((error) => {});
   }, [categorySlug]);
 
-  console.log("page", page);
-
   if (!page) return null;
 
   const settings = {

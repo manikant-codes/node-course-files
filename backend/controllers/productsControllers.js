@@ -10,7 +10,7 @@ const { productValidator } = require("../validators/productsValidator");
 
 const getAllProducts = async (req, res) => {
   try {
-    const filters = { category: 123, subCategory: 465 };
+    const filters = {};
 
     if (req.query.category) {
       const category = await Category.findOne({ slug: req.query.category });

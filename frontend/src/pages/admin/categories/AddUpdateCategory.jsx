@@ -7,7 +7,7 @@ import MyFileUpload from "../../../components/common/MyFileUpload";
 import {
   addCategory,
   getCategory,
-  updateCategory,
+  updateCategory
 } from "../../../services/apiServices";
 
 function AddUpdateCategory() {
@@ -19,7 +19,7 @@ function AddUpdateCategory() {
       ? {
           image: null,
           name: "",
-          slug: "",
+          slug: ""
         }
       : null
   );
@@ -43,7 +43,7 @@ function AddUpdateCategory() {
     setFormState({
       ...formState,
       [e.target.name]: e.target.value,
-      slug: e.target.value.toLowerCase().replaceAll(" ", "-"),
+      slug: e.target.value.toLowerCase().replaceAll(" ", "-")
     });
   }
 

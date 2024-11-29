@@ -16,6 +16,9 @@ function CommonList({
   async function fetchAllData() {
     try {
       const data = await getAllData();
+      if (!data.success) {
+        throw new Error(data.msg);
+      }
       setData(data.data);
     } catch (error) {
       console.log(error.message);

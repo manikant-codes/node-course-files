@@ -1,6 +1,5 @@
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
-import MenuIcon from "@mui/icons-material/Menu";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
@@ -14,10 +13,10 @@ import MenuItem from "@mui/material/MenuItem";
 import { alpha, styled } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
-import { COMPANY_NAME } from "../../consts/main";
 import { Link, useNavigate } from "react-router-dom";
+import { COMPANY_NAME } from "../../consts/main";
 import { getAllPages } from "../../services/apiServices";
+import { useEffect, useState } from "react";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -60,17 +59,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function NavbarMain() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const navigate = useNavigate();
-  const [pages, setPages] = React.useState([]);
+  const [pages, setPages] = useState([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     getAllPages().then((data) => {
-      const temp = data.data.map((value) => {
-        return { name: value.name, slug: value.slug };
+      const pages = data.data;
+      const newPages = pages.map((page) => {
+        return { name: page.name, slug: page.slug };
       });
-      setPages(temp);
+      setPages(newPages);
     });
   }, []);
 
