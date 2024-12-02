@@ -179,6 +179,19 @@ export async function createOrder(body) {
   return data;
 }
 
+export async function updateOrderStatus(id, body) {
+  const response = await fetch(`${BASE_URL}/orders/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  });
+  const data = await response.json();
+  return data;
+}
+
 // End Orders
 
 export const {

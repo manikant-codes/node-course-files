@@ -21,7 +21,7 @@ function MessageBox({
           {title}, {emoji}
         </p>
         <p className="mb-8">{message}</p>
-        {actionBtn && (
+        {actionBtn.text && (
           <Button variant={variant} LinkComponent={Link} to={to}>
             {text}
           </Button>

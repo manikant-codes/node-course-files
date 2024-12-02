@@ -2,18 +2,18 @@ const Order = require("../models/Order");
 const Product = require("../models/Product");
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 
-[
-  {
-    price_data: {
-      currency: "usd",
-      unit_amount: 500,
-      product_data: {
-        name: "name of the product"
-      }
-    },
-    quantity: 1
-  }
-];
+// [
+//   {
+//     price_data: {
+//       currency: "usd",
+//       unit_amount: 500,
+//       product_data: {
+//         name: "name of the product"
+//       }
+//     },
+//     quantity: 1
+//   }
+// ];
 
 const createOrder = async (req, res) => {
   try {
@@ -69,7 +69,7 @@ const createOrder = async (req, res) => {
       totalAmount += finalPrice * item.qty;
     }
 
-    await Order.create({
+    const order = await Order.create({
       orderItems: orderItemsWithPrice,
       user: req.user.userId,
       totalAmount,
@@ -80,12 +80,12 @@ const createOrder = async (req, res) => {
       ui_mode: "embedded",
       line_items: lineItems,
       mode: "payment",
-      return_url: `http://localhost:3000/checkoutCompleted`
+      return_url: `http://localhost:3000/checkoutCompleted/${order._id}`
     });
 
     res.status(200).json({
       success: true,
-      msg: "Order placed successfully!",
+      msg: "Order places successfully!",
       clientSecret: session.client_secret
     });
   } catch (error) {
@@ -93,4 +93,67 @@ const createOrder = async (req, res) => {
   }
 };
 
-module.exports = { createOrder };
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const order = await Order.findById(id);
+
+    console.log("status", status);
+    console.log("order.status", order.status);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        msg: "No such order found!"
+      });
+    }
+
+    if (order.status === "pending") {
+      if (status !== "confirmed" && status !== "cancelled") {
+        return res.status(400).json({
+          success: false,
+          msg: `Cannot change the status to ${status}!`
+        });
+      }
+    } else if (order.status === "confirmed") {
+      if (status !== "dispatched" && status !== "cancelled") {
+        return res.status(400).json({
+          success: false,
+          msg: `Cannot change the status to ${status}!`
+        });
+      }
+    } else if (order.status === "dispatched") {
+      if (status !== "delivered" && status !== "cancelled") {
+        return res.status(400).json({
+          success: false,
+          msg: `Cannot change the status to ${status}!`
+        });
+      }
+    } else if (order.status === "delivered") {
+      if (status !== "cancelled") {
+        return res.status(400).json({
+          success: false,
+          msg: `Cannot change the status to ${status}!`
+        });
+      }
+    } else {
+      return res.status(400).json({
+        success: false,
+        msg: `Cannot change the status to ${status}!`
+      });
+    }
+
+    await Order.findByIdAndUpdate(id, { status });
+
+    res.status(200).json({
+      success: true,
+      msg: "Order status updated successfully!"
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+module.exports = { createOrder, updateOrderStatus };

@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AddressForm from "../../components/main/checkout/AddressForm";
 import CartItems from "../../components/main/checkout/CartItems";
 import { createOrder } from "../../services/apiServices";
@@ -23,6 +23,8 @@ function Checkout() {
   const { cartItems } = useSelector((store) => {
     return store.cart;
   });
+
+  const navigate = useNavigate();
 
   async function handleBuy(e) {
     const orderItems = cartItems.map((product) => {

@@ -34,6 +34,7 @@ import SignIn from "./pages/main/SignIn";
 import SignUp from "./pages/main/SignUp";
 import VerifyEmail from "./pages/main/VerifyEmail";
 import store from "./redux/store";
+import CheckoutCompleted from "./pages/main/CheckoutCompleted";
 
 function App() {
   const theme = createTheme({
@@ -78,6 +79,14 @@ function App() {
                 element={
                   <AuthGuard>
                     <Checkout />
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="checkoutCompleted/:id"
+                element={
+                  <AuthGuard>
+                    <CheckoutCompleted />
                   </AuthGuard>
                 }
               />
