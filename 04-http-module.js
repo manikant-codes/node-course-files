@@ -19,8 +19,10 @@ const server = http.createServer((req, res) => {
         res.writeHead(500, { "Content-Type": "text/html" });
         res.end("<h1>Something went wrong!</h1>");
       } else {
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.end(data);
+        // res.writeHead(200, { "Content-Type": "text/html" });
+        // res.end(data);
+        // res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ name: "Ram" }));
       }
     });
   } else if (req.url === "/index.css") {
@@ -52,6 +54,6 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(5000, () => {
+server.listen(5500, () => {
   console.log("Server is listening on port 5000.");
 });
