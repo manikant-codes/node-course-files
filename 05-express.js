@@ -1,34 +1,35 @@
 const express = require("express");
 const path = require("path");
+const { users, posts } = require("./pages/data");
 
 const server = express();
 
 server.use(express.static("pages"));
 
 // server.get("/", (req, res) => {
-//   //   res.status(404);
-//   //   res.send("<h1>Hello World!</h1>");
-//   //   OR
-//   //   res.status(404).send("<h1>Not Found!</h1>");
-//   //   res.status(404);
-//   //   res.json({ name: "Ram" });
-//   //   OR
-//   //   res.status(404).json({ name: "Ram" });
-//   const filePath = path.join(__dirname, "pages", "index.html");
-//   //   res.status(404);
-//   //   res.sendFile(filePath);
-//   //   OR
-//   res.status(200).sendFile(filePath);
-//   //   const filePath = path.join(__dirname, "files", "info.txt");
-//   //   res.status(200).download(filePath);
-//   //   res.redirect("/about");
+// res.status(200).send("<h1>Hello World!</h1>");
+// res.status(200).json({ name: "Ram" });
+// res.status(200).redirect("/about");
+// res.download(path.join(__dirname, "pages", "mountains.jpg"));
+//   res.status(200).sendFile(path.join(__dirname, "pages", "index.html"));
 // });
 
 // server.get("/index.css", (req, res) => {
-//   const filePath = path.join(__dirname, "pages", "index.css");
-//   res.status(200).sendFile(filePath);
+//   res.status(200).sendFile(path.join(__dirname, "pages", "index.css"));
 // });
 
+// server.get("/mountains.jpg", (req, res) => {
+//   res.status(200).sendFile(path.join(__dirname, "pages", "mountains.jpg"));
+// });
+
+server.get("/users", (req, res) => {
+  res.status(200).json(users);
+});
+
+server.get("/posts", (req, res) => {
+  res.status(200).json(posts);
+});
+
 server.listen(5000, () => {
-  console.log("Server is listening on port 5000!");
+  console.log("Server is listening on port 5000.");
 });
