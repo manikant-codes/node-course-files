@@ -88,13 +88,13 @@ start();
 //   }
 // };
 
-const deleteUser = async () => {
-  try {
-    const users = await User.findOneAndDelete({ email: "hemant@gmail.com" });
-    console.log(users);
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+// const deleteUser = async () => {
+//   try {
+//     const users = await User.findOneAndDelete({ email: "hemant@gmail.com" });
+//     console.log(users);
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
 
 deleteUser();
