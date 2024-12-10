@@ -7,6 +7,7 @@ dotenv.config();
 
 const server = express();
 
+server.use("/uploads", express.static("uploads"));
 server.use(fileUpload());
 
 server.use("/categories", categoryRouter);
