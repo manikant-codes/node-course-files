@@ -3,8 +3,6 @@ const {
   sendDataResponse
 } = require("../helpers/resHelpers");
 const Category = require("../models/Category");
-const path = require("path");
-const fs = require("fs/promises");
 const { saveFile, deleteFile } = require("../helpers/fileHelpers");
 
 const getAllCategories = async (req, res) => {
