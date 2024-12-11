@@ -5,6 +5,7 @@ const {
 const Category = require("../models/Category");
 const path = require("path");
 const fs = require("fs/promises");
+const { saveFile, deleteFile } = require("../helpers/fileHelpers");
 
 const getAllCategories = async (req, res) => {
   try {
@@ -36,10 +37,7 @@ const addCategory = async (req, res) => {
       return sendErrorResponse(res, "Category image is required.", 400);
     }
 
-    const fileName = Date.now() + "-" + req.files.image.name;
-    const filePath = path.join(__dirname, "../uploads", "category", fileName);
-    await req.files.image.mv(filePath);
-    const imageURL = `http://localhost:5000/uploads/category/${fileName}`;
+    const imageURL = await saveFile(req.files.image, "category");
 
     const category = await Category.create({
       name: req.body.name,
@@ -68,18 +66,19 @@ const updateCategory = async (req, res) => {
     }
 
     if (req.files && req.files.image) {
-      const folderPath = path.join(__dirname, "../uploads", "category");
+      // const folderPath = path.join(__dirname, "../uploads", "category");
+      // const fileName = Date.now() + "-" + req.files.image.name;
+      // const filePath = path.join(folderPath, fileName);
+      // await req.files.image.mv(filePath);
+      // const imageURL = `http://localhost:5000/uploads/category/${fileName}`;
+      const imageURL = await saveFile(req.files.image, "category");
 
-      const fileName = Date.now() + "-" + req.files.image.name;
-      const filePath = path.join(folderPath, fileName);
-      await req.files.image.mv(filePath);
-      const imageURL = `http://localhost:5000/uploads/category/${fileName}`;
-
-      const toBeDeletedFileName = path.basename(category.image);
-      const filesInFolder = await fs.readdir(folderPath);
-      if (filesInFolder.includes(toBeDeletedFileName)) {
-        await fs.unlink(filePath);
-      }
+      // const toBeDeletedFileName = path.basename(category.image);
+      // const filesInFolder = await fs.readdir(folderPath);
+      // if (filesInFolder.includes(toBeDeletedFileName)) {
+      //   await fs.unlink(filePath);
+      // }
+      await deleteFile(category.image, "category");
 
       req.body.image = imageURL;
     }
@@ -104,13 +103,7 @@ const deleteCategory = async (req, res) => {
       return sendErrorResponse(res, "No such category found.", 404);
     }
 
-    const fileName = path.basename(category.image);
-    const folderPath = path.join(__dirname, "../uploads", "category");
-    const filesInFolder = await fs.readdir(folderPath);
-
-    if (filesInFolder.includes(fileName)) {
-      await fs.unlink(path.join(folderPath, fileName));
-    }
+    await deleteFile(category.image, "category");
 
     const deletedCategory = await Category.findByIdAndDelete(id);
 
