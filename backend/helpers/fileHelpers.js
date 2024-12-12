@@ -21,10 +21,10 @@ const deleteFile = async (url, folderName) => {
 
   const fileName = path.basename(url);
   const folderPath = path.join(__dirname, "../uploads", folderName);
-  const deletePath = path.join(__dirname, "../uploads", folderName, fileName);
   const filesInFolder = await fs.readdir(folderPath);
 
   if (filesInFolder.includes(fileName)) {
+    const deletePath = path.join(folderPath, fileName);
     await fs.unlink(deletePath);
   }
 };

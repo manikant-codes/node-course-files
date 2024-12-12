@@ -1,3 +1,4 @@
+const { saveFile, deleteFile } = require("../helpers/fileHelpers");
 const {
   sendErrorResponse,
   sendDataResponse
@@ -30,15 +31,54 @@ const getSubCategoryById = async (req, res) => {
 
 const addSubCategory = async (req, res) => {
   try {
-    sendDataResponse(res, null);
+    if (!req.files || !req.files.image) {
+      return sendErrorResponse(res, "Sub-category image is required.", 400);
+    }
+
+    const imageURL = await saveFile(req.files.image, "subCategory");
+
+    const subCategory = await SubCategory.create({
+      name: req.body.name,
+      slug: req.body.slug,
+      category: req.body.category,
+      image: imageURL
+    });
+
+    sendDataResponse(res, subCategory);
   } catch (error) {
     sendErrorResponse(res, error.message);
-  }       
+  }
 };
 
 const updateSubCategory = async (req, res) => {
   try {
-    sendDataResponse(res, null);
+    const { id } = req.params;
+
+    const subCategory = await SubCategory.findById(id);
+
+    if (!subCategory) {
+      return sendErrorResponse(res, "No such sub-category found.", 400);
+    }
+
+    if (!req.body) {
+      req.body = {};
+    }
+
+    if (req.files && req.files.image) {
+      const imageURL = await saveFile(req.files.image, "subCategory");
+
+      await deleteFile(subCategory.image, "subCategory");
+
+      req.body.image = imageURL;
+    }
+
+    const updatedSubCategory = await SubCategory.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true }
+    );
+
+    sendDataResponse(res, updatedSubCategory);
   } catch (error) {
     sendErrorResponse(res, error.message);
   }
@@ -46,7 +86,19 @@ const updateSubCategory = async (req, res) => {
 
 const deleteSubCategory = async (req, res) => {
   try {
-    sendDataResponse(res, null);
+    const { id } = req.params;
+
+    const subCategory = await SubCategory.findById(id);
+
+    if (!subCategory) {
+      return sendErrorResponse(res, "No such sub-category found.", 404);
+    }
+
+    await deleteFile(subCategory.image, "subCategory");
+
+    const deletedSubCategory = await SubCategory.findByIdAndDelete(id);
+
+    sendDataResponse(res, deletedSubCategory);
   } catch (error) {
     sendErrorResponse(res, error.message);
   }
