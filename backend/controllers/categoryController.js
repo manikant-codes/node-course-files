@@ -1,4 +1,5 @@
 const Category = require("../models/Category");
+const path = require("path");
 
 const getAllCategories = async (req, res) => {
   try {
@@ -27,7 +28,23 @@ const getCategoryById = async (req, res) => {
 
 const addCategory = async (req, res) => {
   try {
-    res.send("Add Category");
+    console.log("req.body", req.body);
+    console.log("req.files", req.files);
+
+    const fileName = Date.now() + "-" + req.files.image.name;
+    const uploadPath = path.join(__dirname, "../uploads", "category", fileName);
+
+    await req.files.image.mv(uploadPath);
+
+    const imageURL = `http://localhost:5000/uploads/category/${fileName}`;
+
+    const category = await Category.create({
+      name: req.body.name,
+      slug: req.body.slug,
+      image: imageURL
+    });
+
+    res.json({ success: true, data: category });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }

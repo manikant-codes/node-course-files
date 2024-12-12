@@ -3,8 +3,13 @@ const dotenv = require("dotenv");
 const connect = require("./db/connect");
 const categoryRouter = require("./routes/categoryRouter");
 dotenv.config();
+const fileUpload = require("express-fileupload");
 
 const server = express();
+
+// server.use(express.json());
+server.use(fileUpload());
+server.use("/uploads", express.static("uploads"));
 
 server.use("/categories", categoryRouter);
 
