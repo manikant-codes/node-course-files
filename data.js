@@ -27,6 +27,7 @@ const products = [
     stock: 80
   },
   { id: 10, name: "Desk Chair", price: 199, category: "Furniture", stock: 25 }
+  
 ];
 
 module.exports = products;

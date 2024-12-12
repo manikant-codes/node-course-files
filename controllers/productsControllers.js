@@ -1,3 +1,5 @@
+const products = require("../data");
+
 const getAllProducts = (req, res) => {
   res.status(200).json(products);
 };
