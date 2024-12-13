@@ -1,4 +1,4 @@
-const { saveFile } = require("../helpers/fileHelpers");
+const { saveFile, deleteFile } = require("../helpers/fileHelpers");
 const {
   sendErrorResponse,
   sendDataResponse
@@ -39,7 +39,7 @@ const addProduct = async (req, res) => {
       const temp = [];
 
       for (const image of req.files.images) {
-        const imageURL = await saveFile(req.files.images, "product");
+        const imageURL = await saveFile(image, "product");
         temp.push(imageURL);
       }
 
@@ -59,6 +59,48 @@ const addProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return sendErrorResponse(res, "No such product found.", 404);
+    }
+
+    if (req.files && req.files.images) {
+      if (Array.isArray(req.files.images)) {
+        const temp = [];
+        // req.files.images wali image file hai.
+        for (const image of req.files.images) {
+          const imageURL = await saveFile(image, "product");
+          temp.push(imageURL);
+        }
+
+        for (const image of product.images) {
+          if (!req.body.images.include(image)) {
+            await deleteFile(image, "product");
+          }
+        }
+
+        req.body.images = [...req.body.images, ...temp];
+      } else {
+        const imageURL = saveFile(req.files.images, "product");
+
+        for (const image of product.images) {
+          if (!req.body.images.include(image)) {
+            await deleteFile(image, "product");
+          }
+        }
+
+        req.body.images = [...req.body.images, imageURL];
+      }
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {
+      new: true
+    });
+
+    sendDataResponse(res, updatedProduct);
   } catch (error) {
     sendErrorResponse(res, error.message);
   }
@@ -66,6 +108,22 @@ const updateProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   try {
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return sendErrorResponse(res, "No such product found.", 404);
+    }
+
+    // Delete Image
+    for (const image of product.images) {
+      await deleteFile(image, "product");
+    }
+
+    await Product.findByIdAndDelete(id);
+
+    sendDataResponse(res, null);
   } catch (error) {
     sendErrorResponse(res, error.message);
   }
