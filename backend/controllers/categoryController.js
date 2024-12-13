@@ -1,5 +1,6 @@
 const Category = require("../models/Category");
 const path = require("path");
+const fs = require("fs/promises");
 
 const getAllCategories = async (req, res) => {
   try {
@@ -28,9 +29,6 @@ const getCategoryById = async (req, res) => {
 
 const addCategory = async (req, res) => {
   try {
-    console.log("req.body", req.body);
-    console.log("req.files", req.files);
-
     const fileName = Date.now() + "-" + req.files.image.name;
     const uploadPath = path.join(__dirname, "../uploads", "category", fileName);
 
@@ -52,7 +50,40 @@ const addCategory = async (req, res) => {
 
 const updateCategory = async (req, res) => {
   try {
-    res.send("Update Category");
+    const { id } = req.params;
+
+    const category = await Category.findById(id);
+
+    if (!category) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "No such category found." });
+    }
+
+    if (!req.body) {
+      req.body = {};
+    }
+
+    if (req.files && req.files.image) {
+      const fileName = path.basename(category.image);
+      const folderPath = path.join(__dirname, "../uploads", "category");
+      const filesInfolder = await fs.readdir(folderPath);
+      if (filesInfolder.includes(fileName)) {
+        await fs.unlink(path.join(folderPath, fileName));
+      }
+
+      const newFileName = Date.now() + "-" + req.files.image.name;
+      await req.files.image.mv(folderPath);
+      const newImageURL = `http://localhost:5000/uploads/category/${newFileName}`;
+
+      req.body.image = newImageURL;
+    }
+
+    const updatedCategory = await Category.findByIdAndUpdate(id, req.body, {
+      new: true
+    });
+
+    res.status(200).json({ success: true, data: updatedCategory });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }
@@ -60,7 +91,29 @@ const updateCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
   try {
-    res.send("Delete Category");
+    const { id } = req.params;
+
+    const category = await Category.findById(id);
+
+    if (!category) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "No such category found." });
+    }
+
+    const fileName = path.basename(category.image);
+    const folderPath = path.join(__dirname, "../uploads", "category");
+    const filesInFolder = await fs.readdir(folderPath);
+
+    if (filesInFolder.includes(fileName)) {
+      await fs.unlink(path.join(folderPath, fileName));
+    }
+
+    await Category.findByIdAndDelete(id);
+
+    res
+      .status(200)
+      .json({ success: true, msg: "Category deleted successfully." });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }
