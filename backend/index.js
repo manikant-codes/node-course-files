@@ -4,6 +4,7 @@ const connect = require("./db/connect");
 const categoryRouter = require("./routes/categoryRouter");
 dotenv.config();
 const fileUpload = require("express-fileupload");
+const subCategoryRouter = require("./routes/subCategoryRouter");
 
 const server = express();
 
@@ -12,6 +13,7 @@ server.use(fileUpload());
 server.use("/uploads", express.static("uploads"));
 
 server.use("/categories", categoryRouter);
+server.use("/subCategories", subCategoryRouter);
 
 const start = async () => {
   try {

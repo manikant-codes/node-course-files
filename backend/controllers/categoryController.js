@@ -29,16 +29,19 @@ const getCategoryById = async (req, res) => {
 
 const addCategory = async (req, res) => {
   try {
+    if (!req.files || !req.files.image) {
+      return res
+        .status(400)
+        .json({ success: false, msg: "Category image is required." });
+    }
+
     const fileName = Date.now() + "-" + req.files.image.name;
     const uploadPath = path.join(__dirname, "../uploads", "category", fileName);
-
     await req.files.image.mv(uploadPath);
-
     const imageURL = `http://localhost:5000/uploads/category/${fileName}`;
 
     const category = await Category.create({
-      name: req.body.name,
-      slug: req.body.slug,
+      ...req.body,
       image: imageURL
     });
 
