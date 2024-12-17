@@ -61,10 +61,21 @@ const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
+    console.log("id", id);
+    console.log("req.body", req.body);
+
     const product = await Product.findById(id);
 
     if (!product) {
       return sendErrorResponse(res, "No such product found.", 404);
+    }
+
+    if (!req.body) {
+      req.body = {};
+    }
+
+    if (!req.body.images) {
+      req.body.images = [];
     }
 
     if (req.files && req.files.images) {
@@ -77,17 +88,17 @@ const updateProduct = async (req, res) => {
         }
 
         for (const image of product.images) {
-          if (!req.body.images.include(image)) {
+          if (!req.body.images.includes(image)) {
             await deleteFile(image, "product");
           }
         }
 
         req.body.images = [...req.body.images, ...temp];
       } else {
-        const imageURL = saveFile(req.files.images, "product");
+        const imageURL = await saveFile(req.files.images, "product");
 
         for (const image of product.images) {
-          if (!req.body.images.include(image)) {
+          if (!req.body.images.includes(image)) {
             await deleteFile(image, "product");
           }
         }
