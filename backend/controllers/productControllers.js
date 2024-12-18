@@ -61,9 +61,6 @@ const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    console.log("id", id);
-    console.log("req.body", req.body);
-
     const product = await Product.findById(id);
 
     if (!product) {
@@ -81,15 +78,14 @@ const updateProduct = async (req, res) => {
     if (req.files && req.files.images) {
       if (Array.isArray(req.files.images)) {
         const temp = [];
-        // req.files.images wali image file hai.
-        for (const image of req.files.images) {
-          const imageURL = await saveFile(image, "product");
+        for (const imageFile of req.files.images) {
+          const imageURL = await saveFile(imageFile, "product");
           temp.push(imageURL);
         }
 
-        for (const image of product.images) {
-          if (!req.body.images.includes(image)) {
-            await deleteFile(image, "product");
+        for (const imageURL of product.images) {
+          if (!req.body.images.includes(imageURL)) {
+            await deleteFile(imageURL, "product");
           }
         }
 

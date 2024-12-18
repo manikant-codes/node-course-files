@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const SubCategory = require("./SubCategory");
 
 const pageSchema = new mongoose.Schema({
   name: { type: String, minLength: 2, required: true },
@@ -28,6 +27,7 @@ const pageSchema = new mongoose.Schema({
   },
   subCategories: {
     type: [mongoose.Types.ObjectId],
+    ref: "SubCategory",
     validate: {
       validator: (subCategories) => {
         if (!subCategories) {
@@ -54,6 +54,6 @@ const pageSchema = new mongoose.Schema({
   }
 });
 
-const Page = mongoose.model("Page");
+const Page = mongoose.model("Page", pageSchema);
 
 module.exports = Page;
