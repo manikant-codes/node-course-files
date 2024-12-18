@@ -18,4 +18,15 @@ const deleteFile = async (url, folderName) => {
   }
 };
 
-module.exports = { saveFile, deleteFile };
+const saveMultipleFiles = async (files, folderName) => {
+  const temp = [];
+
+  for (const file of files) {
+    const url = await saveFile(file, folderName);
+    temp.push(url);
+  }
+
+  return temp;
+};
+
+module.exports = { saveFile, deleteFile, saveMultipleFiles };

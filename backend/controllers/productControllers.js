@@ -39,8 +39,8 @@ const addProduct = async (req, res) => {
     if (Array.isArray(req.files.images)) {
       const temp = [];
 
-      for (const image of req.files.images) {
-        const imageURL = await saveFile(image, "product");
+      for (const imageFile of req.files.images) {
+        const imageURL = await saveFile(imageFile, "product");
         temp.push(imageURL);
       }
 
@@ -60,6 +60,52 @@ const addProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "No such product found." });
+    }
+
+    if (!req.body) {
+      req.body = {};
+    }
+
+    if (!req.body.images) {
+      req.body.images = [];
+    }
+
+    if (req.files && req.files.images) {
+      if (Array.isArray(req.files.images)) {
+        const temp = [];
+
+        for (const imageFile of req.files.images) {
+          const imageURL = await saveFile(imageFile, "product");
+          temp.push(imageURL);
+        }
+
+        req.body.images = [...req.body.images, ...temp];
+      } else {
+        const imageURL = await saveFile(req.files.images, "product");
+
+        req.body.images = [...req.body.images, imageURL];
+      }
+    }
+
+    for (const imageURL of product.images) {
+      if (!req.body.images.includes(imageURL)) {
+        await deleteFile(imageURL);
+      }
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {
+      new: true
+    });
+
+    res.status(200).json({ success: true, data: updatedProduct });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }
