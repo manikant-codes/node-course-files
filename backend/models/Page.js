@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { checkIfEmptyArray } = require("../helpers/validationHelper");
 
 const pageSchema = new mongoose.Schema({
   name: { type: String, minLength: 2, required: true },
@@ -6,21 +7,7 @@ const pageSchema = new mongoose.Schema({
   images: {
     type: [String],
     validate: {
-      validator: (images) => {
-        if (!images) {
-          return false;
-        }
-
-        if (images && !Array.isArray(images)) {
-          return false;
-        }
-
-        if (images && Array.isArray(images) && !images.length) {
-          return false;
-        }
-
-        return true;
-      },
+      validator: checkIfEmptyArray,
       message: "At least one image is required."
     },
     required: true
@@ -29,25 +16,7 @@ const pageSchema = new mongoose.Schema({
     type: [mongoose.Types.ObjectId],
     ref: "SubCategory",
     validate: {
-      validator: (subCategories) => {
-        if (!subCategories) {
-          return false;
-        }
-
-        if (subCategories && !Array.isArray(subCategories)) {
-          return false;
-        }
-
-        if (
-          subCategories &&
-          Array.isArray(subCategories) &&
-          !subCategories.length
-        ) {
-          return false;
-        }
-
-        return true;
-      },
+      validator: checkIfEmptyArray,
       message: "At least one sub-category is required."
     },
     required: true

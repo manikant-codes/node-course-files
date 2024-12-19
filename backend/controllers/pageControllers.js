@@ -1,10 +1,16 @@
 const {
   saveFile,
-  deleteFile,
-  saveMultipleFiles
+  saveMultipleFiles,
+  deleteMultipleFiles
 } = require("../helpers/fileHelper");
-const { sendErrorResponse, sendDataResponse } = require("../helpers/resHelper");
+const {
+  sendErrorResponse,
+  sendDataResponse,
+  sendSuccessResponse
+} = require("../helpers/resHelper");
 const Page = require("../models/Page");
+const { default: imageSchema } = require("../schemas/imageSchema");
+const { default: pageValidationSchema } = require("../schemas/pageSchema");
 
 const getAllPages = async (req, res) => {
   try {
@@ -33,9 +39,8 @@ const getPageById = async (req, res) => {
 
 const addPage = async (req, res) => {
   try {
-    if (!req.files || !req.files.images) {
-      return sendErrorResponse(res, "Page image is required.", 400);
-    }
+    await imageSchema.validate(req.files);
+    await pageValidationSchema.validate(req.body);
 
     if (Array.isArray(req.files.images)) {
       const imageURLs = await saveMultipleFiles(req.files.images, "page");
@@ -44,6 +49,8 @@ const addPage = async (req, res) => {
       const imageURL = await saveFile(req.files.images, "page");
       req.body.images = [imageURL];
     }
+
+    await pageValidationSchema.validate(req.body);
 
     const page = await Page.create(req.body);
 
@@ -55,6 +62,39 @@ const addPage = async (req, res) => {
 
 const updatePage = async (req, res) => {
   try {
+    const { id } = req.params;
+
+    const page = await Page.findById(id);
+
+    if (!page) {
+      return sendErrorResponse(res, "No such page found.", 404);
+    }
+
+    if (!req.body) {
+      req.body = {};
+    }
+
+    if (!req.body.images) {
+      req.body.images = [];
+    }
+
+    if (req.files && req.files.images) {
+      if (Array.isArray(req.files.images)) {
+        const imageURLs = await saveMultipleFiles(req.files.images, "page");
+        req.body.images = [...req.body.image, ...imageURLs];
+      } else {
+        const imageURL = await saveFile(req.files.images, "page");
+        req.body.images = [...req.body.image, imageURL];
+      }
+    }
+
+    await deleteMultipleFiles(page.images, "page", req.body.images);
+
+    const updatedPage = await Page.findByIdAndUpdate(id, req.body, {
+      new: true
+    });
+
+    sendDataResponse(res, updatedPage);
   } catch (error) {
     sendErrorResponse(res, error.message);
   }
@@ -62,6 +102,19 @@ const updatePage = async (req, res) => {
 
 const deletePage = async (req, res) => {
   try {
+    const { id } = req.params;
+
+    const page = await Page.findById(id);
+
+    if (!page) {
+      return sendErrorResponse(res, "No such page found.", 404);
+    }
+
+    await deleteMultipleFiles(page.images, "page");
+
+    await Page.findByIdAndDelete(id);
+
+    sendSuccessResponse(res, "Page deleted successfully.");
   } catch (error) {
     sendErrorResponse(res, error.message);
   }
