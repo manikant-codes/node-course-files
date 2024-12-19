@@ -1,17 +1,19 @@
 import React from "react";
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
+import { COMPANY_NAME } from "../../consts";
+import { Link } from "react-router-dom";
 
 function PublicNavbar() {
   return (
     <Navbar fluid border>
-      <Navbar.Brand href="https://flowbite-react.com">
+      <Navbar.Brand href="/">
         <img
-          src="/favicon.svg"
+          src="/cart-logo-new.jpg"
           className="mr-3 h-6 sm:h-9"
           alt="Flowbite React Logo"
         />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-          Flowbite React
+          {COMPANY_NAME}
         </span>
       </Navbar.Brand>
       <div className="flex md:order-2">
@@ -32,22 +34,23 @@ function PublicNavbar() {
               name@flowbite.com
             </span>
           </Dropdown.Header>
-          <Dropdown.Item>Dashboard</Dropdown.Item>
-          <Dropdown.Item>Settings</Dropdown.Item>
-          <Dropdown.Item>Earnings</Dropdown.Item>
-          <Dropdown.Divider />
-          <Dropdown.Item>Sign out</Dropdown.Item>
+          <Dropdown.Item as={Link} to="/admin">
+            Dashboard
+          </Dropdown.Item>
+          <Dropdown.Item as={Link} to="/user">
+            Account
+          </Dropdown.Item>
+          <Dropdown.Item>Log Out</Dropdown.Item>
         </Dropdown>
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
-        <Navbar.Link href="#" active>
+        <Navbar.Link as={Link} to="/">
           Home
         </Navbar.Link>
-        <Navbar.Link href="#">About</Navbar.Link>
-        <Navbar.Link href="#">Services</Navbar.Link>
-        <Navbar.Link href="#">Pricing</Navbar.Link>
-        <Navbar.Link href="#">Contact</Navbar.Link>
+        <Navbar.Link as={Link} to="/contact">
+          Contact
+        </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
   );
