@@ -4,6 +4,8 @@ const productsRouter = require("./routes/productsRouter");
 
 const server = express();
 
+server.use(express.json());
+
 server.use("/products", productsRouter);
 
 connectToDB()
