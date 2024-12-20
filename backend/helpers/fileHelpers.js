@@ -12,6 +12,7 @@ const saveFile = async (file, folderName) => {
   await file.mv(savePath);
   return `http://localhost:5000/uploads/${folderName}/${fileName}`;
 };
+
 const deleteFile = async (url, folderName) => {
   // const toBeDeletedFileName = path.basename(category.image);
   // const filesInFolder = await fs.readdir(folderPath);

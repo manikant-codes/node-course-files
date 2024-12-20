@@ -1,14 +1,18 @@
+import { Button } from "flowbite-react";
 import React, { useState } from "react";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
-import { Button, FileInput, Label, TextInput } from "flowbite-react";
-import MyTextInput from "../../../components/admin/common/form/MyTextInput";
 import MyFileUpload from "../../../components/admin/common/form/MyFileUpload";
+import MyTextInput from "../../../components/admin/common/form/MyTextInput";
+import { addCategory } from "../../../services/apiServices";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const initialState = { name: "", slug: "", image: "" };
 
 function CategoriesForm() {
   const [formState, setFormState] = useState(initialState);
   const [imageURL, setImageURL] = useState("");
+  const navigate = useNavigate();
 
   function handleChange(e) {
     setFormState({
@@ -28,11 +32,37 @@ function CategoriesForm() {
     });
   }
 
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    const formData = new FormData();
+
+    // formData.append("name", formState.name);
+    // formData.append("slug", formState.slug);
+    // formData.append("image", formState.image);
+
+    for (const key in formState) {
+      formData.append(key, formState[key]);
+    }
+
+    const data = await addCategory(formData);
+
+    if (data.success) {
+      toast("Category added successfully.", { type: "success" });
+      navigate("/admin/categories");
+    } else {
+      toast("Failed to add category.", { type: "error" });
+    }
+  }
+
   return (
     <div>
       <AdminPageTitle title="Add Updated Category" />
       <div>
-        <form className="grid grid-cols-[1fr_2fr] gap-4">
+        <form
+          className="grid grid-cols-[1fr_2fr] gap-4"
+          onSubmit={handleSubmit}
+        >
           <MyFileUpload
             name="image"
             onChange={handleImageUpload}
@@ -52,7 +82,7 @@ function CategoriesForm() {
               value={formState.slug}
               disabled={true}
             />
-            <Button>Submit</Button>
+            <Button type="submit">Submit</Button>
           </div>
         </form>
       </div>

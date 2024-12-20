@@ -79,7 +79,12 @@ function Sidebar() {
     <ul className="border-r border-r-gray-300 flex flex-col gap-6 p-6">
       {links.map((link) => {
         return (
-          <SidebarListItem icon={link.icon} link={link.to} name={link.name} />
+          <SidebarListItem
+            key={link.id}
+            icon={link.icon}
+            link={link.to}
+            name={link.name}
+          />
         );
       })}
     </ul>

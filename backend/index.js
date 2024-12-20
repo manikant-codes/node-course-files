@@ -6,12 +6,14 @@ const categoryRouter = require("./routes/categoryRouter");
 const subCategoryRouter = require("./routes/subCategoryRouter");
 const productRouter = require("./routes/productRouter");
 const pageRouter = require("./routes/pageRouter");
+var cors = require("cors");
 dotenv.config();
 
 const server = express();
 
-server.use("/uploads", express.static("uploads"));
+server.use(cors());
 server.use(fileUpload());
+server.use("/uploads", express.static("uploads"));
 
 server.use("/categories", categoryRouter);
 server.use("/subCategories", subCategoryRouter);

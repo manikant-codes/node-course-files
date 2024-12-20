@@ -35,15 +35,21 @@ const addCategory = async (req, res) => {
       return sendErrorResponse(res, "Category image is required.", 400);
     }
 
+    const category = await Category.findOne({ slug: req.body.slug });
+
+    if (category) {
+      return sendErrorResponse(res, "Category by this name already exists.");
+    }
+
     const imageURL = await saveFile(req.files.image, "category");
 
-    const category = await Category.create({
+    const newCategory = await Category.create({
       name: req.body.name,
       slug: req.body.slug,
       image: imageURL
     });
 
-    sendDataResponse(res, category);
+    sendDataResponse(res, newCategory);
   } catch (error) {
     sendErrorResponse(res, error.message);
   }
