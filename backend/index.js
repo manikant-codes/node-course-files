@@ -7,11 +7,14 @@ const fileUpload = require("express-fileupload");
 const subCategoryRouter = require("./routes/subCategoryRouter");
 const productRouter = require("./routes/productRouter");
 const pageRouter = require("./routes/pageRouter");
+const cors = require("cors");
 
 const server = express();
 
-// server.use(express.json());
+server.use(cors());
+server.use(express.json());
 server.use(fileUpload());
+
 server.use("/uploads", express.static("uploads"));
 
 server.use("/categories", categoryRouter);

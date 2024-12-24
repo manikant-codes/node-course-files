@@ -6,6 +6,7 @@ import { HiGift } from "react-icons/hi2";
 import { HiMiniTruck } from "react-icons/hi2";
 import { HiMiniUser } from "react-icons/hi2";
 import { HiMiniPower } from "react-icons/hi2";
+import { HiDocumentPlus } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 
 const links = [
@@ -18,9 +19,10 @@ const links = [
     icon: HiSquare2Stack
   },
   { id: 4, name: "Products", to: "/admin/products", icon: HiGift },
-  { id: 5, name: "Orders", to: "/admin/orders", icon: HiMiniTruck },
-  { id: 6, name: "Users", to: "/admin/users", icon: HiMiniUser },
-  { id: 7, name: "Log Out", to: "/", icon: HiMiniPower }
+  { id: 5, name: "Pages", to: "/admin/pages", icon: HiDocumentPlus },
+  { id: 6, name: "Orders", to: "/admin/orders", icon: HiMiniTruck },
+  { id: 7, name: "Users", to: "/admin/users", icon: HiMiniUser },
+  { id: 8, name: "Log Out", to: "/", icon: HiMiniPower }
 ];
 
 function AdminSidebar() {

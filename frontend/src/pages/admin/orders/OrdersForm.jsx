@@ -1,7 +1,11 @@
 import React from "react";
 
 function OrdersForm() {
-  return <div>OrdersForm</div>;
+  return (
+    <div>
+      <AdminPageTitle title="Update Order" />
+    </div>
+  );
 }
 
 export default OrdersForm;

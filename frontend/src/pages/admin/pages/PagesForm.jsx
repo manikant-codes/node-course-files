@@ -1,12 +1,12 @@
 import React from "react";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 
-function ProductsList() {
+function PagesForm() {
   return (
     <div>
-      <AdminPageTitle title="Products" link="/admin/products/add" />
+      <AdminPageTitle title="Add Update Page" />
     </div>
   );
 }
 
-export default ProductsList;
+export default PagesForm;
