@@ -1,12 +1,14 @@
 const express = require("express");
 const connectToDB = require("./db/connect");
-const productsRouter = require("./routes/productsRouter");
+const categoriesRouter = require("./routes/categoriesRouter");
+const fileUpload = require("express-fileupload");
 
 const server = express();
 
 server.use(express.json());
+server.use(fileUpload());
 
-server.use("/products", productsRouter);
+server.use("/categories", categoriesRouter);
 
 connectToDB()
   .then(() => {
