@@ -1,11 +1,15 @@
 import { Button } from "flowbite-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import MyFileUpload from "../../../components/admin/common/form/MyFileUpload";
 import MyTextInput from "../../../components/admin/common/form/MyTextInput";
-import { addCategory } from "../../../services/apiServices";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import {
+  addCategory,
+  getCategoryById,
+  updateCategory
+} from "../../../services/apiServices";
 
 const initialState = { name: "", slug: "", image: "" };
 
@@ -13,6 +17,25 @@ function CategoriesForm() {
   const [formState, setFormState] = useState(initialState);
   const [imageURL, setImageURL] = useState("");
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  const isAdd = id === "add";
+
+  useEffect(() => {
+    if (!isAdd) {
+      getCategoryById(id)
+        .then((result) => {
+          if (!result.success) {
+            toast("Failed to get category data.", { type: "error" });
+          }
+          setFormState(result.data);
+          setImageURL(result.data.image);
+        })
+        .catch((error) => {
+          toast("Failed to get category data.", { type: "error" });
+        });
+    }
+  }, [id]);
 
   function handleChange(e) {
     setFormState({
@@ -40,15 +63,23 @@ function CategoriesForm() {
     // formData.append("name", formState.name);
     // formData.append("slug", formState.slug);
     // formData.append("image", formState.image);
-
+    // OR
     for (const key in formState) {
       formData.append(key, formState[key]);
     }
 
-    const data = await addCategory(formData);
+    let data;
+
+    if (isAdd) {
+      data = await addCategory(formData);
+    } else {
+      data = await updateCategory(id, formData);
+    }
 
     if (data.success) {
-      toast("Category added successfully.", { type: "success" });
+      toast(`Category ${isAdd ? "added" : "updated"} successfully.`, {
+        type: "success"
+      });
       navigate("/admin/categories");
     } else {
       toast("Failed to add category.", { type: "error" });
@@ -57,7 +88,7 @@ function CategoriesForm() {
 
   return (
     <div>
-      <AdminPageTitle title="Add Updated Category" />
+      <AdminPageTitle title={isAdd ? "Add Category" : "Update Category"} />
       <div>
         <form
           className="grid grid-cols-[1fr_2fr] gap-4"

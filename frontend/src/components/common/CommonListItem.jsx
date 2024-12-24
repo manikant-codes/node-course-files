@@ -1,6 +1,8 @@
+import { Button } from "flowbite-react";
 import React from "react";
+import { HiTrash, HiPencil } from "react-icons/hi2";
 
-function CommonListItem({ entity }) {
+function CommonListItem({ entity, handleEdit, handleDelete }) {
   return (
     <li className="py-3 sm:py-4">
       <div className="flex items-center space-x-4">
@@ -19,8 +21,26 @@ function CommonListItem({ entity }) {
             {entity.slug}
           </p>
         </div>
-        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-          $320
+        <div className="inline-flex items-center gap-2 text-base font-semibold text-gray-900 dark:text-white">
+          <Button
+            pill
+            size="sm"
+            onClick={() => {
+              handleEdit(entity._id);
+            }}
+          >
+            <HiPencil />
+          </Button>
+          <Button
+            pill
+            size="sm"
+            color="failure"
+            onClick={() => {
+              handleDelete(entity._id);
+            }}
+          >
+            <HiTrash />
+          </Button>
         </div>
       </div>
     </li>

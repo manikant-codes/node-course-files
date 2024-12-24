@@ -1,6 +1,6 @@
 import { BASE_URL } from "../consts";
 
-async function getAllCategories(id) {
+async function getAllCategories() {
   const response = await fetch(`${BASE_URL}/categories`);
   const data = await response.json();
   return data;

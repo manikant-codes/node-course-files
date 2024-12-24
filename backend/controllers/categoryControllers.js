@@ -7,7 +7,7 @@ const { saveFile, deleteFile } = require("../helpers/fileHelpers");
 
 const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find().sort({ createdAt: -1 });
     sendDataResponse(res, categories);
   } catch (error) {
     sendErrorResponse(res, error.message);
