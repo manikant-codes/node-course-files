@@ -7,6 +7,7 @@ const server = express();
 
 server.use(express.json());
 server.use(fileUpload());
+server.use("/uploads", express.static("uploads"));
 
 server.use("/categories", categoriesRouter);
 
