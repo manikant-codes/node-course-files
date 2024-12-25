@@ -1,22 +1,21 @@
-import { Button } from "flowbite-react";
-import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Dashboard from "./pages/admin/Dashboard";
+import "./App.css";
 import AdminLayout from "./layouts/admin/AdminLayout";
-import CategoriesList from "./pages/admin/categories/CategoriesList";
+import PublicLayout from "./layouts/public/PublicLayout";
 import CategoriesForm from "./pages/admin/categories/CategoriesForm";
-import SubCategoriesList from "./pages/admin/subCategories/SubCategoriesList";
-import SubCategoriesForm from "./pages/admin/subCategories/SubCategoriesForm";
+import CategoriesList from "./pages/admin/categories/CategoriesList";
+import Dashboard from "./pages/admin/Dashboard";
+import OrdersForm from "./pages/admin/orders/OrdersForm";
+import OrdersList from "./pages/admin/orders/OrdersList";
+import PagesForm from "./pages/admin/pages/PagesForm";
+import PagesList from "./pages/admin/pages/PagesList";
 import ProductsForm from "./pages/admin/products/ProductsForm";
 import ProductsList from "./pages/admin/products/ProductsList";
-import OrdersList from "./pages/admin/orders/OrdersList";
-import OrdersForm from "./pages/admin/orders/OrdersForm";
-import UsersList from "./pages/admin/users/UsersList";
+import SubCategoriesForm from "./pages/admin/subCategories/SubCategoriesForm";
+import SubCategoriesList from "./pages/admin/subCategories/SubCategoriesList";
 import UsersForm from "./pages/admin/users/UsersForm";
+import UsersList from "./pages/admin/users/UsersList";
 import Home from "./pages/public/Home";
-import PublicLayout from "./layouts/public/PublicLayout";
-import PagesList from "./pages/admin/pages/PagesList";
-import PagesForm from "./pages/admin/pages/PagesForm";
 
 function App() {
   return (
