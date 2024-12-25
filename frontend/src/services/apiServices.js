@@ -54,10 +54,69 @@ async function deleteCategory(id) {
   }
 }
 
+async function getAllSubCategories() {
+  const response = await fetch(`${BASE_URL}/subCategories`);
+  const data = await response.json();
+  return data;
+}
+
+async function getSubCategoryById(id) {
+  try {
+    const response = await fetch(`${BASE_URL}/subCategories/${id}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("Error: " + error.message);
+  }
+}
+
+async function addSubCategory(body) {
+  try {
+    const response = await fetch(`${BASE_URL}/subCategories`, {
+      body,
+      method: "POST"
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("Error: " + error.message);
+  }
+}
+
+async function updateSubCategory(id, body) {
+  try {
+    const response = await fetch(`${BASE_URL}/subCategories/${id}`, {
+      body,
+      method: "PATCH"
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("Error: " + error.message);
+  }
+}
+
+async function deleteSubCategory(id) {
+  try {
+    const response = await fetch(`${BASE_URL}/subCategories/${id}`, {
+      method: "DELETE"
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("Error: " + error.message);
+  }
+}
+
 export {
   getAllCategories,
   getCategoryById,
   addCategory,
   updateCategory,
-  deleteCategory
+  deleteCategory,
+  getAllSubCategories,
+  getSubCategoryById,
+  addSubCategory,
+  updateSubCategory,
+  deleteSubCategory
 };
