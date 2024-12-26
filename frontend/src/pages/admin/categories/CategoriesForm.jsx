@@ -14,6 +14,8 @@ import {
 const initialState = { name: "", slug: "", image: "" };
 
 function CategoriesForm() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [formState, setFormState] = useState(initialState);
   const [imageURL, setImageURL] = useState("");
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ function CategoriesForm() {
       getCategoryById(id)
         .then((result) => {
           if (!result.success) {
-            toast("Failed to get category data.", { type: "error" });
+            return toast("Failed to get category data.", { type: "error" });
           }
           setFormState(result.data);
           setImageURL(result.data.image);
@@ -56,33 +58,38 @@ function CategoriesForm() {
   }
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    const formData = new FormData();
+      setLoading(true);
 
-    // formData.append("name", formState.name);
-    // formData.append("slug", formState.slug);
-    // formData.append("image", formState.image);
-    // OR
-    for (const key in formState) {
-      formData.append(key, formState[key]);
-    }
+      const formData = new FormData();
+      formData.append("name", formState.name);
+      formData.append("slug", formState.slug);
+      formData.append("image", formState.image);
 
-    let data;
+      let data;
 
-    if (isAdd) {
-      data = await addCategory(formData);
-    } else {
-      data = await updateCategory(id, formData);
-    }
+      if (isAdd) {
+        data = await addCategory(formData);
+      } else {
+        data = await updateCategory(id, formData);
+      }
 
-    if (data.success) {
-      toast(`Category ${isAdd ? "added" : "updated"} successfully.`, {
-        type: "success"
-      });
-      navigate("/admin/categories");
-    } else {
-      toast("Failed to add category.", { type: "error" });
+      if (data.success) {
+        setLoading(false);
+        toast(`Category ${isAdd ? "added" : "updated"} successfully.`, {
+          type: "success"
+        });
+        navigate("/admin/categories");
+      } else {
+        setLoading(false);
+        setError(data.msg);
+        toast("Failed to add category.", { type: "error" });
+      }
+    } catch (error) {
+      setLoading(false);
+      setError(error.message);
     }
   }
 

@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from "react";
-import CommonListItem from "./CommonListItem";
 import { Spinner } from "flowbite-react";
-import { HiCheck, HiExclamation, HiX } from "react-icons/hi";
+import React, { useEffect, useState } from "react";
+import { HiExclamation } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
+import CommonListItem from "./CommonListItem";
 
 function CommonList({ getData, deleteData }) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    handleFetch();
+  }, []);
 
   function handleFetch() {
     getData()
@@ -34,10 +38,6 @@ function CommonList({ getData, deleteData }) {
     await deleteData(id);
     handleFetch();
   }
-
-  useEffect(() => {
-    handleFetch();
-  }, []);
 
   if (loading)
     return (

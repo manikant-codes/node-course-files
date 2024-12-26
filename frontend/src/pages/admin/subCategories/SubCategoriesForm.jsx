@@ -1,23 +1,30 @@
+import { Button } from "flowbite-react";
 import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
-import MyTextInput from "../../../components/admin/common/form/MyTextInput";
 import MyFileUpload from "../../../components/admin/common/form/MyFileUpload";
 import MySelect from "../../../components/admin/common/form/MySelect";
+import MyTextInput from "../../../components/admin/common/form/MyTextInput";
 import {
   addSubCategory,
-  getAllCategories
+  getAllCategories,
+  getSubCategoryById,
+  updateSubCategory
 } from "../../../services/apiServices";
-import { Button } from "flowbite-react";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 const initialState = { name: "", slug: "", image: null, category: "" };
 
 function SubCategoriesForm() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [formState, setFormState] = useState(initialState);
   const [imageURL, setImageURL] = useState("");
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  const isAdd = id === "add";
 
   useEffect(() => {
     getAllCategories().then((result) => {
@@ -31,6 +38,15 @@ function SubCategoriesForm() {
       setCategories(temp);
     });
   }, []);
+
+  useEffect(() => {
+    if (!isAdd) {
+      getSubCategoryById(id).then((result) => {
+        setFormState(result.data);
+        setImageURL(result.data.image);
+      });
+    }
+  }, [id]);
 
   function handleFileUpload(e) {
     const file = e.target.files[0];
@@ -55,56 +71,81 @@ function SubCategoriesForm() {
   }
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("name", formState.name);
-    formData.append("slug", formState.slug);
-    formData.append("image", formState.image);
-    formData.append("category", formState.category);
+      setLoading(true);
 
-    const result = await addSubCategory(formData);
+      const formData = new FormData();
+      formData.append("name", formState.name);
+      formData.append("slug", formState.slug);
+      formData.append("image", formState.image);
+      formData.append("category", formState.category);
 
-    if (!result.success) {
-      return toast("Failed to add sub-category.", { type: "error" });
+      let result;
+
+      if (isAdd) {
+        result = await addSubCategory(formData);
+      } else {
+        result = await updateSubCategory(id, formData);
+      }
+
+      if (!result.success) {
+        return toast(`Failed to ${isAdd ? "add" : "updated"} sub-category.`, {
+          type: "error"
+        });
+      }
+
+      toast(`Sub-category ${isAdd ? "added" : "updated"} successfully.`, {
+        type: "success"
+      });
+
+      setLoading(false);
+      navigate("/admin/subCategories");
+    } catch (error) {
+      setLoading(false);
+      setError(error.message);
     }
-
-    toast("Sub-category added successfully.", { type: "success" });
-
-    navigate("/admin/subCategories");
   }
 
   return (
     <div>
-      <AdminPageTitle title="Add Update SubCategory" />
+      <AdminPageTitle title={`${isAdd ? "Add" : "Update"} SubCategory`} />
       <div>
-        <form className="grid grid-cols-1 gap-4" onSubmit={handleSubmit}>
+        <form
+          className="grid grid-cols-[1fr_2fr] gap-4"
+          onSubmit={handleSubmit}
+        >
           <MyFileUpload
             name="image"
             url={imageURL}
             onChange={handleFileUpload}
           />
-          <MyTextInput
-            name="name"
-            label="Sub-Category Name"
-            value={formState.name}
-            onChange={handleChange}
-            required={true}
-          />
-          <MyTextInput
-            name="slug"
-            label="Sub-Category Slug"
-            value={formState.slug}
-            disabled={true}
-          />
-          <MySelect
-            name="category"
-            label="Select A Category"
-            options={categories}
-            value={formState.category}
-            onChange={handleChange}
-          />
-          <Button type="submit">Submit</Button>
+          <div className="grid grid-cols-1 gap-4">
+            <MyTextInput
+              name="name"
+              label="Sub-Category Name"
+              value={formState.name}
+              onChange={handleChange}
+              required={true}
+            />
+            <MyTextInput
+              name="slug"
+              label="Sub-Category Slug"
+              value={formState.slug}
+              disabled={true}
+            />
+            <MySelect
+              name="category"
+              label="Select A Category"
+              options={categories}
+              value={formState.category}
+              onChange={handleChange}
+            />
+            <Button type="submit" isProcessing={loading}>
+              Submit
+            </Button>
+          </div>
         </form>
       </div>
     </div>
