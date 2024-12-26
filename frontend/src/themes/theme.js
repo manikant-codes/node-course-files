@@ -25,6 +25,13 @@ const customTheme = {
         }
       }
     }
+  },
+  alert: {
+    color: {
+      primary:
+        "border-violet-500 bg-violet-100 text-violet-700 dark:bg-violet-200 dark:text-violet-800"
+    },
+    icon: "mr-3 inline h-6 w-6 flex-shrink-0"
   }
 };
 

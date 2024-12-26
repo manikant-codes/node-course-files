@@ -1,19 +1,19 @@
+import { Button } from "flowbite-react";
 import React, { useState } from "react";
-import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
-import { Button, FileInput, Label, TextInput } from "flowbite-react";
-import { addCategory } from "../../../services/apiServices";
-import MyFileInput from "../../../components/admin/common/form/MyFileInput";
-import MyTextInput from "../../../components/admin/common/form/MyTextInput";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
+import MyFileInput from "../../../components/admin/common/form/MyFileInput";
+import MyTextInput from "../../../components/admin/common/form/MyTextInput";
+import { addCategory } from "../../../services/apiServices";
 
 function CategoriesForm() {
-  const [imageURL, setImageURL] = useState("");
   const [formState, setFormState] = useState({
     name: "",
     slug: "",
     image: null
   });
+  const [imageURL, setImageURL] = useState("");
   const navigate = useNavigate();
 
   function handleChange(e) {
@@ -53,29 +53,34 @@ function CategoriesForm() {
   return (
     <div>
       <AdminPageTitle title="Add Update Category" />
-      <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
+      <form
+        onSubmit={handleSubmit}
+        className="mt-4 grid grid-cols-[1fr_2fr] gap-4"
+      >
         <MyFileInput
           name="image"
           label="Upload Category Image"
           url={imageURL}
           onChange={handleFileUpload}
         />
-        <MyTextInput
-          name="name"
-          lable="Category Name"
-          value={formState.name}
-          onChange={handleChange}
-          required={true}
-        />
-        <MyTextInput
-          name="slug"
-          lable="Category Slug"
-          value={formState.slug}
-          disabled={true}
-        />
-        <Button color="primary" type="submit">
-          Submit
-        </Button>
+        <div className="flex flex-col gap-4">
+          <MyTextInput
+            name="name"
+            lable="Category Name"
+            value={formState.name}
+            onChange={handleChange}
+            required={true}
+          />
+          <MyTextInput
+            name="slug"
+            lable="Category Slug"
+            value={formState.slug}
+            disabled={true}
+          />
+          <Button color="primary" type="submit">
+            Submit
+          </Button>
+        </div>
       </form>
     </div>
   );

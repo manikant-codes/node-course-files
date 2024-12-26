@@ -6,7 +6,7 @@ import { HiMiniPlus } from "react-icons/hi2";
 function AdminPageTitle({ title, link }) {
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl text-gray-700 font-semibold">{title}</h2>
         {link && (
           <Button color="primary" size="sm" as={Link} to={link}>
@@ -15,7 +15,6 @@ function AdminPageTitle({ title, link }) {
           </Button>
         )}
       </div>
-      <hr />
     </div>
   );
 }

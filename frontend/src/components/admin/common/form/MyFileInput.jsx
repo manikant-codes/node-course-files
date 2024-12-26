@@ -8,7 +8,7 @@ function MyFileInput({ name, label, url, onChange }) {
         <img
           src={url || "/placeholder.svg"}
           alt=""
-          className="w-full h-[256px] rounded-xl object-contain border border-gray-300"
+          className="w-full h-[256px] rounded-xl object-cover border border-gray-300"
         />
       </div>
       <div className="mb-2 block">

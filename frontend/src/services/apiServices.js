@@ -3,31 +3,28 @@
 import { BASE_URL } from "../consts";
 
 async function getAllCategories() {
-  try {
-    const response = await fetch(`${BASE_URL}/categories`);
-    return await response.json();
-  } catch (error) {
-    console.log(error.message);
-  }
+  const response = await fetch(`${BASE_URL}/categories`);
+  return await response.json();
 }
 
 function getCategoryById() {}
 
 async function addCategory(body) {
-  try {
-    const response = await fetch(`${BASE_URL}/categories`, {
-      method: "POST",
-      body: body
-    });
-    return await response.json();
-  } catch (error) {
-    console.log(error.message);
-  }
+  const response = await fetch(`${BASE_URL}/categories`, {
+    method: "POST",
+    body: body
+  });
+  return await response.json();
 }
 
 function updateCategory() {}
 
-function deleteCategory() {}
+async function deleteCategory(id) {
+  const response = await fetch(`${BASE_URL}/categories/${id}`, {
+    method: "DELETE"
+  });
+  return response.json();
+}
 
 export {
   getAllCategories,
