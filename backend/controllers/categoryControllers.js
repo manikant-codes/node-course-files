@@ -71,12 +71,15 @@ const updateCategory = async (req, res) => {
       const fileName = path.basename(category.image);
       const folderPath = path.join(__dirname, "../uploads", "category");
       const filesInfolder = await fs.readdir(folderPath);
+
       if (filesInfolder.includes(fileName)) {
         await fs.unlink(path.join(folderPath, fileName));
       }
 
+      console.log("here");
+
       const newFileName = Date.now() + "-" + req.files.image.name;
-      await req.files.image.mv(folderPath);
+      await req.files.image.mv(path.join(folderPath, newFileName));
       const newImageURL = `http://localhost:5000/uploads/category/${newFileName}`;
 
       req.body.image = newImageURL;

@@ -7,7 +7,10 @@ async function getAllCategories() {
   return await response.json();
 }
 
-function getCategoryById() {}
+async function getCategoryById(id) {
+  const response = await fetch(`${BASE_URL}/categories/${id}`);
+  return await response.json();
+}
 
 async function addCategory(body) {
   const response = await fetch(`${BASE_URL}/categories`, {
@@ -17,7 +20,13 @@ async function addCategory(body) {
   return await response.json();
 }
 
-function updateCategory() {}
+async function updateCategory(id, body) {
+  const response = await fetch(`${BASE_URL}/categories/${id}`, {
+    method: "PATCH",
+    body
+  });
+  return response.json();
+}
 
 async function deleteCategory(id) {
   const response = await fetch(`${BASE_URL}/categories/${id}`, {
