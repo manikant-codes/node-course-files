@@ -7,7 +7,7 @@ const getAllCategories = async (req, res) => {
     const categories = await Category.find();
     res.status(200).json({ success: true, data: categories });
   } catch (error) {
-    res.status(500).json({ success: false, msg: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -20,12 +20,12 @@ const getCategoryById = async (req, res) => {
     if (!category) {
       return res
         .status(404)
-        .json({ success: false, msg: "No such category found." });
+        .json({ success: false, message: "No such category found." });
     }
 
     res.status(200).json({ success: true, data: category });
   } catch (error) {
-    res.status(500).json({ success: false, msg: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -34,7 +34,7 @@ const addCategory = async (req, res) => {
     if (!req.files || !req.files.image) {
       return res
         .status(400)
-        .json({ success: false, msg: "Category image is required." });
+        .json({ success: false, message: "Category image is required." });
     }
 
     const existingCategory = await Category.findOne({ slug: body.slug });
@@ -42,14 +42,14 @@ const addCategory = async (req, res) => {
     if (existingCategory) {
       return res
         .status(400)
-        .json({ success: false, msg: "Category slug already exists." });
+        .json({ success: false, message: "Category slug already exists." });
     }
 
     const fileName = Date.now() + "-" + req.files.image.name;
 
-    const folderPath = path.join(__dirname, "../uploads", "category", fileName);
+    const filePath = path.join(__dirname, "../uploads", "category", fileName);
 
-    await req.files.image.mv(folderPath);
+    await req.files.image.mv(filePath);
 
     const imageURL = `http://localhost:5000/uploads/category/${fileName}`;
 
@@ -59,14 +59,55 @@ const addCategory = async (req, res) => {
 
     res.status(200).json({ success: true, data: category });
   } catch (error) {
-    res.status(500).json({ success: false, msg: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
 const updateCategory = async (req, res) => {
   try {
+    const { id } = req.params;
+
+    const category = await Category.findById(id);
+
+    if (!category) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No such category found." });
+    }
+
+    if (!req.body) {
+      req.body = {};
+    }
+
+    if (req.files && req.files.image) {
+      const fileName = Date.now() + "-" + req.files.image.name;
+      const filePath = path.josin(
+        __dirname,
+        "../uploads",
+        "category",
+        fileName
+      );
+      await req.files.image.mv(filePath);
+      const imageURL = `http://localhost:5000/uploads/category/${fileName}`;
+
+      const oldFileName = path.basename(category.image);
+      const folderPath = path.join(__dirname, "../uploads", "category");
+      const filesInFolder = await fs.readdir(folderPath);
+
+      if (filesInFolder.includes(oldFileName)) {
+        await fs.unlink(path.join(folderPath, oldFileName));
+      }
+
+      req.body.image = imageURL;
+    }
+
+    const updatedCategory = await Category.findByIdAndUpdate(id, req.body, {
+      new: true
+    });
+
+    res.status(200).json({ success: true, data: updatedCategory });
   } catch (error) {
-    res.status(500).json({ success: false, msg: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -79,7 +120,7 @@ const deleteCategory = async (req, res) => {
     if (!category) {
       return res
         .status(404)
-        .json({ success: false, msg: "No such category found." });
+        .json({ success: false, message: "No such category found." });
     }
 
     const fileName = path.basename(category.image);
@@ -95,9 +136,9 @@ const deleteCategory = async (req, res) => {
 
     res
       .status(500)
-      .json({ success: true, msg: "Category deleted successfully." });
+      .json({ success: true, message: "Category deleted successfully." });
   } catch (error) {
-    res.status(500).json({ success: false, msg: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
