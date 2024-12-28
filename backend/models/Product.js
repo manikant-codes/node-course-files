@@ -36,9 +36,9 @@ const productSchema = new mongoose.Schema({
   discountPercentage: { type: Number, min: 0, max: 100, default: 0 },
   taxPercentage: { type: Number, min: 0, max: 100, default: 0 },
   shippingFee: { type: Number, min: 0, default: 0 },
-  qty: { type: Number, min: 0, required: true },
-  sizes: { type: [String] },
-  colors: { type: [String] }
+  qty: { type: Number, min: 0, required: true }
+  // sizes: { type: [String] },
+  // colors: { type: [String] }
 });
 
 const Product = mongoose.model("Product", productSchema);
