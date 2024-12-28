@@ -3,6 +3,7 @@ const connectToDB = require("./db/connect");
 const categoriesRouter = require("./routes/categoriesRouter");
 const fileUpload = require("express-fileupload");
 const subcategoriesRouter = require("./routes/subcategoriesRouter");
+const productsRouter = require("./routes/productsRouter");
 
 const server = express();
 
@@ -12,6 +13,7 @@ server.use("/uploads", express.static("uploads"));
 
 server.use("/categories", categoriesRouter);
 server.use("/subcategories", subcategoriesRouter);
+server.use("/products", productsRouter);
 
 connectToDB()
   .then(() => {

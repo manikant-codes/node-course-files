@@ -1,21 +1,21 @@
-const Subcategory = require("../models/Subcategories");
+const SubCategory = require("../models/SubCategory");
 const path = require("path");
 const fs = require("fs/promises");
 
-const getAllSubcategories = async () => {
+const getAllSubCategories = async (req, res) => {
   try {
-    const subcategories = await Subcategory.find();
+    const subcategories = await SubCategory.find();
     res.status(200).json({ success: true, data: subcategories });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-const getSubcategoryById = async () => {
+const getSubCategoryById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const subcategory = await Subcategory.findById(id);
+    const subcategory = await SubCategory.findById(id);
 
     if (!subcategory) {
       return res
@@ -29,7 +29,7 @@ const getSubcategoryById = async () => {
   }
 };
 
-const addSubcategory = async () => {
+const addSubCategory = async (req, res) => {
   try {
     if (!req.files || !req.files.image) {
       return res
@@ -49,18 +49,18 @@ const addSubcategory = async () => {
 
     req.body.image = imageURL;
 
-    const subcategory = await Subcategory.create(req.body);
+    const subcategory = await SubCategory.create(req.body);
     res.status(200).json({ success: true, data: subcategory });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-const updateSubcategory = async () => {
+const updateSubCategory = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const subcategory = await Subcategory.findById(id);
+    const subcategory = await SubCategory.findById(id);
 
     if (!subcategory) {
       return res
@@ -94,7 +94,7 @@ const updateSubcategory = async () => {
       req.body.image = imageURL;
     }
 
-    const updatedSubcategory = await Subcategory.findByIdAndUpdate(
+    const updatedSubcategory = await SubCategory.findByIdAndUpdate(
       id,
       req.body,
       { new: true }
@@ -106,11 +106,11 @@ const updateSubcategory = async () => {
   }
 };
 
-const deleteSubcategory = async () => {
+const deleteSubCategory = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const subcategory = await Subcategory.findById(id);
+    const subcategory = await SubCategory.findById(id);
 
     if (!subcategory) {
       return res
@@ -126,7 +126,7 @@ const deleteSubcategory = async () => {
       await fs.unlink(path.join(folderPath, fileName));
     }
 
-    await Subcategory.findByIdAndDelete(id);
+    await SubCategory.findByIdAndDelete(id);
 
     res
       .status(200)
@@ -137,9 +137,9 @@ const deleteSubcategory = async () => {
 };
 
 module.exports = {
-  getAllSubcategories,
-  getSubcategoryById,
-  addSubcategory,
-  updateSubcategory,
-  deleteSubcategory
+  getAllSubCategories,
+  getSubCategoryById,
+  addSubCategory,
+  updateSubCategory,
+  deleteSubCategory
 };
