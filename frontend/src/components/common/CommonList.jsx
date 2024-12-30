@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import CommonListItem from "./CommonListItem";
 import MessageBox from "./MessageBox";
 
-function CommonList({ getData, deleteData }) {
+function CommonList({ getData, deleteData, getFieldValues }) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
@@ -41,7 +41,7 @@ function CommonList({ getData, deleteData }) {
     handleFetch();
   }
 
-  if (loading)
+  if (loading) {
     return (
       <MessageBox
         renderIcon={() => {
@@ -50,6 +50,7 @@ function CommonList({ getData, deleteData }) {
         message="Loading..."
       />
     );
+  }
 
   if (error) {
     return (
@@ -61,28 +62,35 @@ function CommonList({ getData, deleteData }) {
     );
   }
 
-  return (
-    <ul className="bg-cyan-50 border border-cyan-200 p-4 rounded-xl">
-      {data.length > 0 ? (
-        data.map((entity, index) => {
-          return (
-            <>
+  function renderList() {
+    if (data.length > 0) {
+      return (
+        <ul className="bg-cyan-50 border border-cyan-200 p-4 rounded-xl">
+          {data.map((entity, index) => {
+            const { image, title, desc } = getFieldValues(entity);
+            return (
               <CommonListItem
+                key={index}
+                id={entity._id}
+                image={image}
+                title={title}
+                desc={desc}
                 entity={entity}
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
+                index={index}
+                length={data.length}
               />
-              {index < data.length - 1 && (
-                <hr className="border-b border-b-cyan-100 outline-0" />
-              )}
-            </>
-          );
-        })
-      ) : (
-        <MessageBox icon={HiArchiveBoxXMark} message="No data to show." />
-      )}
-    </ul>
-  );
+            );
+          })}
+        </ul>
+      );
+    } else {
+      return <MessageBox icon={HiArchiveBoxXMark} message="No data to show." />;
+    }
+  }
+
+  return <>{renderList()}</>;
 }
 
 export default CommonList;

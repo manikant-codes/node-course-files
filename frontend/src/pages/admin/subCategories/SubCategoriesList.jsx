@@ -17,6 +17,13 @@ function SubCategoriesList() {
         <CommonList
           getData={getAllSubCategories}
           deleteData={deleteSubCategory}
+          getFieldValues={(entity) => {
+            return {
+              image: entity.image,
+              title: entity.name,
+              desc: "Category: " + entity.category.name
+            };
+          }}
         />
       </div>
     </div>

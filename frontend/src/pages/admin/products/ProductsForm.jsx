@@ -1,17 +1,18 @@
+import { Button } from "flowbite-react";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
-import MySelect from "../../../components/admin/common/form/MySelect";
-import MyTextInput from "../../../components/admin/common/form/MyTextInput";
-import { Button, Textarea } from "flowbite-react";
-import MyTextarea from "../../../components/admin/common/form/MyTextarea";
 import MyMultipleFileUpload from "../../../components/admin/common/form/MyMultipleFileUpload";
+import MySelect from "../../../components/admin/common/form/MySelect";
+import MyTextarea from "../../../components/admin/common/form/MyTextarea";
+import MyTextInput from "../../../components/admin/common/form/MyTextInput";
 import {
   addProduct,
   getAllCategories,
   getAllSubCategories
 } from "../../../services/apiServices";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import MyMultiSelect from "../../../components/admin/common/form/MyMultiSelect";
 
 const initialState = {
   name: "",
@@ -217,6 +218,7 @@ function ProductsForm() {
           </div>
 
           {/* Sizes Multi Select Here */}
+          <MyMultiSelect />
           {/* Colors Multi Select Here */}
 
           <Button type="submit">Submit</Button>

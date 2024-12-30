@@ -14,7 +14,17 @@ function CategoriesList() {
         btn={{ to: "/admin/categories/add", text: "Add Category" }}
       />
       <div>
-        <CommonList getData={getAllCategories} deleteData={deleteCategory} />
+        <CommonList
+          getData={getAllCategories}
+          deleteData={deleteCategory}
+          getFieldValues={(entity) => {
+            return {
+              image: entity.image,
+              title: entity.name,
+              desc: entity.slug
+            };
+          }}
+        />
       </div>
     </div>
   );
