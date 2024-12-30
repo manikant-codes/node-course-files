@@ -35,12 +35,39 @@ async function deleteCategory(id) {
   return response.json();
 }
 
+// End Categories
+
+// Sub-Categories
+
+async function getAllSubCategories() {
+  const response = await fetch(`${BASE_URL}/subCategories`);
+  return await response.json();
+}
+
+async function addSubCategory(body) {
+  const response = await fetch(`${BASE_URL}/subCategories`, {
+    method: "POST",
+    body: body
+  });
+  return await response.json();
+}
+
+async function deleteSubCategory(id) {
+  const response = await fetch(`${BASE_URL}/subCategories/${id}`, {
+    method: "DELETE"
+  });
+  return response.json();
+}
+
+// End Sub-Categories
+
 export {
   getAllCategories,
   getCategoryById,
   addCategory,
   updateCategory,
-  deleteCategory
+  deleteCategory,
+  getAllSubCategories,
+  addSubCategory,
+  deleteSubCategory
 };
-
-// End Categories

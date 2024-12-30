@@ -11,12 +11,14 @@ import {
   updateCategory
 } from "../../../services/apiServices";
 
+const initialState = {
+  name: "",
+  slug: "",
+  image: null
+};
+
 function CategoriesForm() {
-  const [formState, setFormState] = useState({
-    name: "",
-    slug: "",
-    image: null
-  });
+  const [formState, setFormState] = useState(initialState);
   const [imageURL, setImageURL] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
@@ -56,31 +58,37 @@ function CategoriesForm() {
   }
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("name", formState.name);
-    formData.append("slug", formState.slug);
-    formData.append("image", formState.image);
+      const formData = new FormData();
+      formData.append("name", formState.name);
+      formData.append("slug", formState.slug);
+      formData.append("image", formState.image);
 
-    let result;
+      let result;
 
-    if (isAdd) {
-      result = await addCategory(formData);
-    } else {
-      result = await updateCategory(id, formData);
-    }
+      if (isAdd) {
+        result = await addCategory(formData);
+      } else {
+        result = await updateCategory(id, formData);
+      }
 
-    if (!result.success) {
+      if (!result.success) {
+        return toast(`Failed to ${isAdd ? "add" : "update"} category.`, {
+          type: "error"
+        });
+      }
+
+      toast(`Category ${isAdd ? "added" : "updated"} successfully.`, {
+        type: "success"
+      });
+      navigate("/admin/categories");
+    } catch (error) {
       return toast(`Failed to ${isAdd ? "add" : "update"} category.`, {
         type: "error"
       });
     }
-
-    toast(`Category ${isAdd ? "added" : "updated"} successfully.`, {
-      type: "success"
-    });
-    navigate("/admin/categories");
   }
 
   return (
