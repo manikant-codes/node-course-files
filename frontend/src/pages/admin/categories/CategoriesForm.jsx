@@ -1,10 +1,11 @@
 import { Button } from "flowbite-react";
 import React, { useEffect, useState } from "react";
+import { HiArrowPath, HiMiniExclamationTriangle } from "react-icons/hi2";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import MyFileInput from "../../../components/admin/common/form/MyFileInput";
 import MyTextInput from "../../../components/admin/common/form/MyTextInput";
+import MyAlert from "../../../components/common/MyAlert";
 import {
   addCategory,
   getCategoryById,
@@ -18,28 +19,41 @@ const initialState = {
 };
 
 function CategoriesForm() {
+  const { id } = useParams();
+  const isAdd = id === "add";
+  const [formStateLoading, setFormStateLoading] = useState(
+    isAdd ? false : true
+  );
   const [formState, setFormState] = useState(initialState);
+  const [formStateError, setFormStateError] = useState("");
   const [imageURL, setImageURL] = useState("");
   const navigate = useNavigate();
-  const { id } = useParams();
-
-  useEffect(() => {
-    fetchCategory();
-  }, []);
-
-  const isAdd = id === "add";
 
   async function fetchCategory() {
     try {
-      if (!isAdd) {
-        const result = await getCategoryById(id);
-        setFormState(result.data);
-        setImageURL(result.data.image);
+      const result = await getCategoryById(id);
+
+      if (!result.success) {
+        toast("Failed to fetch category.", { type: "error" });
+        setFormStateError("Failed to fetch category.");
+        return;
       }
+
+      setFormState(result.data);
+      setImageURL(result.data.image);
     } catch (error) {
-      toast("Failed to fetch category data.", { type: "error" });
+      toast("Failed to fetch category.", { type: "error" });
+      setFormStateError("Failed to fetch category.");
+    } finally {
+      setFormStateLoading(false);
     }
   }
+
+  useEffect(() => {
+    if (!isAdd) {
+      fetchCategory();
+    }
+  }, [id]);
 
   function handleChange(e) {
     setFormState({
@@ -91,39 +105,50 @@ function CategoriesForm() {
     }
   }
 
+  if (formStateLoading) {
+    return <MyAlert icon={HiArrowPath} msg="Loading..." />;
+  }
+
+  if (formStateError) {
+    return (
+      <MyAlert
+        color="failure"
+        icon={HiMiniExclamationTriangle}
+        msg={formStateError}
+      />
+    );
+  }
+
   return (
-    <div>
-      <AdminPageTitle title={`${isAdd ? "Add" : "Update"} Category`} />
-      <form
-        onSubmit={handleSubmit}
-        className="mt-4 grid grid-cols-[1fr_2fr] gap-4"
-      >
-        <MyFileInput
-          name="image"
-          label="Upload Category Image"
-          url={imageURL}
-          onChange={handleFileUpload}
+    <form
+      onSubmit={handleSubmit}
+      className="mt-4 grid grid-cols-[1fr_2fr] gap-4"
+    >
+      <MyFileInput
+        name="image"
+        label="Upload Category Image"
+        url={imageURL}
+        onChange={handleFileUpload}
+      />
+      <div className="flex flex-col gap-4">
+        <MyTextInput
+          name="name"
+          lable="Category Name"
+          value={formState.name}
+          onChange={handleChange}
+          required={true}
         />
-        <div className="flex flex-col gap-4">
-          <MyTextInput
-            name="name"
-            lable="Category Name"
-            value={formState.name}
-            onChange={handleChange}
-            required={true}
-          />
-          <MyTextInput
-            name="slug"
-            lable="Category Slug"
-            value={formState.slug}
-            disabled={true}
-          />
-          <Button color="primary" type="submit">
-            Submit
-          </Button>
-        </div>
-      </form>
-    </div>
+        <MyTextInput
+          name="slug"
+          lable="Category Slug"
+          value={formState.slug}
+          disabled={true}
+        />
+        <Button color="primary" type="submit">
+          Submit
+        </Button>
+      </div>
+    </form>
   );
 }
 

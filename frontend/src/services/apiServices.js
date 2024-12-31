@@ -44,12 +44,25 @@ async function getAllSubCategories() {
   return await response.json();
 }
 
+async function getSubCategoryById(id) {
+  const response = await fetch(`${BASE_URL}/subCategories/${id}`);
+  return await response.json();
+}
+
 async function addSubCategory(body) {
   const response = await fetch(`${BASE_URL}/subCategories`, {
     method: "POST",
     body: body
   });
   return await response.json();
+}
+
+async function updateSubCategory(id, body) {
+  const response = await fetch(`${BASE_URL}/subCategories/${id}`, {
+    method: "PATCH",
+    body
+  });
+  return response.json();
 }
 
 async function deleteSubCategory(id) {
@@ -68,6 +81,8 @@ export {
   updateCategory,
   deleteCategory,
   getAllSubCategories,
+  getSubCategoryById,
   addSubCategory,
+  updateSubCategory,
   deleteSubCategory
 };

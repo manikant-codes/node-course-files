@@ -1,15 +1,18 @@
 import { Button } from "flowbite-react";
 import React, { useEffect, useState } from "react";
-import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
-import MyFileInput from "../../../components/admin/common/form/MyFileInput";
-import MyTextInput from "../../../components/admin/common/form/MyTextInput";
-import MySelect from "../../../components/admin/common/form/MySelect";
+import { HiArrowPath, HiMiniExclamationTriangle } from "react-icons/hi2";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import MyFileInput from "../../../components/admin/common/form/MyFileInput";
+import MySelect from "../../../components/admin/common/form/MySelect";
+import MyTextInput from "../../../components/admin/common/form/MyTextInput";
+import MyAlert from "../../../components/common/MyAlert";
 import {
   addSubCategory,
-  getAllCategories
+  getAllCategories,
+  getSubCategoryById,
+  updateSubCategory
 } from "../../../services/apiServices";
-import { useNavigate } from "react-router-dom";
 
 const initialState = {
   name: "",
@@ -19,7 +22,13 @@ const initialState = {
 };
 
 function SubCategoriesForm() {
+  const { id } = useParams();
+  const isAdd = id === "add";
+  const [formStateLoading, setFormStateLoading] = useState(
+    isAdd ? false : true
+  );
   const [formState, setFormState] = useState(initialState);
+  const [formStateError, setFormStateError] = useState("");
   const [imageURL, setImageURL] = useState("");
   const [categoryOptions, setCategoryOptions] = useState([]);
   const navigate = useNavigate();
@@ -27,12 +36,39 @@ function SubCategoriesForm() {
   async function fetchAllCategories() {
     try {
       const result = await getAllCategories();
+
+      if (!result.success) {
+        toast("Failed to get categories.", { type: "error" });
+        return;
+      }
+
       const temp = result.data.map((category) => {
         return { value: category._id, text: category.name };
       });
+
       setCategoryOptions(temp);
     } catch (error) {
       toast("Failed to get categories.", { type: "error" });
+    }
+  }
+
+  async function fetchSubCategory() {
+    try {
+      const result = await getSubCategoryById(id);
+
+      if (!result.success) {
+        toast("Failed to fetch sub-categoory.", { type: "error" });
+        setFormStateError("Failed to fetch sub-categoory.");
+        return;
+      }
+
+      setFormState(result.data);
+      setImageURL(result.data.image);
+    } catch (error) {
+      toast("Failed to fetch sub-categoory.", { type: "error" });
+      setFormStateError("Failed to fetch sub-categoory.");
+    } finally {
+      setFormStateLoading(false);
     }
   }
 
@@ -40,11 +76,17 @@ function SubCategoriesForm() {
     fetchAllCategories();
   }, []);
 
+  useEffect(() => {
+    if (!isAdd) {
+      fetchSubCategory();
+    }
+  }, [id]);
+
   function handleFileUpload(e) {
     const file = e.target.files[0];
     const tempURL = URL.createObjectURL(file);
-    setImageURL(tempURL);
 
+    setImageURL(tempURL);
     setFormState({ ...formState, image: file });
   }
 
@@ -69,59 +111,82 @@ function SubCategoriesForm() {
         formData.append(key, formState[key]);
       }
 
-      const result = await addSubCategory(formData);
+      let result;
 
-      if (!result.success) {
-        return toast("Failed to add sub-category.", { type: "error" });
+      if (isAdd) {
+        result = await addSubCategory(formData);
+      } else {
+        result = await updateSubCategory(id, formData);
       }
 
-      toast("Sub-category added successfully.", { type: "success" });
+      if (!result.success) {
+        return toast(`Failed to ${isAdd ? "add" : "update"} sub-category.`, {
+          type: "error"
+        });
+      }
+
+      toast(`Sub-category ${isAdd ? "added" : "updated"} successfully.`, {
+        type: "success"
+      });
       navigate("/admin/subCategories");
     } catch (error) {
-      toast("Failed to add sub-category.", { type: "error" });
+      toast(`Failed to ${isAdd ? "add" : "update"} sub-category.`, {
+        type: "error"
+      });
     }
   }
 
+  if (formStateLoading) {
+    return <MyAlert icon={HiArrowPath} msg="Loading..." />;
+  }
+
+  if (formStateError) {
+    return (
+      <MyAlert
+        color="failure"
+        icon={HiMiniExclamationTriangle}
+        msg={formStateError}
+      />
+    );
+  }
+
   return (
-    <div>
-      <AdminPageTitle title="Add Update Sub-Category" />
-      <form
-        onSubmit={handleSubmit}
-        className="mt-4 grid grid-cols-[1fr_2fr] gap-4"
-      >
-        <MyFileInput
-          name="image"
-          label="Upload Sub-Category Image"
-          url={imageURL}
-          onChange={handleFileUpload}
+    <form
+      onSubmit={handleSubmit}
+      className="mt-4 grid grid-cols-[1fr_2fr] gap-4"
+    >
+      <MyFileInput
+        name="image"
+        label="Upload Sub-Category Image"
+        url={imageURL}
+        onChange={handleFileUpload}
+      />
+      <div className="flex flex-col gap-4">
+        <MyTextInput
+          name="name"
+          lable="Sub-Category Name"
+          value={formState.name}
+          onChange={handleChange}
+          required={true}
         />
-        <div className="flex flex-col gap-4">
-          <MyTextInput
-            name="name"
-            lable="Sub-Category Name"
-            value={formState.name}
-            onChange={handleChange}
-            required={true}
-          />
-          <MyTextInput
-            name="slug"
-            lable="Sub-Category Slug"
-            value={formState.slug}
-            disabled={true}
-          />
-          <MySelect
-            name="category"
-            label="Select A Category"
-            value={formState.category}
-            onChange={handleChange}
-            options={categoryOptions}
-          />
-          <Button color="primary" type="submit">
-            Submit
-          </Button>
-        </div>
-      </form>
-    </div>
+        <MyTextInput
+          name="slug"
+          lable="Sub-Category Slug"
+          value={formState.slug}
+          disabled={true}
+        />
+        <MySelect
+          name="category"
+          label="Select A Category"
+          value={formState.category}
+          onChange={handleChange}
+          options={categoryOptions}
+        />
+        <Button color="primary" type="submit">
+          Submit
+        </Button>
+      </div>
+    </form>
   );
 }
 

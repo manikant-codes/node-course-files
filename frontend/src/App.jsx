@@ -16,6 +16,7 @@ import SubCategoriesList from "./pages/admin/subCategories/SubCategoriesList";
 import UsersForm from "./pages/admin/users/UsersForm";
 import UsersList from "./pages/admin/users/UsersList";
 import Home from "./pages/public/Home";
+import FormWrapper from "./components/admin/common/FormWrapper";
 
 function App() {
   return (
@@ -30,9 +31,23 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="categories" element={<CategoriesList />} />
-          <Route path="categories/:id" element={<CategoriesForm />} />
+          <Route
+            path="categories/:id"
+            element={
+              <FormWrapper title={"Category"}>
+                <CategoriesForm />
+              </FormWrapper>
+            }
+          />
           <Route path="subCategories" element={<SubCategoriesList />} />
-          <Route path="subCategories/:id" element={<SubCategoriesForm />} />
+          <Route
+            path="subCategories/:id"
+            element={
+              <FormWrapper title={"Sub-Category"}>
+                <SubCategoriesForm />
+              </FormWrapper>
+            }
+          />
           <Route path="products" element={<ProductsList />} />
           <Route path="products/:id" element={<ProductsForm />} />
           <Route path="pages" element={<PagesList />} />

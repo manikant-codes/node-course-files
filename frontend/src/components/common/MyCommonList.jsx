@@ -55,9 +55,11 @@ function MyCommonList({ getAllData, deleteData }) {
     }
   }
 
-  if (loading) return <MyAlert icon={HiArrowPath} msg="Loading..." />;
+  if (loading) {
+    return <MyAlert icon={HiArrowPath} msg="Loading..." />;
+  }
 
-  if (error)
+  if (error) {
     return (
       <MyAlert
         color="failure"
@@ -65,6 +67,7 @@ function MyCommonList({ getAllData, deleteData }) {
         msg={"Failed to fetch data."}
       />
     );
+  }
 
   function renderList() {
     if (data.length > 0) {

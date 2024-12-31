@@ -65,7 +65,7 @@ const updateSubCategory = async (req, res) => {
       req.body = {};
     }
 
-    if (req.files && req.file.image) {
+    if (req.files && req.files.image) {
       await deleteFile(subCategory.image, "subCategory");
       req.body.image = await saveFile(req.files.image, "subCategory");
       //   const imageURL = await saveFile(req.files.image, "subCategory");

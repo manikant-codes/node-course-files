@@ -28,7 +28,7 @@ function MyCommonListItem({
             size="xs"
             color="primary"
           >
-            <HiMiniPencilSquare className="h-5 w-5" />
+            <HiMiniPencilSquare className="h-4 w-4" />
           </Button>
           <Button
             size="xs"
@@ -37,7 +37,7 @@ function MyCommonListItem({
               handleDelete(id);
             }}
           >
-            <HiMiniTrash className="h-5 w-5" />
+            <HiMiniTrash className="h-4 w-4" />
           </Button>
         </div>
       </li>
