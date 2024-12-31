@@ -49,6 +49,14 @@ const addProduct = async (req, res) => {
       req.body.images = [imageURL];
     }
 
+    if (req.body.sizes) {
+      req.body.sizes = req.body.sizes.split(",");
+    }
+
+    if (req.body.colors) {
+      req.body.colors = req.body.colors.split(",");
+    }
+
     const product = await Product.create(req.body);
 
     sendDataResponse(res, product);
@@ -101,6 +109,14 @@ const updateProduct = async (req, res) => {
 
         req.body.images = [...req.body.images, imageURL];
       }
+    }
+
+    if (req.body.sizes) {
+      req.body.sizes = req.body.sizes.split(",");
+    }
+
+    if (req.body.colors) {
+      req.body.colors = req.body.colors.split(",");
     }
 
     const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {

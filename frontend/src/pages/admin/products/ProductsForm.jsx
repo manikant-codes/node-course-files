@@ -1,18 +1,23 @@
-import { Button } from "flowbite-react";
+import { Button, Spinner } from "flowbite-react";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { HiExclamation } from "react-icons/hi";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import MyMultipleFileUpload from "../../../components/admin/common/form/MyMultipleFileUpload";
+import MyMultiSelect from "../../../components/admin/common/form/MyMultiSelect";
 import MySelect from "../../../components/admin/common/form/MySelect";
 import MyTextarea from "../../../components/admin/common/form/MyTextarea";
 import MyTextInput from "../../../components/admin/common/form/MyTextInput";
+import MessageBox from "../../../components/common/MessageBox";
+import { COLORS, SIZES } from "../../../consts";
 import {
   addProduct,
   getAllCategories,
-  getAllSubCategories
+  getAllSubCategories,
+  getProductById,
+  updateProduct
 } from "../../../services/apiServices";
-import MyMultiSelect from "../../../components/admin/common/form/MyMultiSelect";
 
 const initialState = {
   name: "",
@@ -26,12 +31,19 @@ const initialState = {
   taxPercentage: "",
   shippingFee: "",
   qty: "",
-  sizes: null,
-  colors: null
+  sizes: [],
+  colors: []
 };
 
 function ProductsForm() {
+  const { id } = useParams();
+  const isAdd = id === "add";
+  const [formStateLoading, setFormStateLoading] = useState(
+    isAdd ? false : true
+  );
   const [formState, setFormState] = useState(initialState);
+  const [formStateError, setFormStateError] = useState("");
+
   const [imagesURLs, setImagesURLs] = useState([""]);
   const [categoriesOptions, setCategoriesOptions] = useState([]);
   const [subCategoriesOptions, setSubCategoriesOptions] = useState([]);
@@ -46,7 +58,7 @@ function ProductsForm() {
       temp.unshift({ value: "", text: "Select A Category" });
       setCategoriesOptions(temp);
     } catch (error) {
-      toast("Failed to fetch categories.");
+      toast("Failed to fetch categories.", { type: "error" });
     }
   }
 
@@ -59,7 +71,27 @@ function ProductsForm() {
       temp.unshift({ value: "", text: "Select A Sub-Category" });
       setSubCategoriesOptions(temp);
     } catch (error) {
-      toast("Failed to fetch sub-categories.");
+      toast("Failed to fetch sub-categories.", { type: "error" });
+    }
+  }
+
+  async function fetchProduct() {
+    try {
+      const result = await getProductById(id);
+
+      if (!result.success) {
+        toast("Failed to fetch prduct.", { type: "error" });
+        setFormStateError("Failed to fetch product.");
+        return;
+      }
+
+      setFormState(result.data);
+      setImagesURLs(result.data.images);
+    } catch (error) {
+      toast("Failed to fetch product.", { type: "error" });
+      setFormStateError("Failed to fetch product.");
+    } finally {
+      setFormStateLoading(false);
     }
   }
 
@@ -70,6 +102,12 @@ function ProductsForm() {
   useEffect(() => {
     fetchSubCategories();
   }, []);
+
+  useEffect(() => {
+    if (!isAdd) {
+      fetchProduct();
+    }
+  }, [id]);
 
   function handleFileUpload(e) {
     const files = e.target.files;
@@ -99,39 +137,79 @@ function ProductsForm() {
   }
 
   async function handleSubmit(e) {
-    e.preventDefault();
-    console.log(formState);
-
-    const formData = new FormData();
-
-    for (const key in formState) {
-      if (key === "images") {
-        for (const image of formState[key]) {
-          formData.append("images", image);
-        }
-      } else {
-        formData.append(key, formState[key]);
-      }
-    }
-
     try {
-      const result = await addProduct(formData);
-      if (!result.success) {
-        return toast("Failed to add product.", { type: "error" });
+      e.preventDefault();
+
+      const formData = new FormData();
+
+      for (const key in formState) {
+        if (key === "images") {
+          for (const image of formState[key]) {
+            formData.append("images", image);
+          }
+        } else {
+          formData.append(key, formState[key]);
+        }
       }
 
-      toast("Product added successfully.", { type: "success" });
+      console.log("formState", formState);
+      console.log("formData", Array.from(formData.entries()));
+
+      let result;
+
+      if (isAdd) {
+        result = await addProduct(formData);
+      } else {
+        result = await updateProduct(id, formData);
+      }
+
+      if (!result.success) {
+        return toast(`Failed to ${isAdd ? "add" : "update"} product.`, {
+          type: "error"
+        });
+      }
+
+      toast(`Product ${isAdd ? "added" : "updated"} successfully.`, {
+        type: "success"
+      });
       navigate("/admin/products");
     } catch (error) {
       toast("Failed to add product.", { type: "error" });
     }
+  }
 
-    console.log(Array.from(formData.entries()));
+  function setSelectedSizes(updatedSizes) {
+    setFormState({ ...formState, sizes: updatedSizes });
+  }
+
+  function setSelectedColors(updatedColors) {
+    setFormState({ ...formState, colors: updatedColors });
+  }
+
+  if (formStateLoading) {
+    return (
+      <MessageBox
+        renderIcon={() => {
+          return <Spinner />;
+        }}
+        message="Loading..."
+      />
+    );
+  }
+
+  if (formStateError) {
+    return (
+      <MessageBox
+        icon={HiExclamation}
+        message={formStateError}
+        status="error"
+      />
+    );
   }
 
   return (
     <div>
-      <AdminPageTitle title="Add Update Product" />
+      <AdminPageTitle title={`${isAdd ? "Add" : "Update"} Product`} />
       <div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {/* Multi File Upload Here */}
@@ -217,9 +295,23 @@ function ProductsForm() {
             />
           </div>
 
-          {/* Sizes Multi Select Here */}
-          <MyMultiSelect />
-          {/* Colors Multi Select Here */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Sizes Multi Select Here */}
+            <MyMultiSelect
+              name="sizes"
+              selected={formState.sizes}
+              setSelected={setSelectedSizes}
+              initialOptions={SIZES}
+            />
+
+            {/* Colors Multi Select Here */}
+            <MyMultiSelect
+              name="colors"
+              selected={formState.colors}
+              setSelected={setSelectedColors}
+              initialOptions={COLORS}
+            />
+          </div>
 
           <Button type="submit">Submit</Button>
         </form>

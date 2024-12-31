@@ -1,10 +1,12 @@
-import { Button } from "flowbite-react";
+import { Button, Spinner } from "flowbite-react";
 import React, { useEffect, useState } from "react";
+import { HiExclamation } from "react-icons/hi";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import MyFileUpload from "../../../components/admin/common/form/MyFileUpload";
 import MyTextInput from "../../../components/admin/common/form/MyTextInput";
+import MessageBox from "../../../components/common/MessageBox";
 import {
   addCategory,
   getCategoryById,
@@ -14,28 +16,39 @@ import {
 const initialState = { name: "", slug: "", image: "" };
 
 function CategoriesForm() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const { id } = useParams();
+  const isAdd = id === "add";
+  const [formStateLoading, setFormStateLoading] = useState(
+    isAdd ? false : true
+  );
   const [formState, setFormState] = useState(initialState);
+  const [formStateError, setFormStateError] = useState("");
   const [imageURL, setImageURL] = useState("");
   const navigate = useNavigate();
-  const { id } = useParams();
 
-  const isAdd = id === "add";
+  async function fetchCategory() {
+    try {
+      const result = await getCategoryById(id);
+
+      if (!result.success) {
+        toast("Failed to fetch category data.", { type: "error" });
+        setFormStateError("Failed to fetch category data.");
+        return;
+      }
+
+      setFormState(result.data);
+      setImageURL(result.data.image);
+    } catch (error) {
+      toast("Failed to fetch category data.", { type: "error" });
+      setFormStateError("Failed to fetch category data.");
+    } finally {
+      setFormStateLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (!isAdd) {
-      getCategoryById(id)
-        .then((result) => {
-          if (!result.success) {
-            return toast("Failed to get category data.", { type: "error" });
-          }
-          setFormState(result.data);
-          setImageURL(result.data.image);
-        })
-        .catch((error) => {
-          toast("Failed to get category data.", { type: "error" });
-        });
+      fetchCategory();
     }
   }, [id]);
 
@@ -61,7 +74,7 @@ function CategoriesForm() {
     try {
       e.preventDefault();
 
-      setLoading(true);
+      setFormStateLoading(true);
 
       const formData = new FormData();
       formData.append("name", formState.name);
@@ -77,20 +90,41 @@ function CategoriesForm() {
       }
 
       if (data.success) {
-        setLoading(false);
+        setFormStateLoading(false);
         toast(`Category ${isAdd ? "added" : "updated"} successfully.`, {
           type: "success"
         });
         navigate("/admin/categories");
       } else {
-        setLoading(false);
-        setError(data.msg);
+        setFormStateLoading(false);
+        setFormStateError(data.msg);
         toast("Failed to add category.", { type: "error" });
       }
     } catch (error) {
-      setLoading(false);
-      setError(error.message);
+      setFormStateLoading(false);
+      setFormStateError(error.message);
     }
+  }
+
+  if (formStateLoading) {
+    return (
+      <MessageBox
+        renderIcon={() => {
+          return <Spinner />;
+        }}
+        message="Loading..."
+      />
+    );
+  }
+
+  if (formStateError) {
+    return (
+      <MessageBox
+        icon={HiExclamation}
+        message={formStateError}
+        status="error"
+      />
+    );
   }
 
   return (

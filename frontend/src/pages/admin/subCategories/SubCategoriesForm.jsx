@@ -1,11 +1,13 @@
-import { Button } from "flowbite-react";
+import { Button, Spinner } from "flowbite-react";
 import React, { useEffect, useState } from "react";
+import { HiExclamation } from "react-icons/hi";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import MyFileUpload from "../../../components/admin/common/form/MyFileUpload";
 import MySelect from "../../../components/admin/common/form/MySelect";
 import MyTextInput from "../../../components/admin/common/form/MyTextInput";
+import MessageBox from "../../../components/common/MessageBox";
 import {
   addSubCategory,
   getAllCategories,
@@ -16,18 +18,20 @@ import {
 const initialState = { name: "", slug: "", image: null, category: "" };
 
 function SubCategoriesForm() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const { id } = useParams();
+  const isAdd = id === "add";
+  const [formStateLoading, setFormStateLoading] = useState(
+    isAdd ? false : true
+  );
   const [formState, setFormState] = useState(initialState);
+  const [formStateError, setFormStateError] = useState(false);
   const [imageURL, setImageURL] = useState("");
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
-  const { id } = useParams();
 
-  const isAdd = id === "add";
-
-  useEffect(() => {
-    getAllCategories().then((result) => {
+  async function fetchAllCategories() {
+    try {
+      const result = await getAllCategories();
       const temp = result.data.map((category) => {
         return { value: category._id, text: category.name };
       });
@@ -36,15 +40,38 @@ function SubCategoriesForm() {
       temp.unshift({ value: "", text: "Select A Category" });
 
       setCategories(temp);
-    });
+    } catch (error) {
+      toast("Failed to fetch categories.", { type: "error" });
+    }
+  }
+
+  async function fetchSubCategory() {
+    try {
+      const result = await getSubCategoryById(id);
+
+      if (!result.success) {
+        toast("Failed to fetch sub-category.", { type: "error" });
+        setFormStateError("Failed to fetch sub-category.");
+        return;
+      }
+
+      setFormState(result.data);
+      setImageURL(result.data.image);
+    } catch (error) {
+      toast("Failed to fetch sub-category.", { type: "error" });
+      setFormStateError("Failed to fetch sub-category.");
+    } finally {
+      setFormStateLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchAllCategories();
   }, []);
 
   useEffect(() => {
     if (!isAdd) {
-      getSubCategoryById(id).then((result) => {
-        setFormState(result.data);
-        setImageURL(result.data.image);
-      });
+      fetchSubCategory();
     }
   }, [id]);
 
@@ -74,7 +101,7 @@ function SubCategoriesForm() {
     try {
       e.preventDefault();
 
-      setLoading(true);
+      setFormStateLoading(true);
 
       const formData = new FormData();
       formData.append("name", formState.name);
@@ -100,12 +127,33 @@ function SubCategoriesForm() {
         type: "success"
       });
 
-      setLoading(false);
+      setFormStateLoading(false);
       navigate("/admin/subCategories");
     } catch (error) {
-      setLoading(false);
-      setError(error.message);
+      setFormStateLoading(false);
+      setFormStateError(error.message);
     }
+  }
+
+  if (formStateLoading) {
+    return (
+      <MessageBox
+        renderIcon={() => {
+          return <Spinner />;
+        }}
+        message="Loading..."
+      />
+    );
+  }
+
+  if (formStateError) {
+    return (
+      <MessageBox
+        icon={HiExclamation}
+        message={formStateError}
+        status="error"
+      />
+    );
   }
 
   return (
@@ -142,7 +190,7 @@ function SubCategoriesForm() {
               value={formState.category}
               onChange={handleChange}
             />
-            <Button type="submit" isProcessing={loading}>
+            <Button type="submit" isProcessing={formStateLoading}>
               Submit
             </Button>
           </div>
