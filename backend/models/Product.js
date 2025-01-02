@@ -33,6 +33,7 @@ const productSchema = new mongoose.Schema({
     required: true
   },
   price: { type: Number, min: 0, required: true },
+  quantity: { type: Number, min: 0, required: true },
   discountPercentage: { type: Number, min: 0, max: 100, default: 0 },
   taxPercentage: { type: Number, min: 0, max: 100, default: 0 },
   shippingFee: { type: Number, min: 0, default: 0 },
