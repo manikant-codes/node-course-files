@@ -74,27 +74,29 @@ const updatePage = async (req, res) => {
       req.body.images = [];
     }
 
-    if (req.files.images && Array.isArray(req.files.images)) {
-      const temp = [];
-      for (const imageFile of req.files.images) {
-        const imageURL = await saveFile(imageFile, "page");
-        temp.push(imageURL);
-      }
-
-      for (const imageURL of page.images) {
-        if (!req.body.images.includes(imageURL)) {
-          await deleteFile(imageURL, "page");
+    if (req.files && req.files.images) {
+      if (Array.isArray(req.files.images)) {
+        const temp = [];
+        for (const imageFile of req.files.images) {
+          const imageURL = await saveFile(imageFile, "page");
+          temp.push(imageURL);
         }
-      }
 
-      req.body.images = [...req.body.images, ...temp];
-    } else {
-      const imageURL = await saveFile(req.body.images, "page");
-      req.body.images = [...req.body.image, imageURL];
+        for (const imageURL of page.images) {
+          if (!req.body.images.includes(imageURL)) {
+            await deleteFile(imageURL, "page");
+          }
+        }
 
-      for (const imageURL of page.images) {
-        if (!req.body.images.includes(imageURL)) {
-          await deleteFile(imageURL, "page");
+        req.body.images = [...req.body.images, ...temp];
+      } else {
+        const imageURL = await saveFile(req.files.images, "page");
+        req.body.images = [...req.body.images, imageURL];
+
+        for (const imageURL of page.images) {
+          if (!req.body.images.includes(imageURL)) {
+            await deleteFile(imageURL, "page");
+          }
         }
       }
     }

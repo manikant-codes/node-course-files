@@ -1,135 +1,241 @@
-import { Button } from "flowbite-react";
+import { Button, Spinner } from "flowbite-react";
 import React, { useEffect, useState } from "react";
+import { HiExclamation } from "react-icons/hi";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
-import MyFileUpload from "../../../components/admin/common/form/MyFileUpload";
-import MyTextInput from "../../../components/admin/common/form/MyTextInput";
-import { addCategory, updateCategory } from "../../../services/apiServices";
+import MessageBox from "../../../components/common/MessageBox";
 
 function CommonForm({
   initialState,
-  getDataById,
+  urlsInitialState,
   imageField,
-  imageState,
-  setImageState,
-  addData,
-  updateData,
-  navURL
+  getDataById
 }) {
-  //   const [formState, setFormState] = useState(initialState);
-  //   const [loading, setLoading] = useState(false);
-  //   const [error, setError] = useState(false);
-  //   const navigate = useNavigate();
-  //   const { id } = useParams();
+  const { id } = useParams();
+  const isAdd = id === "add";
 
-  //   const isAdd = id === "add";
+  const [formDataLoading, setFormDataLoading] = useState(isAdd ? false : true);
+  const [formData, setFormData] = useState(initialState);
+  const [formDataError, setFormDataError] = useState("");
 
-  //   useEffect(() => {
-  //     if (!isAdd) {
-  //       getDataById(id)
-  //         .then((result) => {
-  //           if (!result.success) {
-  //             return toast("Failed to get data.", { type: "error" });
-  //           }
+  const [urls, setUrls] = useState(urlsInitialState);
 
-  //           setFormState(result.data);
+  // const [categoriesLoading, setCategoriesLoading] = useState(true);
+  // const [categoriesOptions, setCategoriesOptions] = useState([]);
+  // const [categoriesError, setCategoriesError] = useState("");
 
-  //           if (imageField) {
-  //             setImageState(result.data[imageField]);
-  //           }
-  //         })
-  //         .catch((error) => {
-  //           toast("Failed to get data.", { type: "error" });
-  //         });
+  // const [subCategoriesLoading, setSubCategoriesLoading] = useState(true);
+  // const [subCategoriesOptions, setSubCategoriesOptions] = useState([]);
+  // const [subCategoriesError, setSubCategoriesError] = useState("");
+
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   fetchCategories();
+  // }, []);
+
+  // useEffect(() => {
+  //   fetchSubCategories();
+  // }, []);
+
+  useEffect(() => {
+    if (!isAdd) {
+      fetchFormData();
+    }
+  }, [id]);
+
+  // async function fetchCategories() {
+  //   try {
+  //     const result = await getAllCategories();
+
+  //     if (!result.success) {
+  //       toast("Failed to fetch categories.", { type: "error" });
+  //       setCategoriesError("Failed to fetch categories.");
+  //       return;
   //     }
-  //   }, [id]);
 
-  //   function handleChange(e) {
-  //     setFormState({
-  //       ...formState,
-  //       [e.target.name]: e.target.value,
+  //     const temp = result.data.map((category) => {
+  //       return { value: category.name, text: category.name };
+  //     });
+  //     temp.unshift({ value: "", text: "Select A Category" });
+
+  //     setCategoriesOptions(temp);
+  //   } catch (error) {
+  //     toast("Failed to fetch categories.", { type: "error" });
+  //     setCategoriesError("Failed to fetch categories.");
+  //   } finally {
+  //     setCategoriesLoading(false);
+  //   }
+  // }
+
+  // async function fetchSubCategories() {
+  //   try {
+  //     const result = await getAllSubCategories();
+
+  //     if (!result.success) {
+  //       toast("Failed to fetch sub-categories.", { type: "error" });
+  //       setSubCategoriesError("Failed to fetch sub-categories.");
+  //       return;
+  //     }
+
+  //     const temp = result.data.map((subCategory) => {
+  //       return { value: subCategory._id, text: subCategory.name };
+  //     });
+  //     temp.unshift({ value: "", text: "Select A Sub-Category" });
+
+  //     setSubCategoriesOptions(temp);
+  //   } catch (error) {
+  //     toast("Failed to fetch sub-categories.", { type: "error" });
+  //     setSubCategoriesError("Failed to fetch sub-categories.");
+  //   } finally {
+  //     setSubCategoriesLoading(false);
+  //   }
+  // }
+
+  async function fetchFormData() {
+    try {
+      const result = await getDataById(id);
+
+      if (!result.success) {
+        toast("Failed to fetch form data.", { type: "error" });
+        setFormDataError("Failed to fetch form data.");
+        return;
+      }
+
+      setFormData(result.data);
+      setUrls(result.data[imageField]);
+    } catch (error) {
+      toast("Failed to fetch form data.", { type: "error" });
+      setFormDataError("Failed to fetch form data.");
+    } finally {
+      setFormDataLoading(false);
+    }
+  }
+
+  // function handleFileUpload(e) {
+  //   const files = e.target.files;
+  //   setFormData({ ...formData, images: files });
+
+  //   const urls = [];
+  //   for (const file of files) {
+  //     const tempURL = URL.createObjectURL(file);
+  //     urls.push(tempURL);
+  //   }
+  //   setUrls(urls);
+  // }
+
+  // function handleChange(e) {
+  //   if (e.target.name === "name") {
+  //     setFormData({
+  //       ...formData,
+  //       name: e.target.value,
   //       slug: e.target.value.toLowerCase().replaceAll(" ", "-")
   //     });
-  //   }
-
-  //   function handleImageUpload(e) {
-  //     const tempURL = URL.createObjectURL(e.target.files[0]);
-  //     setImageURL(tempURL);
-
-  //     setFormState({
-  //       ...formState,
-  //       image: e.target.files[0]
+  //   } else {
+  //     setFormData({
+  //       ...formData,
+  //       [e.target.name]: e.target.value
   //     });
   //   }
+  // }
 
-  //   async function handleSubmit(e) {
-  //     try {
-  //       e.preventDefault();
+  // async function handleSubmit(e) {
+  //   try {
+  //     e.preventDefault();
 
-  //       setLoading(true);
+  //     const formData = new FormData();
 
-  //       const formData = new FormData();
-  //       for (const field in formData) {
-  //         formData.append(field, formState[field]);
-  //       }
-
-  //       let data;
-
-  //       if (isAdd) {
-  //         data = await addData(formData);
+  //     for (const key in formData) {
+  //       if (key === "images") {
+  //         for (const image of formData[key]) {
+  //           formData.append("images", image);
+  //         }
+  //       } else if (key === "subCategories") {
+  //         for (const subCategory of formData[key]) {
+  //           formData.append("subCategories", subCategory);
+  //         }
   //       } else {
-  //         data = await updateData(id, formData);
+  //         formData.append(key, formData[key]);
   //       }
-
-  //       if (data.success) {
-  //         setLoading(false);
-  //         toast(`Data ${isAdd ? "added" : "updated"} successfully.`, {
-  //           type: "success"
-  //         });
-  //         navigate(navURL);
-  //       } else {
-  //         setLoading(false);
-  //         setError(data.msg);
-  //         toast("Failed to add data.", { type: "error" });
-  //       }
-  //     } catch (error) {
-  //       setLoading(false);
-  //       setError(error.message);
   //     }
+
+  //     let result;
+
+  //     if (isAdd) {
+  //       result = await addPage(formData);
+  //     } else {
+  //       result = await updatePage(id, formData);
+  //     }
+
+  //     if (!result.success) {
+  //       return toast(`Failed to ${isAdd ? "add" : "update"} page.`, {
+  //         type: "error"
+  //       });
+  //     }
+
+  //     toast(`Page ${isAdd ? "added" : "updated"} successfully.`, {
+  //       type: "success"
+  //     });
+  //     navigate("/admin/pages");
+  //   } catch (error) {
+  //     console.log("error", error);
+  //     toast("Failed to add page.", { type: "error" });
   //   }
+  // }
+
+  // function setSelectedSubCategories(updatedSubCategories) {
+  //   setFormData({ ...formData, subCategories: updatedSubCategories });
+  // }
+
+  if (formDataLoading) {
+    return (
+      <MessageBox
+        renderIcon={() => {
+          return <Spinner />;
+        }}
+        message="Loading..."
+      />
+    );
+  }
+
+  if (formDataError) {
+    return (
+      <MessageBox icon={HiExclamation} message={formDataError} status="error" />
+    );
+  }
 
   return (
     <div>
-      <AdminPageTitle title={isAdd ? "Add Category" : "Update Category"} />
-      {/* <div>
-        <form
-          className="grid grid-cols-[1fr_2fr] gap-4"
-          onSubmit={handleSubmit}
-        >
-          <MyFileUpload
-            name="image"
-            onChange={handleImageUpload}
-            url={imageURL}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {/* <MyMultipleFileUpload
+          urls={urls}
+          name="images"
+          onChange={handleFileUpload}
+        />
+        <div className="grid grid-cols-2 gap-4">
+          <MySelect
+            name="name"
+            label="Page Name"
+            value={formData.name}
+            onChange={handleChange}
+            options={categoriesOptions}
           />
-          <div className="flex flex-col gap-4">
-            <MyTextInput
-              name="name"
-              label="Category name"
-              value={formState.name}
-              onChange={handleChange}
-              required={true}
-            />
-            <MyTextInput
-              name="slug"
-              label="Category Slug"
-              value={formState.slug}
-              disabled={true}
-            />
-            <Button type="submit">Submit</Button>
-          </div>
-        </form>
-      </div> */}
+          <MyTextInput
+            name="slug"
+            label="Product Slug"
+            value={formData.slug}
+            disabled={true}
+          />
+        </div>
+        <MyMultiSelect
+          name="subCategories"
+          selected={formData.subCategories}
+          setSelected={setSelectedSubCategories}
+          initialOptions={subCategoriesOptions}
+        /> */}
+        {fields}
+        <Button type="submit">Submit</Button>
+      </form>
     </div>
   );
 }

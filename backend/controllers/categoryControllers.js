@@ -70,20 +70,8 @@ const updateCategory = async (req, res) => {
     }
 
     if (req.files && req.files.image) {
-      // const folderPath = path.join(__dirname, "../uploads", "category");
-      // const fileName = Date.now() + "-" + req.files.image.name;
-      // const filePath = path.join(folderPath, fileName);
-      // await req.files.image.mv(filePath);
-      // const imageURL = `http://localhost:5000/uploads/category/${fileName}`;
       const imageURL = await saveFile(req.files.image, "category");
-
-      // const toBeDeletedFileName = path.basename(category.image);
-      // const filesInFolder = await fs.readdir(folderPath);
-      // if (filesInFolder.includes(toBeDeletedFileName)) {
-      //   await fs.unlink(filePath);
-      // }
       await deleteFile(category.image, "category");
-
       req.body.image = imageURL;
     }
 

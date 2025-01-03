@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
-import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
-import MessageBox from "../../../components/common/MessageBox";
 import { Button, Spinner } from "flowbite-react";
+import React, { useEffect, useState } from "react";
 import { HiExclamation } from "react-icons/hi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import MyMultipleFileUpload from "../../../components/admin/common/form/MyMultipleFileUpload";
-import MyTextInput from "../../../components/admin/common/form/MyTextInput";
 import MyMultiSelect from "../../../components/admin/common/form/MyMultiSelect";
+import MySelect from "../../../components/admin/common/form/MySelect";
+import MyTextInput from "../../../components/admin/common/form/MyTextInput";
+import MessageBox from "../../../components/common/MessageBox";
 import {
   addPage,
   getAllCategories,
@@ -14,8 +16,6 @@ import {
   getPageById,
   updatePage
 } from "../../../services/apiServices";
-import MySelect from "../../../components/admin/common/form/MySelect";
-import { toast } from "react-toastify";
 
 const initialState = {
   name: "",
@@ -27,25 +27,31 @@ const initialState = {
 function PagesForm() {
   const { id } = useParams();
   const isAdd = id === "add";
+
   const [formStateLoading, setFormStateLoading] = useState(
     isAdd ? false : true
   );
   const [formState, setFormState] = useState(initialState);
   const [formStateError, setFormStateError] = useState("");
+
   const [imagesURLs, setImagesURLs] = useState([""]);
-  const [subCategoriesLoading, setSubCategoriesLoading] = useState(true);
-  const [subCategoriesOptions, setSubCategoriesOptions] = useState([]);
-  const [subCategoriesError, setSubCategoriesError] = useState("");
+
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [categoriesOptions, setCategoriesOptions] = useState([]);
   const [categoriesError, setCategoriesError] = useState("");
 
-  useEffect(() => {
-    fetchSubCategories();
-  }, []);
+  const [subCategoriesLoading, setSubCategoriesLoading] = useState(true);
+  const [subCategoriesOptions, setSubCategoriesOptions] = useState([]);
+  const [subCategoriesError, setSubCategoriesError] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    fetchSubCategories();
   }, []);
 
   useEffect(() => {
@@ -54,35 +60,51 @@ function PagesForm() {
     }
   }, [id]);
 
-  async function fetchSubCategories() {
-    try {
-      const result = await getAllSubCategories();
-      const temp = result.data.map((subCategory) => {
-        return { value: subCategory._id, text: subCategory.name };
-      });
-      temp.unshift({ value: "", text: "Select A Sub-Category" });
-      setSubCategoriesOptions(temp);
-    } catch (error) {
-      toast("Failed to fetch sub-categories.", { type: "error" });
-      setSubCategoriesError("Failed to fetch sub-categories.");
-    } finally {
-      setSubCategoriesLoading(false);
-    }
-  }
-
   async function fetchCategories() {
     try {
       const result = await getAllCategories();
+
+      if (!result.success) {
+        toast("Failed to fetch categories.", { type: "error" });
+        setCategoriesError("Failed to fetch categories.");
+        return;
+      }
+
       const temp = result.data.map((category) => {
         return { value: category.name, text: category.name };
       });
       temp.unshift({ value: "", text: "Select A Category" });
+
       setCategoriesOptions(temp);
     } catch (error) {
       toast("Failed to fetch categories.", { type: "error" });
       setCategoriesError("Failed to fetch categories.");
     } finally {
       setCategoriesLoading(false);
+    }
+  }
+
+  async function fetchSubCategories() {
+    try {
+      const result = await getAllSubCategories();
+
+      if (!result.success) {
+        toast("Failed to fetch sub-categories.", { type: "error" });
+        setSubCategoriesError("Failed to fetch sub-categories.");
+        return;
+      }
+
+      const temp = result.data.map((subCategory) => {
+        return { value: subCategory._id, text: subCategory.name };
+      });
+      temp.unshift({ value: "", text: "Select A Sub-Category" });
+
+      setSubCategoriesOptions(temp);
+    } catch (error) {
+      toast("Failed to fetch sub-categories.", { type: "error" });
+      setSubCategoriesError("Failed to fetch sub-categories.");
+    } finally {
+      setSubCategoriesLoading(false);
     }
   }
 
@@ -153,9 +175,6 @@ function PagesForm() {
         }
       }
 
-      console.log("formState", formState);
-      console.log("formData", Array.from(formData.entries()));
-
       let result;
 
       if (isAdd) {
@@ -175,6 +194,7 @@ function PagesForm() {
       });
       navigate("/admin/pages");
     } catch (error) {
+      console.log("error", error);
       toast("Failed to add page.", { type: "error" });
     }
   }
