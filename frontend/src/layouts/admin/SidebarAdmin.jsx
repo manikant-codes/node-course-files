@@ -40,7 +40,12 @@ function SidebarAdmin() {
     <ul className="p-4 border-r border-r-gray-300">
       {links.map((link) => {
         return (
-          <SidebarListItem link={link.to} icon={link.icon} text={link.text} />
+          <SidebarListItem
+            key={link.id}
+            link={link.to}
+            icon={link.icon}
+            text={link.text}
+          />
         );
       })}
     </ul>

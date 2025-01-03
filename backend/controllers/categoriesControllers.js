@@ -37,7 +37,7 @@ const addCategory = async (req, res) => {
         .json({ success: false, message: "Category image is required." });
     }
 
-    const existingCategory = await Category.findOne({ slug: body.slug });
+    const existingCategory = await Category.findOne({ slug: req.body.slug });
 
     if (existingCategory) {
       return res

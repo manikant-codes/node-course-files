@@ -10,7 +10,9 @@ function LayoutAdmin() {
       <NavbarAdmin />
       <div className="grid grid-cols-[256px_1fr]">
         <SidebarAdmin />
-        <Outlet />
+        <div className="p-4">
+          <Outlet />
+        </div>
       </div>
       <FooterAdmin />
     </div>
