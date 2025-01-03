@@ -8,7 +8,17 @@ function ProductsList() {
     <div>
       <AdminPageTitle title="Products" link="/admin/products/add" />
       <div>
-        <MyCommonList getAllData={getAllProducts} deleteData={deleteProduct} />
+        <MyCommonList
+          getAllData={getAllProducts}
+          deleteData={deleteProduct}
+          getAllFields={(product) => {
+            return {
+              image: product.images[0],
+              title: product.name,
+              subTitle: product.price
+            };
+          }}
+        />
       </div>
     </div>
   );

@@ -81,10 +81,10 @@ const updatePage = async (req, res) => {
     if (req.files && req.files.images) {
       if (Array.isArray(req.files.images)) {
         const imageURLs = await saveMultipleFiles(req.files.images, "page");
-        req.body.images = [...req.body.image, ...imageURLs];
+        req.body.images = [...req.body.images, ...imageURLs];
       } else {
         const imageURL = await saveFile(req.files.images, "page");
-        req.body.images = [...req.body.image, imageURL];
+        req.body.images = [...req.body.images, imageURL];
       }
     }
 

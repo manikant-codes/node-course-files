@@ -4,7 +4,7 @@ import { HiMiniPencilSquare, HiMiniTrash } from "react-icons/hi2";
 
 function MyCommonListItem({
   id,
-  src,
+  image,
   title,
   subTitle,
   handleDelete,
@@ -15,7 +15,11 @@ function MyCommonListItem({
   return (
     <>
       <li className="flex items-center py-2 gap-4">
-        <img className="h-10 w-10 rounded-full object-cover" src={src} alt="" />
+        <img
+          className="h-10 w-10 rounded-full object-cover"
+          src={image}
+          alt=""
+        />
         <div className="grow-[1]">
           <h3 className="text-gray-900">{title}</h3>
           <p className="text-gray-500">{subTitle}</p>

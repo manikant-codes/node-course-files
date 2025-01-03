@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import MyAlert from "./MyAlert";
 import MyCommonListItem from "./MyCommonListItem";
 
-function MyCommonList({ getAllData, deleteData }) {
+function MyCommonList({ getAllData, deleteData, getAllFields }) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
@@ -74,13 +74,15 @@ function MyCommonList({ getAllData, deleteData }) {
       return (
         <ul className="bg-violet-100 rounded-xl p-4 border border-violet-300">
           {data.map((item, index) => {
+            const { image, title, subTitle } = getAllFields(item);
+
             return (
               <MyCommonListItem
                 key={index}
                 id={item._id}
-                src={item.image}
-                title={item.name}
-                subTitle={item.slug}
+                image={image}
+                title={title}
+                subTitle={subTitle}
                 handleDelete={handleDelete}
                 handleEdit={handleEdit}
                 index={index}

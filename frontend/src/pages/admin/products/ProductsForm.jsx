@@ -7,9 +7,16 @@ import MyMultipleFilesInput from "../../../components/admin/common/form/MyMutipl
 import { Button } from "flowbite-react";
 import { toast } from "react-toastify";
 import {
+  addProduct,
   getAllCategories,
-  getAllSubCategories
+  getAllSubCategories,
+  getProductById,
+  updateProduct
 } from "../../../services/apiServices";
+import { useNavigate, useParams } from "react-router-dom";
+import MyAlert from "../../../components/common/MyAlert";
+import { HiArrowPath, HiMiniExclamationTriangle } from "react-icons/hi2";
+import { useForm } from "../../../hooks/useForm";
 
 const initialState = {
   name: "",
@@ -28,11 +35,27 @@ const initialState = {
 };
 
 function ProductsForm() {
-  const [formStateLoading, setFormStateLoading] = useState(false);
-  const [formState, setFormState] = useState(initialState);
-  const [formStateError, setFormStateError] = useState("");
+  // const { id } = useParams();
+  // const isAdd = id === "add";
 
-  const [imageURLs, setImageURLs] = useState([""]);
+  // const [formStateLoading, setFormStateLoading] = useState(
+  //   isAdd ? false : true
+  // );
+  // const [formState, setFormState] = useState(initialState);
+  // const [formStateError, setFormStateError] = useState("");
+
+  // const [imageURLs, setImageURLs] = useState([""]);
+
+  const {
+    loading,
+    data,
+    setData,
+    error,
+    urls,
+    setUrls,
+    handleChange,
+    handleSubmit
+  } = useForm(initialState, [""], "images", getProductById);
 
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [categoriesOptions, setCategoriesOptions] = useState([]);
@@ -42,6 +65,8 @@ function ProductsForm() {
   const [subCategoriesOptions, setSubCategoriesOptions] = useState([]);
   const [subCategoriesError, setSubCategoriesError] = useState([]);
 
+  // const navigate = useNavigate();
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -49,6 +74,12 @@ function ProductsForm() {
   useEffect(() => {
     fetchSubCategories();
   }, []);
+
+  // useEffect(() => {
+  //   if (!isAdd) {
+  //     fetchProduct();
+  //   }
+  // }, [id]);
 
   async function fetchCategories() {
     try {
@@ -96,35 +127,99 @@ function ProductsForm() {
     }
   }
 
-  function handleChange(e) {
-    if (e.target.name === "name") {
-      setFormState({
-        ...formState,
-        [e.target.name]: e.target.value,
-        slug: e.target.value.toLowerCase().replace(/\s+/g, "-")
-      });
-    } else {
-      setFormState({
-        ...formState,
-        [e.target.name]: e.target.value
-      });
-    }
-  }
+  // async function fetchProduct() {
+  //   try {
+  //     const result = await getProductById(id);
+
+  //     if (!result.success) {
+  //       toast("Failed to fetch product.", { type: "error" });
+  //       setFormStateError("Failed to fetch product.");
+  //       return;
+  //     }
+
+  //     setFormState(result.data);
+  //     setImageURLs(result.data.images);
+  //   } catch (error) {
+  //     toast("Failed to fetch product.", { type: "error" });
+  //     setFormStateError("Failed to fetch product.");
+  //   } finally {
+  //     setFormStateLoading(false);
+  //   }
+  // }
+
+  // function handleChange(e) {
+  //   if (e.target.name === "name") {
+  //     setFormState({
+  //       ...formState,
+  //       [e.target.name]: e.target.value,
+  //       slug: e.target.value.toLowerCase().replace(/\s+/g, "-")
+  //     });
+  //   } else {
+  //     setFormState({
+  //       ...formState,
+  //       [e.target.name]: e.target.value
+  //     });
+  //   }
+  // }
 
   function handleFileUpload(e) {
     const files = e.target.files;
-    setFormState({ ...formState, images: files });
+    setData({ ...data, images: files });
 
     const temp = [];
     for (const file of files) {
       temp.push(URL.createObjectURL(file));
     }
-    setImageURLs(temp);
+    setUrls(temp);
   }
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    console.log("formState", formState);
+  // async function handleSubmit(e) {
+  //   try {
+  //     e.preventDefault();
+
+  //     const formData = new FormData();
+  //     for (const key in formState) {
+  //       if (key === "images") {
+  //         for (const image of formState[key]) {
+  //           formData.append("images", image);
+  //         }
+  //       } else {
+  //         formData.append(key, formState[key]);
+  //       }
+  //     }
+
+  //     let result;
+  //     if (isAdd) {
+  //       result = await addProduct(formData);
+  //     } else {
+  //       result = await updateProduct(id, formData);
+  //     }
+
+  //     if (!result.success) {
+  //       return toast(`Failed to ${isAdd ? "add" : "update"} product.`, {
+  //         type: "error"
+  //       });
+  //     }
+
+  //     toast(`Product ${isAdd ? "added" : "updated"} successfully.`, {
+  //       type: "success"
+  //     });
+  //     navigate("/admin/products");
+  //   } catch (error) {
+  //     toast(`Failed to ${isAdd ? "add" : "update"} product.`, {
+  //       type: "error"
+  //     });
+  //   }
+  // }
+
+  if (loading) {
+    return <MyAlert icon={HiArrowPath} msg="Loading..." />;
+  }
+
+  if (error) {
+    return (
+      <MyAlert color="failure" icon={HiMiniExclamationTriangle} msg={error} />
+    );
   }
 
   return (
@@ -137,7 +232,7 @@ function ProductsForm() {
             name="images"
             label="Product Images"
             onChange={handleFileUpload}
-            urls={imageURLs}
+            urls={urls}
           />
 
           <div className="grid grid-cols-2 gap-4">
@@ -145,7 +240,7 @@ function ProductsForm() {
             <MyTextInput
               name="name"
               lable="Name"
-              value={formState.name}
+              value={data.name}
               onChange={handleChange}
               required={true}
             />
@@ -153,7 +248,7 @@ function ProductsForm() {
             <MyTextInput
               name="slug"
               lable="Slug"
-              value={formState.slug}
+              value={data.slug}
               disabled={true}
               required={true}
             />
@@ -163,7 +258,7 @@ function ProductsForm() {
           <MyTextArea
             name="desc"
             label="Description"
-            value={formState.desc}
+            value={data.desc}
             onChange={handleChange}
           />
 
@@ -172,7 +267,7 @@ function ProductsForm() {
             <MySelect
               name="category"
               label="Select A Category"
-              value={formState.category}
+              value={data.category}
               onChange={handleChange}
               options={categoriesOptions}
             />
@@ -180,7 +275,7 @@ function ProductsForm() {
             <MySelect
               name="subCategory"
               label="Select A Sub-Category"
-              value={formState.subCategory}
+              value={data.subCategory}
               onChange={handleChange}
               options={subCategoriesOptions}
             />
@@ -192,7 +287,7 @@ function ProductsForm() {
               name="price"
               lable="Price"
               type="number"
-              value={formState.price}
+              value={data.price}
               onChange={handleChange}
               required={true}
             />
@@ -201,7 +296,7 @@ function ProductsForm() {
               name="quantity"
               lable="Quantity"
               type="number"
-              value={formState.quantity}
+              value={data.quantity}
               onChange={handleChange}
               required={true}
             />
@@ -213,7 +308,7 @@ function ProductsForm() {
               name="discountPercentage"
               lable="Discount (%)"
               type="number"
-              value={formState.discountPercentage}
+              value={data.discountPercentage}
               onChange={handleChange}
               required={true}
             />
@@ -222,7 +317,7 @@ function ProductsForm() {
               name="taxPercentage"
               lable="Tax (%)"
               type="number"
-              value={formState.taxPercentage}
+              value={data.taxPercentage}
               onChange={handleChange}
               required={true}
             />
@@ -231,7 +326,7 @@ function ProductsForm() {
               name="shippingFee"
               lable="Shipping Fee"
               type="number"
-              value={formState.shippingFee}
+              value={data.shippingFee}
               onChange={handleChange}
               required={true}
             />
@@ -240,7 +335,9 @@ function ProductsForm() {
           {/* colors Multi Select */}
           {/* sizes Multi Select */}
 
-          <Button type="submit">Submit</Button>
+          <Button color="primary" type="submit">
+            Submit
+          </Button>
         </form>
       </div>
     </div>

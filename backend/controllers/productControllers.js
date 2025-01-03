@@ -52,7 +52,7 @@ const addProduct = async (req, res) => {
 
     const product = await Product.create(req.body);
 
-    res.status(500).json({ success: false, data: product });
+    res.status(200).json({ success: true, data: product });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }
@@ -87,6 +87,8 @@ const updateProduct = async (req, res) => {
           temp.push(imageURL);
         }
 
+        console.log("temp", temp);
+
         req.body.images = [...req.body.images, ...temp];
       } else {
         const imageURL = await saveFile(req.files.images, "product");
@@ -97,7 +99,7 @@ const updateProduct = async (req, res) => {
 
     for (const imageURL of product.images) {
       if (!req.body.images.includes(imageURL)) {
-        await deleteFile(imageURL);
+        await deleteFile(imageURL, "product");
       }
     }
 
