@@ -23,3 +23,6 @@ export const {
   updateProduct,
   deleteProduct
 } = getAllApiServices("product", "products");
+
+export const { getAllPages, getPageById, addPage, updatePage, deletePage } =
+  getAllApiServices("page", "pages");

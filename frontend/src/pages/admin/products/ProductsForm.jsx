@@ -1,11 +1,14 @@
+import { Button } from "flowbite-react";
 import React, { useEffect, useState } from "react";
+import { HiArrowPath, HiMiniExclamationTriangle } from "react-icons/hi2";
+import { toast } from "react-toastify";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
-import MyTextInput from "../../../components/admin/common/form/MyTextInput";
+import MyMultipleFilesInput from "../../../components/admin/common/form/MyMutipleFilesInput";
 import MySelect from "../../../components/admin/common/form/MySelect";
 import MyTextArea from "../../../components/admin/common/form/MyTextArea";
-import MyMultipleFilesInput from "../../../components/admin/common/form/MyMutipleFilesInput";
-import { Button } from "flowbite-react";
-import { toast } from "react-toastify";
+import MyTextInput from "../../../components/admin/common/form/MyTextInput";
+import MyAlert from "../../../components/common/MyAlert";
+import { useForm } from "../../../hooks/useForm";
 import {
   addProduct,
   getAllCategories,
@@ -13,10 +16,6 @@ import {
   getProductById,
   updateProduct
 } from "../../../services/apiServices";
-import { useNavigate, useParams } from "react-router-dom";
-import MyAlert from "../../../components/common/MyAlert";
-import { HiArrowPath, HiMiniExclamationTriangle } from "react-icons/hi2";
-import { useForm } from "../../../hooks/useForm";
 
 const initialState = {
   name: "",
@@ -46,16 +45,39 @@ function ProductsForm() {
 
   // const [imageURLs, setImageURLs] = useState([""]);
 
+  function getFormData(formData) {
+    const body = new FormData();
+    for (const key in formData) {
+      if (key === "images") {
+        for (const image of formData[key]) {
+          body.append("images", image);
+        }
+      } else {
+        body.append(key, formData[key]);
+      }
+    }
+    return body;
+  }
+
   const {
     loading,
-    data,
-    setData,
     error,
-    urls,
-    setUrls,
+    formData,
+    setFormData,
+    imageUrls,
+    setImageUrls,
     handleChange,
     handleSubmit
-  } = useForm(initialState, [""], "images", getProductById);
+  } = useForm(
+    initialState,
+    [""],
+    "images",
+    getProductById,
+    getFormData,
+    addProduct,
+    updateProduct,
+    "/admin/products"
+  );
 
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [categoriesOptions, setCategoriesOptions] = useState([]);
@@ -110,7 +132,7 @@ function ProductsForm() {
 
       if (!result.success) {
         toast("Failed to fetch sub-categories.", { type: "error" });
-        setCategoriesError("Failed to fetch sub-categories.");
+        setSubCategoriesError("Failed to fetch sub-categories.");
         return;
       }
 
@@ -164,13 +186,13 @@ function ProductsForm() {
 
   function handleFileUpload(e) {
     const files = e.target.files;
-    setData({ ...data, images: files });
+    setFormData({ ...formData, images: files });
 
     const temp = [];
     for (const file of files) {
       temp.push(URL.createObjectURL(file));
     }
-    setUrls(temp);
+    setImageUrls(temp);
   }
 
   // async function handleSubmit(e) {
@@ -232,7 +254,7 @@ function ProductsForm() {
             name="images"
             label="Product Images"
             onChange={handleFileUpload}
-            urls={urls}
+            urls={imageUrls}
           />
 
           <div className="grid grid-cols-2 gap-4">
@@ -240,7 +262,7 @@ function ProductsForm() {
             <MyTextInput
               name="name"
               lable="Name"
-              value={data.name}
+              value={formData.name}
               onChange={handleChange}
               required={true}
             />
@@ -248,7 +270,7 @@ function ProductsForm() {
             <MyTextInput
               name="slug"
               lable="Slug"
-              value={data.slug}
+              value={formData.slug}
               disabled={true}
               required={true}
             />
@@ -258,7 +280,7 @@ function ProductsForm() {
           <MyTextArea
             name="desc"
             label="Description"
-            value={data.desc}
+            value={formData.desc}
             onChange={handleChange}
           />
 
@@ -267,7 +289,7 @@ function ProductsForm() {
             <MySelect
               name="category"
               label="Select A Category"
-              value={data.category}
+              value={formData.category}
               onChange={handleChange}
               options={categoriesOptions}
             />
@@ -275,7 +297,7 @@ function ProductsForm() {
             <MySelect
               name="subCategory"
               label="Select A Sub-Category"
-              value={data.subCategory}
+              value={formData.subCategory}
               onChange={handleChange}
               options={subCategoriesOptions}
             />
@@ -287,7 +309,7 @@ function ProductsForm() {
               name="price"
               lable="Price"
               type="number"
-              value={data.price}
+              value={formData.price}
               onChange={handleChange}
               required={true}
             />
@@ -296,7 +318,7 @@ function ProductsForm() {
               name="quantity"
               lable="Quantity"
               type="number"
-              value={data.quantity}
+              value={formData.quantity}
               onChange={handleChange}
               required={true}
             />
@@ -308,7 +330,7 @@ function ProductsForm() {
               name="discountPercentage"
               lable="Discount (%)"
               type="number"
-              value={data.discountPercentage}
+              value={formData.discountPercentage}
               onChange={handleChange}
               required={true}
             />
@@ -317,7 +339,7 @@ function ProductsForm() {
               name="taxPercentage"
               lable="Tax (%)"
               type="number"
-              value={data.taxPercentage}
+              value={formData.taxPercentage}
               onChange={handleChange}
               required={true}
             />
@@ -326,13 +348,14 @@ function ProductsForm() {
               name="shippingFee"
               lable="Shipping Fee"
               type="number"
-              value={data.shippingFee}
+              value={formData.shippingFee}
               onChange={handleChange}
               required={true}
             />
           </div>
 
           {/* colors Multi Select */}
+
           {/* sizes Multi Select */}
 
           <Button color="primary" type="submit">

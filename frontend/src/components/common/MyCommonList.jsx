@@ -93,7 +93,7 @@ function MyCommonList({ getAllData, deleteData, getAllFields }) {
         </ul>
       );
     } else {
-      return <MyAlert icon={HiArchiveBoxXMark} msg="No categories to show." />;
+      return <MyAlert icon={HiArchiveBoxXMark} msg="No data to show." />;
     }
   }
 

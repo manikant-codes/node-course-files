@@ -13,6 +13,7 @@ import {
   getSubCategoryById,
   updateSubCategory
 } from "../../../services/apiServices";
+import { useForm } from "../../../hooks/useForm";
 
 const initialState = {
   name: "",
@@ -22,16 +23,48 @@ const initialState = {
 };
 
 function SubCategoriesForm() {
-  const { id } = useParams();
-  const isAdd = id === "add";
-  const [formStateLoading, setFormStateLoading] = useState(
-    isAdd ? false : true
-  );
-  const [formState, setFormState] = useState(initialState);
-  const [formStateError, setFormStateError] = useState("");
-  const [imageURL, setImageURL] = useState("");
+  // const { id } = useParams();
+  // const isAdd = id === "add";
+  // const [formStateLoading, setFormStateLoading] = useState(
+  //   isAdd ? false : true
+  // );
+  // const [formState, setFormState] = useState(initialState);
+  // const [formStateError, setFormStateError] = useState("");
+  // const [imageURL, setImageURL] = useState("");
+  // const navigate = useNavigate();
+
+  const [categoryLoading, setCategoryLoading] = useState(true);
   const [categoryOptions, setCategoryOptions] = useState([]);
-  const navigate = useNavigate();
+  const [categoryError, setCategoryError] = useState("");
+
+  function getBody(formData) {
+    const body = new FormData();
+    body.append("name", formData.name);
+    body.append("slug", formData.slug);
+    body.append("image", formData.image);
+    body.append("category", formData.category);
+    return body;
+  }
+
+  const {
+    loading,
+    error,
+    formData,
+    setFormData,
+    imageUrls,
+    setImageUrls,
+    handleChange,
+    handleSubmit
+  } = useForm(
+    initialState,
+    "",
+    "image",
+    getSubCategoryById,
+    getBody,
+    addSubCategory,
+    updateSubCategory,
+    "/admin/subCategories"
+  );
 
   async function fetchAllCategories() {
     try {
@@ -52,95 +85,95 @@ function SubCategoriesForm() {
     }
   }
 
-  async function fetchSubCategory() {
-    try {
-      const result = await getSubCategoryById(id);
+  // async function fetchSubCategory() {
+  //   try {
+  //     const result = await getSubCategoryById(id);
 
-      if (!result.success) {
-        toast("Failed to fetch sub-categoory.", { type: "error" });
-        setFormStateError("Failed to fetch sub-categoory.");
-        return;
-      }
+  //     if (!result.success) {
+  //       toast("Failed to fetch sub-categoory.", { type: "error" });
+  //       setFormStateError("Failed to fetch sub-categoory.");
+  //       return;
+  //     }
 
-      setFormState(result.data);
-      setImageURL(result.data.image);
-    } catch (error) {
-      toast("Failed to fetch sub-categoory.", { type: "error" });
-      setFormStateError("Failed to fetch sub-categoory.");
-    } finally {
-      setFormStateLoading(false);
-    }
-  }
+  //     setFormState(result.data);
+  //     setImageURL(result.data.image);
+  //   } catch (error) {
+  //     toast("Failed to fetch sub-categoory.", { type: "error" });
+  //     setFormStateError("Failed to fetch sub-categoory.");
+  //   } finally {
+  //     setFormStateLoading(false);
+  //   }
+  // }
 
   useEffect(() => {
     fetchAllCategories();
   }, []);
 
-  useEffect(() => {
-    if (!isAdd) {
-      fetchSubCategory();
-    }
-  }, [id]);
+  // useEffect(() => {
+  //   if (!isAdd) {
+  //     fetchSubCategory();
+  //   }
+  // }, [id]);
 
   function handleFileUpload(e) {
     const file = e.target.files[0];
     const tempURL = URL.createObjectURL(file);
 
-    setImageURL(tempURL);
-    setFormState({ ...formState, image: file });
+    setImageUrls(tempURL);
+    setFormData({ ...formData, image: file });
   }
 
-  function handleChange(e) {
-    if (e.target.name === "name") {
-      setFormState({
-        ...formState,
-        [e.target.name]: e.target.value,
-        slug: e.target.value.replaceAll(" ", "-").toLowerCase()
-      });
-    } else {
-      setFormState({ ...formState, [e.target.name]: e.target.value });
-    }
-  }
+  // function handleChange(e) {
+  //   if (e.target.name === "name") {
+  //     setFormState({
+  //       ...formState,
+  //       [e.target.name]: e.target.value,
+  //       slug: e.target.value.replaceAll(" ", "-").toLowerCase()
+  //     });
+  //   } else {
+  //     setFormState({ ...formState, [e.target.name]: e.target.value });
+  //   }
+  // }
 
-  async function handleSubmit(e) {
-    try {
-      e.preventDefault();
+  // async function handleSubmit(e) {
+  //   try {
+  //     e.preventDefault();
 
-      const formData = new FormData();
-      for (const key in formState) {
-        formData.append(key, formState[key]);
-      }
+  //     const formData = new FormData();
+  //     for (const key in formState) {
+  //       formData.append(key, formState[key]);
+  //     }
 
-      let result;
+  //     let result;
 
-      if (isAdd) {
-        result = await addSubCategory(formData);
-      } else {
-        result = await updateSubCategory(id, formData);
-      }
+  //     if (isAdd) {
+  //       result = await addSubCategory(formData);
+  //     } else {
+  //       result = await updateSubCategory(id, formData);
+  //     }
 
-      if (!result.success) {
-        return toast(`Failed to ${isAdd ? "add" : "update"} sub-category.`, {
-          type: "error"
-        });
-      }
+  //     if (!result.success) {
+  //       return toast(`Failed to ${isAdd ? "add" : "update"} sub-category.`, {
+  //         type: "error"
+  //       });
+  //     }
 
-      toast(`Sub-category ${isAdd ? "added" : "updated"} successfully.`, {
-        type: "success"
-      });
-      navigate("/admin/subCategories");
-    } catch (error) {
-      toast(`Failed to ${isAdd ? "add" : "update"} sub-category.`, {
-        type: "error"
-      });
-    }
-  }
+  //     toast(`Sub-category ${isAdd ? "added" : "updated"} successfully.`, {
+  //       type: "success"
+  //     });
+  //     navigate("/admin/subCategories");
+  //   } catch (error) {
+  //     toast(`Failed to ${isAdd ? "add" : "update"} sub-category.`, {
+  //       type: "error"
+  //     });
+  //   }
+  // }
 
-  if (formStateLoading) {
+  if (loading) {
     return <MyAlert icon={HiArrowPath} msg="Loading..." />;
   }
 
-  if (formStateError) {
+  if (error) {
     return (
       <MyAlert
         color="failure"
@@ -158,27 +191,27 @@ function SubCategoriesForm() {
       <MyFileInput
         name="image"
         label="Upload Sub-Category Image"
-        url={imageURL}
+        url={imageUrls}
         onChange={handleFileUpload}
       />
       <div className="flex flex-col gap-4">
         <MyTextInput
           name="name"
           lable="Sub-Category Name"
-          value={formState.name}
+          value={formData.name}
           onChange={handleChange}
           required={true}
         />
         <MyTextInput
           name="slug"
           lable="Sub-Category Slug"
-          value={formState.slug}
+          value={formData.slug}
           disabled={true}
         />
         <MySelect
           name="category"
           label="Select A Category"
-          value={formState.category}
+          value={formData.category}
           onChange={handleChange}
           options={categoryOptions}
         />
