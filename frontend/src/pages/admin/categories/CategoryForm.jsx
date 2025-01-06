@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import { Button, FileInput, Label, TextInput } from "flowbite-react";
 import { addCategory } from "../../../services/apiServices";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   image: null,
@@ -11,6 +12,7 @@ const initialState = {
 
 function CategoryForm() {
   const [formState, setFormState] = useState(initialState);
+  const navigate = useNavigate();
 
   function handleUpload(e) {
     const file = e.target.files[0];
@@ -41,6 +43,7 @@ function CategoryForm() {
       }
 
       alert("Category added successfully.");
+      navigate("/admin/categories");
     } catch (error) {
       alert("Failed to add category.");
     }
