@@ -4,10 +4,43 @@ const {
   sendDataResponse
 } = require("../helpers/resHelpers");
 const SubCategory = require("../models/SubCategory");
+const Category = require("../models/Category");
+const Product = require("../models/Product");
+const Page = require("../models/Page");
 
 const getAllSubCategories = async (req, res) => {
   try {
     const subCategories = await SubCategory.find().populate("category");
+    sendDataResponse(res, subCategories);
+  } catch (error) {
+    sendErrorResponse(res, error.message);
+  }
+};
+
+const getAllSubCategoriesByCategoryId = async (req, res) => {
+  try {
+    const { categoryId } = req.params;
+
+    const subCategories = await SubCategory.find({ category: categoryId });
+
+    sendDataResponse(res, subCategories);
+  } catch (error) {
+    sendErrorResponse(res, error.message);
+  }
+};
+
+const getAllSubCategoriesByCategorySlug = async (req, res) => {
+  try {
+    const { categorySlug } = req.params;
+
+    const category = await Category.findOne({ slug: categorySlug });
+
+    if (!category) {
+      return sendErrorResponse(res, "No such category found.", 404);
+    }
+
+    const subCategories = await SubCategory.find({ category: category._id });
+
     sendDataResponse(res, subCategories);
   } catch (error) {
     sendErrorResponse(res, error.message);
@@ -94,6 +127,17 @@ const deleteSubCategory = async (req, res) => {
       return sendErrorResponse(res, "No such sub-category found.", 404);
     }
 
+    const product = await Product.findOne({ category: id });
+    const page = await Page.findOne({ subCategories: id });
+
+    if (product || page) {
+      return sendErrorResponse(
+        res,
+        "Sub-category is being used in products or pages.",
+        400
+      );
+    }
+
     await deleteFile(subCategory.image, "subCategory");
 
     const deletedSubCategory = await SubCategory.findByIdAndDelete(id);
@@ -106,6 +150,8 @@ const deleteSubCategory = async (req, res) => {
 
 module.exports = {
   getAllSubCategories,
+  getAllSubCategoriesByCategoryId,
+  getAllSubCategoriesByCategorySlug,
   getSubCategoryById,
   addSubCategory,
   updateSubCategory,

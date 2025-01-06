@@ -14,7 +14,7 @@ import { COLORS, SIZES } from "../../../consts";
 import {
   addProduct,
   getAllCategories,
-  getAllSubCategories,
+  getAllSubCategoriesByCategoryId,
   getProductById,
   updateProduct
 } from "../../../services/apiServices";
@@ -43,7 +43,6 @@ function ProductsForm() {
   );
   const [formState, setFormState] = useState(initialState);
   const [formStateError, setFormStateError] = useState("");
-
   const [imagesURLs, setImagesURLs] = useState([""]);
   const [categoriesOptions, setCategoriesOptions] = useState([]);
   const [subCategoriesOptions, setSubCategoriesOptions] = useState([]);
@@ -62,9 +61,9 @@ function ProductsForm() {
     }
   }
 
-  async function fetchSubCategories() {
+  async function fetchSubCategoriesByCategoryId() {
     try {
-      const result = await getAllSubCategories();
+      const result = await getAllSubCategoriesByCategoryId(formState.category);
       const temp = result.data.map((subCategory) => {
         return { value: subCategory._id, text: subCategory.name };
       });
@@ -100,8 +99,10 @@ function ProductsForm() {
   }, []);
 
   useEffect(() => {
-    fetchSubCategories();
-  }, []);
+    if (formState.category) {
+      fetchSubCategoriesByCategoryId();
+    }
+  }, [formState.category]);
 
   useEffect(() => {
     if (!isAdd) {
@@ -127,6 +128,12 @@ function ProductsForm() {
         ...formState,
         name: e.target.value,
         slug: e.target.value.toLowerCase().replaceAll(" ", "-")
+      });
+    } else if (e.target.name === "category") {
+      setFormState({
+        ...formState,
+        [e.target.name]: e.target.value,
+        subCategory: ""
       });
     } else {
       setFormState({

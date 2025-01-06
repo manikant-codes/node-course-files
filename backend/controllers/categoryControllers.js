@@ -3,6 +3,9 @@ const {
   sendDataResponse
 } = require("../helpers/resHelpers");
 const Category = require("../models/Category");
+const SubCategory = require("../models/SubCategory");
+const Product = require("../models/Product");
+const Page = require("../models/Page");
 const { saveFile, deleteFile } = require("../helpers/fileHelpers");
 
 const getAllCategories = async (req, res) => {
@@ -93,6 +96,17 @@ const deleteCategory = async (req, res) => {
 
     if (!category) {
       return sendErrorResponse(res, "No such category found.", 404);
+    }
+
+    const subCategory = await SubCategory.findOne({ category: id });
+    const product = await Product.findOne({ category: id });
+    const page = await Page.findOne({ slug: category.slug });
+
+    if (subCategory || product || page) {
+      return sendErrorResponse(
+        res,
+        "Category cannot be deleted as it is associated with other resources."
+      );
     }
 
     await deleteFile(category.image, "category");

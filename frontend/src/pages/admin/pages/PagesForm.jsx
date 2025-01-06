@@ -12,7 +12,7 @@ import MessageBox from "../../../components/common/MessageBox";
 import {
   addPage,
   getAllCategories,
-  getAllSubCategories,
+  getAllSubCategoriesByCategorySlug,
   getPageById,
   updatePage
 } from "../../../services/apiServices";
@@ -27,23 +27,18 @@ const initialState = {
 function PagesForm() {
   const { id } = useParams();
   const isAdd = id === "add";
-
   const [formStateLoading, setFormStateLoading] = useState(
     isAdd ? false : true
   );
   const [formState, setFormState] = useState(initialState);
   const [formStateError, setFormStateError] = useState("");
-
   const [imagesURLs, setImagesURLs] = useState([""]);
-
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [categoriesOptions, setCategoriesOptions] = useState([]);
   const [categoriesError, setCategoriesError] = useState("");
-
-  const [subCategoriesLoading, setSubCategoriesLoading] = useState(true);
+  const [subCategoriesLoading, setSubCategoriesLoading] = useState(false);
   const [subCategoriesOptions, setSubCategoriesOptions] = useState([]);
   const [subCategoriesError, setSubCategoriesError] = useState("");
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -51,8 +46,10 @@ function PagesForm() {
   }, []);
 
   useEffect(() => {
-    fetchSubCategories();
-  }, []);
+    if (formState.slug) {
+      fetchSubCategoriesByCategorySlug();
+    }
+  }, [formState.slug]);
 
   useEffect(() => {
     if (!isAdd) {
@@ -84,9 +81,9 @@ function PagesForm() {
     }
   }
 
-  async function fetchSubCategories() {
+  async function fetchSubCategoriesByCategorySlug() {
     try {
-      const result = await getAllSubCategories();
+      const result = await getAllSubCategoriesByCategorySlug(formState.slug);
 
       if (!result.success) {
         toast("Failed to fetch sub-categories.", { type: "error" });
@@ -145,7 +142,8 @@ function PagesForm() {
       setFormState({
         ...formState,
         name: e.target.value,
-        slug: e.target.value.toLowerCase().replaceAll(" ", "-")
+        slug: e.target.value.toLowerCase().replaceAll(" ", "-"),
+        subCategories: []
       });
     } else {
       setFormState({

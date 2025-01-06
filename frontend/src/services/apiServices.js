@@ -1,3 +1,4 @@
+import { BASE_URL } from "../consts";
 import { getAllApiServices } from "../helpers/apiServicesHelper";
 
 // Categories
@@ -21,6 +22,20 @@ export const {
   updateSubCategory,
   deleteSubCategory
 } = getAllApiServices("subCategory", "subCategories");
+
+export async function getAllSubCategoriesByCategorySlug(slug) {
+  const response = await fetch(
+    `${BASE_URL}/subCategories/category/slug/${slug}`
+  );
+  const data = await response.json();
+  return data;
+}
+
+export async function getAllSubCategoriesByCategoryId(id) {
+  const response = await fetch(`${BASE_URL}/subCategories/category/${id}`);
+  const data = await response.json();
+  return data;
+}
 
 // End Sub-Categories
 

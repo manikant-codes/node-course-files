@@ -5,6 +5,7 @@ import { HiArchiveBoxXMark } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
 import CommonListItem from "./CommonListItem";
 import MessageBox from "./MessageBox";
+import { toast } from "react-toastify";
 
 function CommonList({ getData, deleteData, getFieldValues }) {
   const [loading, setLoading] = useState(true);
@@ -35,10 +36,20 @@ function CommonList({ getData, deleteData, getFieldValues }) {
   }
 
   async function handleDelete(id) {
-    const isSure = confirm("Are you sure you want to delete this?");
-    if (!isSure) return;
-    await deleteData(id);
-    handleFetch();
+    try {
+      const isSure = confirm("Are you sure you want to delete this?");
+      if (!isSure) return;
+      const result = await deleteData(id);
+      if (!result.success) {
+        toast(result.msg, { type: "error" });
+        return;
+      }
+
+      toast("Data deleted successfully.", { type: "success" });
+      handleFetch();
+    } catch (error) {
+      toast("Failed to delete data.", { type: "error" });
+    }
   }
 
   if (loading) {

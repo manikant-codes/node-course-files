@@ -1,5 +1,5 @@
 import { Label, Select } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HiMiniXCircle } from "react-icons/hi2";
 
 function getFilteredOptions(initialOptions, selected) {
@@ -22,6 +22,10 @@ function MyMultiSelect({
 }) {
   const filteredOptions = getFilteredOptions(initialOptions, selected);
   const [options, setOptions] = useState(filteredOptions);
+
+  useEffect(() => {
+    setOptions(getFilteredOptions(initialOptions, selected));
+  }, [initialOptions]);
 
   function handleChange(e) {
     if (!e.target.value) return;
