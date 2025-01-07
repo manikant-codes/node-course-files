@@ -1,16 +1,17 @@
 import React from "react";
-import { FaSpinner, FaCircleXmark } from "react-icons/fa6";
+
 import {
   FaInfoCircle,
   FaExclamationTriangle,
-  FaCheckCircle
+  FaCheckCircle,
+  FaSpinner,
+  FaTimesCircle
 } from "react-icons/fa";
 
-const StatusMessage = ({ customIcon, type, message }) => {
+const StatusMessage = ({ type, message, customIcon }) => {
   let icon;
   let bgColor;
   let borderColor;
-  let textColor;
 
   switch (type) {
     case "loading":
@@ -19,15 +20,13 @@ const StatusMessage = ({ customIcon, type, message }) => {
       );
       bgColor = "bg-teal-50";
       borderColor = "border-teal-200";
-      textColor = "text-teal-500";
       break;
     case "error":
       icon = (
-        <FaCircleXmark className="inline-block text-2xl text-red-500 mr-2" />
+        <FaTimesCircle className="inline-block text-2xl text-red-500 mr-2" />
       );
       bgColor = "bg-red-50";
       borderColor = "border-red-200";
-      textColor = "text-red-500";
       break;
     case "success":
       icon = (
@@ -35,7 +34,6 @@ const StatusMessage = ({ customIcon, type, message }) => {
       );
       bgColor = "bg-green-50";
       borderColor = "border-green-200";
-      textColor = "text-green-500";
       break;
     case "info":
       icon = (
@@ -43,7 +41,6 @@ const StatusMessage = ({ customIcon, type, message }) => {
       );
       bgColor = "bg-blue-50";
       borderColor = "border-blue-200";
-      textColor = "text-blue-500";
       break;
     case "warning":
       icon = (
@@ -51,7 +48,6 @@ const StatusMessage = ({ customIcon, type, message }) => {
       );
       bgColor = "bg-yellow-50";
       borderColor = "border-yellow-200";
-      textColor = "text-yellow-500";
       break;
     default:
       icon = customIcon || (
@@ -59,7 +55,6 @@ const StatusMessage = ({ customIcon, type, message }) => {
       );
       bgColor = "bg-teal-50";
       borderColor = "border-teal-200";
-      textColor = "text-teal-500";
   }
 
   return (

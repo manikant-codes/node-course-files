@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
+import StatusMessage from "../../../components/common/StatusMessage";
 import { getAllCategories } from "../../../services/apiServices";
 import CategoryListItem from "./CategoryListItem";
-import { FaCircleXmark, FaSpinner } from "react-icons/fa6";
-import StatusMessage from "../../../components/common/StatusMessage";
 
 function CategoriesList() {
   const [loading, setLoading] = useState(true);
