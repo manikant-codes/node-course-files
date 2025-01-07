@@ -3,9 +3,22 @@ export async function getAllCategories() {
   return await response.json();
 }
 
+export async function getCategoryById(id) {
+  const response = await fetch(`http://localhost:5000/categories/${id}`);
+  return await response.json();
+}
+
 export async function addCategory(body) {
   const response = await fetch("http://localhost:5000/categories", {
     method: "POST",
+    body
+  });
+  return await response.json();
+}
+
+export async function updateCategory(id, body) {
+  const response = await fetch(`http://localhost:5000/categories/${id}`, {
+    method: "PATCH",
     body
   });
   return await response.json();

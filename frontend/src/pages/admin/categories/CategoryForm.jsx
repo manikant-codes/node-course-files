@@ -1,8 +1,13 @@
-import React, { useState } from "react";
-import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import { Button, FileInput, Label, TextInput } from "flowbite-react";
-import { addCategory } from "../../../services/apiServices";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
+import StatusMessage from "../../../components/common/StatusMessage";
+import {
+  addCategory,
+  getCategoryById,
+  updateCategory
+} from "../../../services/apiServices";
 
 const initialState = {
   image: null,
@@ -11,12 +16,53 @@ const initialState = {
 };
 
 function CategoryForm() {
+  const { id } = useParams();
+  const isUpdate = id !== "add";
+  const [formStateLoading, setFormStateLoading] = useState(
+    isUpdate ? true : false
+  );
   const [formState, setFormState] = useState(initialState);
+  const [formStateError, setFormStateError] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isUpdate) {
+      fetchCategory();
+    }
+  }, []);
+
+  async function fetchCategory() {
+    try {
+      const result = await getCategoryById(id);
+
+      if (!result.success) {
+        alert("Failed to fetch category.");
+        setFormStateError("Failed to fetch category.");
+        return;
+      }
+
+      setFormState({
+        image: result.data.image,
+        name: result.data.name,
+        slug: result.data.slug
+      });
+
+      setImageUrl(result.data.image);
+    } catch (error) {
+      alert("Failed to fetch category.");
+      setFormStateError("Failed to fetch category.");
+    } finally {
+      setFormStateLoading(false);
+    }
+  }
 
   function handleUpload(e) {
     const file = e.target.files[0];
     setFormState({ ...formState, image: file });
+
+    const tempUrl = URL.createObjectURL(file);
+    setImageUrl(tempUrl);
   }
 
   function handleChange(e) {
@@ -36,17 +82,40 @@ function CategoryForm() {
       formData.append("name", formState.name);
       formData.append("slug", formState.slug);
 
-      const result = await addCategory(formData);
-
-      if (!result.success) {
-        return alert("Failed to add category.");
+      let result;
+      if (isUpdate) {
+        result = await updateCategory(id, formData);
+      } else {
+        result = await addCategory(formData);
       }
 
-      alert("Category added successfully.");
+      if (!result.success) {
+        return alert(`Failed to ${isUpdate ? "update" : "add"} category.`);
+      }
+
+      alert(`Category ${isUpdate ? "updated" : "added"} successfully.`);
       navigate("/admin/categories");
     } catch (error) {
-      alert("Failed to add category.");
+      alert(`Failed to ${isUpdate ? "update" : "add"} category.`);
     }
+  }
+
+  if (formStateLoading) {
+    return (
+      <>
+        <AdminPageTitle title={`${isUpdate ? "Update" : "Add"} Category`} />
+        <StatusMessage type="loading" message="Loading form data..." />
+      </>
+    );
+  }
+
+  if (formStateError) {
+    return (
+      <>
+        <AdminPageTitle title={`${isUpdate ? "Update" : "Add"} Category`} />
+        <StatusMessage type="error" message={formStateError} />
+      </>
+    );
   }
 
   return (
@@ -56,6 +125,14 @@ function CategoryForm() {
         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
           {/* image */}
           <div>
+            <div className="w-[200px] h-[200px] mb-2 block rounded-lg overflow-hidden border">
+              <img
+                src={imageUrl || "/placeholder.svg"}
+                alt=""
+                className="w-full h-full object-cover rounded-lg"
+              />
+            </div>
+
             <div>
               <Label htmlFor="image" value="Upload Category Image" />
             </div>
