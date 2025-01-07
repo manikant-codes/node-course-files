@@ -19,6 +19,7 @@ import UsersForm from "./pages/admin/users/UsersForm";
 import OrdersForm from "./pages/admin/orders/OrdersForm";
 import Contact from "./pages/public/Contact";
 import Home from "./pages/public/Home";
+import Page from "./pages/public/Page";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <Routes>
         <Route path="/" element={<PublicLayout />}>
           <Route index element={<Home />} />
+          <Route path=":slug" element={<Page />} />
           <Route path="contact" element={<Contact />} />
         </Route>
         <Route path="/user" element={<UserLayout />}>

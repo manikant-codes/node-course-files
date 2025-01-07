@@ -30,6 +30,22 @@ const getPageById = async (req, res) => {
   }
 };
 
+const getPageBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const page = await Page.findOne({ slug }).populate("subCategories");
+
+    if (!page) {
+      return sendErrorResponse(res, "No such page found.", 404);
+    }
+
+    sendDataResponse(res, page);
+  } catch (error) {
+    sendErrorResponse(res, error.message);
+  }
+};
+
 const addPage = async (req, res) => {
   try {
     if (!req.files || !req.files.images) {
@@ -136,6 +152,7 @@ const deletePage = async (req, res) => {
 module.exports = {
   getAllPages,
   getPageById,
+  getPageBySlug,
   addPage,
   updatePage,
   deletePage

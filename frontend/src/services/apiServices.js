@@ -56,4 +56,10 @@ export const {
 export const { getAllPages, getPageById, addPage, updatePage, deletePage } =
   getAllApiServices("page", "pages");
 
+export async function getPageBySlug(slug) {
+  const response = await fetch(`${BASE_URL}/pages/slug/${slug}`);
+  const data = await response.json();
+  return data;
+}
+
 // End Pages

@@ -13,6 +13,17 @@ function getFilteredOptions(initialOptions, selected) {
   return filteredOptions;
 }
 
+function getSelectedOptions(initialOptions, selected) {
+  const selectedOptions = initialOptions.filter((option) => {
+    if (selected.includes(option.value)) {
+      return true;
+    }
+    return false;
+  });
+
+  return selectedOptions;
+}
+
 function MyMultiSelect({
   name,
   selected,
@@ -21,16 +32,28 @@ function MyMultiSelect({
   required = false
 }) {
   const filteredOptions = getFilteredOptions(initialOptions, selected);
+  const initialSelectedOptions = getSelectedOptions(initialOptions, selected);
+
   const [options, setOptions] = useState(filteredOptions);
+  const [selectedOptions, setSelectedOptions] = useState(
+    initialSelectedOptions
+  );
 
   useEffect(() => {
     setOptions(getFilteredOptions(initialOptions, selected));
+    setSelectedOptions(getSelectedOptions(initialOptions, selected));
   }, [initialOptions]);
 
   function handleChange(e) {
     if (!e.target.value) return;
 
     setSelected([...selected, e.target.value]);
+    setSelectedOptions([
+      ...selectedOptions,
+      options.find((option) => {
+        return option.value === e.target.value;
+      })
+    ]);
 
     const updatedOptions = options.filter((option, index) => {
       if (option.value === e.target.value) {
@@ -44,8 +67,12 @@ function MyMultiSelect({
 
   function handleRemove(index) {
     const updatedSelected = [...selected];
+    const updatedSelectedOptions = [...selectedOptions];
     const deleted = updatedSelected.splice(index, 1);
+    updatedSelectedOptions.splice(index, 1);
+
     setSelected(updatedSelected);
+    setSelectedOptions(updatedSelectedOptions);
 
     const deletedOption = initialOptions.find((option, index) => {
       return option.value === deleted[0];
@@ -69,7 +96,7 @@ function MyMultiSelect({
         })}
       </Select>
       <div className="flex items-center flex-wrap gap-2 mt-4">
-        {selected.map((value, index) => {
+        {selectedOptions.map((option, index) => {
           return (
             <div
               key={index}
@@ -81,7 +108,7 @@ function MyMultiSelect({
                   handleRemove(index);
                 }}
               />
-              <p>{value}</p>
+              <p>{option.text}</p>
             </div>
           );
         })}
