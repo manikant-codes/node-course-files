@@ -122,7 +122,7 @@ function CategoryForm() {
     <div>
       <AdminPageTitle title="Add Update Category" />
       <div>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {/* image */}
           <div>
             <div className="w-[200px] h-[200px] mb-2 block rounded-lg overflow-hidden border">
