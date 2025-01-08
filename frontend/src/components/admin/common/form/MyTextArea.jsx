@@ -22,6 +22,7 @@ function MyTextArea({
         placeholder={label}
         required={required}
         rows={rows}
+        color="primary"
       />
     </div>
   );

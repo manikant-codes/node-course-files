@@ -21,6 +21,7 @@ function MySelect({ name, label, value, onChange, options, required = false }) {
         value={value}
         onChange={onChange}
         required={required}
+        color="primary"
       >
         {options.map((option, index) => {
           return (

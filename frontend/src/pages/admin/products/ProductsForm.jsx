@@ -17,6 +17,7 @@ import {
   updateProduct
 } from "../../../services/apiServices";
 import MyMultiSelect from "../../../components/admin/common/form/MyMultiSelect";
+import { COLORS, SIZES } from "../../../consts";
 
 const initialState = {
   name: "",
@@ -52,6 +53,14 @@ function ProductsForm() {
       if (key === "images") {
         for (const image of formData[key]) {
           body.append("images", image);
+        }
+      } else if (key === "sizes") {
+        for (const size of formData[key]) {
+          body.append("sizes", size);
+        }
+      } else if (key === "colors") {
+        for (const size of formData[key]) {
+          body.append("colors", size);
         }
       } else {
         body.append(key, formData[key]);
@@ -355,10 +364,31 @@ function ProductsForm() {
             />
           </div>
 
-          {/* colors Multi Select */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* colors Multi Select */}
+            <MyMultiSelect
+              initialOptions={COLORS}
+              selectedOptions={formData.colors}
+              setSelectedOptions={(colors) => {
+                setFormData({
+                  ...formData,
+                  colors: colors
+                });
+              }}
+            />
 
-          {/* sizes Multi Select */}
-          <MyMultiSelect />
+            {/* sizes Multi Select */}
+            <MyMultiSelect
+              initialOptions={SIZES}
+              selectedOptions={formData.sizes}
+              setSelectedOptions={(sizes) => {
+                setFormData({
+                  ...formData,
+                  sizes: sizes
+                });
+              }}
+            />
+          </div>
 
           <Button color="primary" type="submit">
             Submit
