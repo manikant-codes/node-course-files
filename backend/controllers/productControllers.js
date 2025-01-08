@@ -4,10 +4,29 @@ const {
   sendDataResponse
 } = require("../helpers/resHelpers");
 const Product = require("../models/Product");
+const SubCategory = require("../models/SubCategory");
 
 const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
+    sendDataResponse(res, products);
+  } catch (error) {
+    sendErrorResponse(res, error.message);
+  }
+};
+
+const getAllProductsBySubCategorySlug = async (req, res) => {
+  try {
+    const { subCategorySlug } = req.params;
+
+    const subCategory = await SubCategory.findOne({ slug: subCategorySlug });
+
+    if (!subCategory) {
+      return sendErrorResponse(res, "No such sub-category found.", 404);
+    }
+
+    const products = await Product.find({ subCategory: subCategory._id });
+
     sendDataResponse(res, products);
   } catch (error) {
     sendErrorResponse(res, error.message);
@@ -154,6 +173,7 @@ const deleteProduct = async (req, res) => {
 
 module.exports = {
   getAllProducts,
+  getAllProductsBySubCategorySlug,
   getProductById,
   addProduct,
   updateProduct,

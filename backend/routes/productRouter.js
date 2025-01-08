@@ -4,11 +4,16 @@ const {
   getProductById,
   addProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  getAllProductsBySubCategorySlug
 } = require("../controllers/productControllers");
 const productRouter = express.Router();
 
 productRouter.get("/", getAllProducts);
+productRouter.get(
+  "/subCategory/:subCategorySlug",
+  getAllProductsBySubCategorySlug
+);
 productRouter.get("/:id", getProductById);
 productRouter.post("/", addProduct);
 productRouter.patch("/:id", updateProduct);

@@ -6,7 +6,6 @@ import UserLayout from "./layouts/user/UserLayout";
 import AdminLayout from "./layouts/admin/AdminLayout";
 import CategoriesList from "./pages/admin/categories/CategoriesList";
 import SubCategoriesList from "./pages/admin/subCategories/SubCategoriesList";
-import ProductsList from "./pages/admin/products/ProductsList";
 import Dashboard from "./pages/admin/Dashboard";
 import PagesList from "./pages/admin/pages/PagesList";
 import UsersList from "./pages/admin/users/UsersList";
@@ -20,6 +19,8 @@ import OrdersForm from "./pages/admin/orders/OrdersForm";
 import Contact from "./pages/public/Contact";
 import Home from "./pages/public/Home";
 import Page from "./pages/public/Page";
+import Products from "./pages/public/Products";
+import ProductsList from "./pages/admin/products/ProductsList";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/" element={<PublicLayout />}>
           <Route index element={<Home />} />
           <Route path=":slug" element={<Page />} />
+          <Route path=":slug/:subCategorySlug" element={<Products />} />
           <Route path="contact" element={<Contact />} />
         </Route>
         <Route path="/user" element={<UserLayout />}>

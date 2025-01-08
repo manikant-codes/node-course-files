@@ -49,6 +49,12 @@ export const {
   deleteProduct
 } = getAllApiServices("product", "products");
 
+export async function getAllProductsBySubCategorySlug(slug) {
+  const response = await fetch(`${BASE_URL}/products/subCategory/${slug}`);
+  const data = await response.json();
+  return data;
+}
+
 // End Products
 
 // Pages
