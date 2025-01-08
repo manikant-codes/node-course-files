@@ -16,6 +16,7 @@ import {
   getProductById,
   updateProduct
 } from "../../../services/apiServices";
+import MyMultiSelect from "../../../components/admin/common/form/MyMultiSelect";
 
 const initialState = {
   name: "",
@@ -357,6 +358,7 @@ function ProductsForm() {
           {/* colors Multi Select */}
 
           {/* sizes Multi Select */}
+          <MyMultiSelect />
 
           <Button color="primary" type="submit">
             Submit
