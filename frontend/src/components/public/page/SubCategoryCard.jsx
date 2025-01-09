@@ -6,7 +6,7 @@ function SubCategoryCard({ subCategory }) {
   const { slug } = useParams();
 
   function handleNavigate(subCategorySlug) {
-    navigate(`/${slug}/${subCategorySlug}`);
+    navigate(`${subCategorySlug}`);
   }
 
   return (
@@ -21,7 +21,6 @@ function SubCategoryCard({ subCategory }) {
         alt=""
         className="h-[256px] w-full object-cover object-top mb-4"
       />
-
       <h3 className="text-lg ">{subCategory.name}</h3>
     </div>
   );

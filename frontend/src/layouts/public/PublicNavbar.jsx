@@ -16,7 +16,10 @@ function PublicNavbar() {
       if (!result.success) {
         toast("Failed to fetch pages.", { type: "error" });
         console.log(result.msg);
+        return;
       }
+
+      console.log("result", result);
 
       const temp = result.data.map((page) => {
         return {

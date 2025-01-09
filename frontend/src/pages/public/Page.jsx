@@ -13,6 +13,8 @@ function Page() {
   const [error, setError] = React.useState("");
   const { slug } = useParams();
 
+  console.log("page", page);
+
   async function fetchPage() {
     try {
       const result = await getPageBySlug(slug);
@@ -34,17 +36,23 @@ function Page() {
 
   if (loading) {
     return (
-      <MessageBox
-        renderIcon={() => {
-          return <Spinner />;
-        }}
-        message="Loading..."
-      />
+      <div className="p-8">
+        <MessageBox
+          renderIcon={() => {
+            return <Spinner />;
+          }}
+          message="Loading..."
+        />
+      </div>
     );
   }
 
   if (error) {
-    return <MessageBox icon={HiExclamation} message={error} status="error" />;
+    return (
+      <div className="p-8">
+        <MessageBox icon={HiExclamation} message={error} status="error" />
+      </div>
+    );
   }
 
   console.log("page", page);
@@ -55,10 +63,11 @@ function Page() {
       <div className="mb-16">
         <Carousel images={page.images} />
       </div>
+
       {/* Sub-categories */}
       <div>
         <h2 className="text-4xl text-center mb-8">Shop by Categories</h2>
-        <div className="grid grid-cols-4 gap-4 p-8 pt-0">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-8 pt-0">
           {page.subCategories.map((subCategory) => {
             return <SubCategoryCard subCategory={subCategory} />;
           })}

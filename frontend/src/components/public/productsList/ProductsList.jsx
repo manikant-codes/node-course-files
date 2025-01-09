@@ -1,18 +1,17 @@
+import { Button, Spinner } from "flowbite-react";
 import React, { useEffect } from "react";
-import { getAllProductsBySubCategorySlug } from "../../../services/apiServices";
+import { HiExclamation } from "react-icons/hi";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Button } from "flowbite-react";
-import { FaArrowRight } from "react-icons/fa";
+import { getAllProductsBySubCategorySlug } from "../../../services/apiServices";
+import MessageBox from "../../common/MessageBox";
+import ProductListItem from "./ProductListItem";
 
 function ProductsList() {
+  const [loading, setLoading] = React.useState(true);
   const [products, setProducts] = React.useState([]);
+  const [error, setError] = React.useState("");
   const { slug, subCategorySlug } = useParams();
-  const navigate = useNavigate();
-
-  function handleGoToDetailsPage(productSlug) {
-    navigate(productSlug);
-  }
 
   async function fetchProducts() {
     try {
@@ -21,12 +20,17 @@ function ProductsList() {
       if (!result.success) {
         toast("Failed to fetch products.", { type: "error" });
         console.log("Error: ", result.msg);
+        setError(result.msg);
+        return;
       }
 
       setProducts(result.data);
     } catch (error) {
       toast("Failed to fetch products.", { type: "error" });
       console.log("Error: ", error.messasge);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -34,37 +38,50 @@ function ProductsList() {
     fetchProducts();
   }, []);
 
+  if (loading) {
+    return (
+      <div className="p-8">
+        <MessageBox
+          renderIcon={() => {
+            return <Spinner />;
+          }}
+          message="Loading..."
+        />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-8">
+        <MessageBox icon={HiExclamation} message={error} status="error" />
+      </div>
+    );
+  }
+
   return (
     <div className="p-4">
       {/* Title */}
-      <h2></h2>
+      <h2 className="text-xl font-semibold mb-4">Results</h2>
       {/* Bread Crumbs */}
       {/* Products List */}
-      <ul className="grid grid-cols-4 gap-4">
-        {products.map((product) => (
-          <li
-            onClick={() => {
-              handleGoToDetailsPage(product.slug);
-            }}
-            key={product._id}
-            className="border border-gray-300 p-4"
-          >
-            <img
-              src={product.images[0]}
-              alt=""
-              className="w-full h-[256px] object-cover object-top mb-2"
+      {products.length > 0 && (
+        <ul className="grid grid-cols-4 gap-4">
+          {products.map((product) => (
+            <ProductListItem
+              key={product._id}
+              image={product.images[0]}
+              name={product.name}
+              desc={product.desc}
+              price={product.price}
+              slug={product.slug}
             />
-            <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-            <p className="text-gray-500 line-clamp-2 mb-2">{product.desc}</p>
-            <p className="text-lg font-semibold flex items-center justify-between">
-              <span>₹{product.price.toLocaleString("en-in")}</span>
-              <Button size="xs">
-                <span>Buy Now</span>
-              </Button>
-            </p>
-          </li>
-        ))}
-      </ul>
+          ))}
+        </ul>
+      )}
+      {products.length <= 0 && (
+        <MessageBox icon={HiExclamation} message="No products found." />
+      )}
     </div>
   );
 }
