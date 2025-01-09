@@ -37,10 +37,10 @@ function CategoriesForm() {
   }
 
   const {
-    loading,
-    error,
-    formData,
-    setFormData,
+    formStateLoading,
+    formStateError,
+    formState,
+    setFormState,
     imageUrls,
     setImageUrls,
     handleChange,
@@ -92,7 +92,7 @@ function CategoriesForm() {
 
   function handleFileUpload(e) {
     const file = e.target.files[0];
-    setFormData({ ...formData, image: file });
+    setFormState({ ...formState, image: file });
 
     const tempURL = URL.createObjectURL(file);
     setImageUrls(tempURL);
@@ -132,13 +132,17 @@ function CategoriesForm() {
   //   }
   // }
 
-  if (loading) {
+  if (formStateLoading) {
     return <MyAlert icon={HiArrowPath} msg="Loading..." />;
   }
 
-  if (error) {
+  if (formStateError) {
     return (
-      <MyAlert color="failure" icon={HiMiniExclamationTriangle} msg={error} />
+      <MyAlert
+        color="failure"
+        icon={HiMiniExclamationTriangle}
+        msg={formStateError}
+      />
     );
   }
 
@@ -157,14 +161,14 @@ function CategoriesForm() {
         <MyTextInput
           name="name"
           lable="Category Name"
-          value={formData.name}
+          value={formState.name}
           onChange={handleChange}
           required={true}
         />
         <MyTextInput
           name="slug"
           lable="Category Slug"
-          value={formData.slug}
+          value={formState.slug}
           disabled={true}
         />
         <Button color="primary" type="submit">

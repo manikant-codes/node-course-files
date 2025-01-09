@@ -70,10 +70,10 @@ function ProductsForm() {
   }
 
   const {
-    loading,
-    error,
-    formData,
-    setFormData,
+    formStateLoading,
+    formStateError,
+    formState,
+    setFormState,
     imageUrls,
     setImageUrls,
     handleChange,
@@ -196,7 +196,7 @@ function ProductsForm() {
 
   function handleFileUpload(e) {
     const files = e.target.files;
-    setFormData({ ...formData, images: files });
+    setFormState({ ...formState, images: files });
 
     const temp = [];
     for (const file of files) {
@@ -244,13 +244,17 @@ function ProductsForm() {
   //   }
   // }
 
-  if (loading) {
+  if (formStateLoading) {
     return <MyAlert icon={HiArrowPath} msg="Loading..." />;
   }
 
-  if (error) {
+  if (formStateError) {
     return (
-      <MyAlert color="failure" icon={HiMiniExclamationTriangle} msg={error} />
+      <MyAlert
+        color="failure"
+        icon={HiMiniExclamationTriangle}
+        msg={formStateError}
+      />
     );
   }
 
@@ -272,7 +276,7 @@ function ProductsForm() {
             <MyTextInput
               name="name"
               lable="Name"
-              value={formData.name}
+              value={formState.name}
               onChange={handleChange}
               required={true}
             />
@@ -280,7 +284,7 @@ function ProductsForm() {
             <MyTextInput
               name="slug"
               lable="Slug"
-              value={formData.slug}
+              value={formState.slug}
               disabled={true}
               required={true}
             />
@@ -290,7 +294,7 @@ function ProductsForm() {
           <MyTextArea
             name="desc"
             label="Description"
-            value={formData.desc}
+            value={formState.desc}
             onChange={handleChange}
           />
 
@@ -299,7 +303,7 @@ function ProductsForm() {
             <MySelect
               name="category"
               label="Select A Category"
-              value={formData.category}
+              value={formState.category}
               onChange={handleChange}
               options={categoriesOptions}
             />
@@ -307,7 +311,7 @@ function ProductsForm() {
             <MySelect
               name="subCategory"
               label="Select A Sub-Category"
-              value={formData.subCategory}
+              value={formState.subCategory}
               onChange={handleChange}
               options={subCategoriesOptions}
             />
@@ -319,7 +323,7 @@ function ProductsForm() {
               name="price"
               lable="Price"
               type="number"
-              value={formData.price}
+              value={formState.price}
               onChange={handleChange}
               required={true}
             />
@@ -328,7 +332,7 @@ function ProductsForm() {
               name="quantity"
               lable="Quantity"
               type="number"
-              value={formData.quantity}
+              value={formState.quantity}
               onChange={handleChange}
               required={true}
             />
@@ -340,7 +344,7 @@ function ProductsForm() {
               name="discountPercentage"
               lable="Discount (%)"
               type="number"
-              value={formData.discountPercentage}
+              value={formState.discountPercentage}
               onChange={handleChange}
               required={true}
             />
@@ -349,7 +353,7 @@ function ProductsForm() {
               name="taxPercentage"
               lable="Tax (%)"
               type="number"
-              value={formData.taxPercentage}
+              value={formState.taxPercentage}
               onChange={handleChange}
               required={true}
             />
@@ -358,7 +362,7 @@ function ProductsForm() {
               name="shippingFee"
               lable="Shipping Fee"
               type="number"
-              value={formData.shippingFee}
+              value={formState.shippingFee}
               onChange={handleChange}
               required={true}
             />
@@ -368,10 +372,10 @@ function ProductsForm() {
             {/* colors Multi Select */}
             <MyMultiSelect
               initialOptions={COLORS}
-              selectedOptions={formData.colors}
+              selectedOptions={formState.colors}
               setSelectedOptions={(colors) => {
-                setFormData({
-                  ...formData,
+                setFormState({
+                  ...formState,
                   colors: colors
                 });
               }}
@@ -380,10 +384,10 @@ function ProductsForm() {
             {/* sizes Multi Select */}
             <MyMultiSelect
               initialOptions={SIZES}
-              selectedOptions={formData.sizes}
+              selectedOptions={formState.sizes}
               setSelectedOptions={(sizes) => {
-                setFormData({
-                  ...formData,
+                setFormState({
+                  ...formState,
                   sizes: sizes
                 });
               }}

@@ -24,6 +24,8 @@ function getSlectedOptionsObjects(initialOptions, initialSelctedOptions) {
 }
 
 function MyMultiSelect({
+  name,
+  label,
   initialOptions,
   selectedOptions,
   setSelectedOptions
@@ -34,6 +36,13 @@ function MyMultiSelect({
   const [selectedOptionsObjects, setSelectedOptionsObjects] = React.useState(
     getSlectedOptionsObjects(initialOptions, selectedOptions)
   );
+
+  React.useEffect(() => {
+    setOptions(getInitialOptions(initialOptions, selectedOptions));
+    setSelectedOptionsObjects(
+      getSlectedOptionsObjects(initialOptions, selectedOptions)
+    );
+  }, [initialOptions, selectedOptions]);
 
   function handleAdd(e) {
     if (e.target.value === "") return;
@@ -76,9 +85,9 @@ function MyMultiSelect({
   return (
     <div className="">
       <div className="mb-2 block">
-        <Label htmlFor="sizes" value="Sizes" />
+        <Label htmlFor={name} value={label} />
       </div>
-      <Select id="sizes" name="sizes" color="primary" onChange={handleAdd}>
+      <Select id={name} name={name} color="primary" onChange={handleAdd}>
         {options.map((size, index) => {
           return (
             <option key={index} value={size.value}>

@@ -1,19 +1,21 @@
+import { Button } from "flowbite-react";
 import React, { useEffect, useState } from "react";
-import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
-import {
-  addPage,
-  getAllCategories,
-  getAllSubCategories,
-  getPageById,
-  updatePage
-} from "../../../services/apiServices";
-import MyAlert from "../../../components/common/MyAlert";
 import { HiArrowPath, HiMiniExclamationTriangle } from "react-icons/hi2";
-import { useForm } from "../../../hooks/useForm";
+import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import MyMultipleFilesInput from "../../../components/admin/common/form/MyMutipleFilesInput";
 import MySelect from "../../../components/admin/common/form/MySelect";
 import MyTextInput from "../../../components/admin/common/form/MyTextInput";
-import { Button } from "flowbite-react";
+import MyAlert from "../../../components/common/MyAlert";
+import { useForm } from "../../../hooks/useForm";
+import {
+  addPage,
+  getAllCategories,
+  getAllSubCategoriesByCategorySlug,
+  getPageById,
+  updatePage
+} from "../../../services/apiServices";
+import MyMultiSelect from "../../../components/admin/common/form/MyMultiSelect";
+import { toast } from "react-toastify";
 
 const initialState = {
   name: "",
@@ -23,24 +25,27 @@ const initialState = {
 };
 
 function PagesForm() {
-  function getBody(formData) {
-    const body = new FormData();
-    body.append("name", formData.name);
-    body.append("slug", formData.slug);
-    body.append("subCategories", formData.subCategories);
+  function getFormData(formState) {
+    const formData = new FormData();
+    formData.append("name", formState.name);
+    formData.append("slug", formState.slug);
 
-    for (const image of formData.images) {
-      body.append("images", image);
+    for (const subCategory of formState.subCategories) {
+      formData.append("subCategories", subCategory);
     }
 
-    return body;
+    for (const image of formState.images) {
+      formData.append("images", image);
+    }
+
+    return formData;
   }
 
   const {
-    loading,
-    error,
-    formData,
-    setFormData,
+    formStateLoading,
+    formStateError,
+    formState,
+    setFormState,
     imageUrls,
     setImageUrls,
     handleChange,
@@ -50,7 +55,7 @@ function PagesForm() {
     [""],
     "images",
     getPageById,
-    getBody,
+    getFormData,
     addPage,
     updatePage,
     "/admin/pages"
@@ -69,8 +74,10 @@ function PagesForm() {
   }, []);
 
   useEffect(() => {
-    fetchSubCategories();
-  }, []);
+    if (formState.name) {
+      fetchSubCategories();
+    }
+  }, [formState.slug]);
 
   async function fetchCategories() {
     try {
@@ -83,7 +90,7 @@ function PagesForm() {
       }
 
       const transformedCategories = result.data.map((category) => {
-        return { value: category._id, text: category.name };
+        return { value: category.slug, text: category.name };
       });
 
       setCategoriesOptions(transformedCategories);
@@ -97,11 +104,12 @@ function PagesForm() {
 
   async function fetchSubCategories() {
     try {
-      const result = await getAllSubCategories();
+      const result = await getAllSubCategoriesByCategorySlug(formState.slug);
 
       if (!result.success) {
         toast("Failed to fetch sub-categories.", { type: "error" });
         setSubCategoriesError("Failed to fetch sub-categories.");
+        console.log(result.msg);
         return;
       }
 
@@ -109,10 +117,16 @@ function PagesForm() {
         return { value: subCategory._id, text: subCategory.name };
       });
 
+      transformedSubCategories.unshift({
+        value: "",
+        text: "Select A Sub-Category"
+      });
+
       setSubCategoriesOptions(transformedSubCategories);
     } catch (error) {
       toast("Failed to fetch sub-categories.", { type: "error" });
       setSubCategoriesError("Failed to fetch sub-categories.");
+      console.log(error.message);
     } finally {
       setSubCategoriesLoading(false);
     }
@@ -120,7 +134,7 @@ function PagesForm() {
 
   function handleFileUpload(e) {
     const files = e.target.files;
-    setFormData({ ...formData, images: files });
+    setFormState({ ...formState, images: files });
 
     const temp = [];
     for (const file of files) {
@@ -129,13 +143,17 @@ function PagesForm() {
     setImageUrls(temp);
   }
 
-  if (loading) {
+  if (formStateLoading || categoriesLoading || subCategoriesLoading) {
     return <MyAlert icon={HiArrowPath} msg="Loading..." />;
   }
 
-  if (error) {
+  if (formStateError || categoriesError || subCategoriesError) {
     return (
-      <MyAlert color="failure" icon={HiMiniExclamationTriangle} msg={error} />
+      <MyAlert
+        color="failure"
+        icon={HiMiniExclamationTriangle}
+        msg={formStateError}
+      />
     );
   }
 
@@ -157,7 +175,7 @@ function PagesForm() {
             <MySelect
               name="name"
               label="Select A Page"
-              value={formData.name}
+              value={formState.name}
               onChange={handleChange}
               options={categoriesOptions}
             />
@@ -166,14 +184,22 @@ function PagesForm() {
             <MyTextInput
               name="slug"
               lable="Slug"
-              value={formData.slug}
+              value={formState.slug}
               disabled={true}
               required={true}
             />
           </div>
 
           {/* subCategories Multi Select */}
-
+          <MyMultiSelect
+            name="subCategories"
+            label="Sub-Categories"
+            initialOptions={subCategoriesOptions}
+            selectedOptions={formState.subCategories}
+            setSelectedOptions={(subCategories) => {
+              setFormState({ ...formState, subCategories });
+            }}
+          />
           <Button color="primary" type="submit">
             Submit
           </Button>

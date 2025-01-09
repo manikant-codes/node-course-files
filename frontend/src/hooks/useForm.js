@@ -7,16 +7,18 @@ export function useForm(
   initialImageUrls,
   imageField,
   getDataById,
-  getBody,
+  getFormData,
   addData,
   updateData,
   navURL
 ) {
   const { id } = useParams();
   const isAdd = id === "add";
-  const [loading, setLoading] = useState(isAdd ? false : true);
-  const [formData, setFormData] = useState(initialFormData);
-  const [error, setError] = useState("");
+  const [formStateLoading, setFormStateLoading] = useState(
+    isAdd ? false : true
+  );
+  const [formState, setFormState] = useState(initialFormData);
+  const [formStateError, setFormStateError] = useState("");
   const [imageUrls, setImageUrls] = useState(initialImageUrls);
   const navigate = useNavigate();
 
@@ -33,85 +35,79 @@ export function useForm(
 
         if (!result.success) {
           toast("Failed to fetch form data.", { type: "error" });
-          setError("Failed to fetch form data.");
+          setFormStateError("Failed to fetch form data.");
           console.log(result.msg);
           return;
         }
 
-        setFormData(result.data);
+        setFormState(result.data);
         setImageUrls(result.data[imageField]);
       } catch (error) {
         toast("Failed to fetch form data.", { type: "error" });
-        setError("Failed to fetch form data.");
+        setFormStateError("Failed to fetch form data.");
         console.log(error.message);
       } finally {
-        setLoading(false);
+        setFormStateLoading(false);
       }
     },
     [id]
   );
 
-  const handleChange = useCallback(
-    function (e) {
-      if (e.target.name === "name") {
-        setFormData({
-          ...formData,
-          [e.target.name]: e.target.value,
-          slug: e.target.value.toLowerCase().replace(/\s+/g, "-")
-        });
+  function handleChange(e) {
+    if (e.target.name === "name") {
+      setFormState({
+        ...formState,
+        [e.target.name]: e.target.value,
+        slug: e.target.value.toLowerCase().replace(/\s+/g, "-")
+      });
+    } else {
+      setFormState({
+        ...formState,
+        [e.target.name]: e.target.value
+      });
+    }
+  }
+
+  async function handleSubmit(e) {
+    try {
+      e.preventDefault();
+
+      const formData = getFormData(formState);
+
+      let result;
+
+      if (isAdd) {
+        result = await addData(formData);
       } else {
-        setFormData({
-          ...formData,
-          [e.target.name]: e.target.value
-        });
+        result = await updateData(id, formData);
       }
-    },
-    [formData]
-  );
 
-  const handleSubmit = useCallback(
-    async function (e) {
-      try {
-        e.preventDefault();
-
-        const body = getBody(formData);
-
-        let result;
-
-        if (isAdd) {
-          result = await addData(body);
-        } else {
-          result = await updateData(id, body);
-        }
-
-        if (!result.success) {
-          toast(`Failed to ${isAdd ? "add" : "update"} data.`, {
-            type: "error"
-          });
-          console.log(result.msg);
-          return;
-        }
-
-        toast(`Data ${isAdd ? "added" : "updated"} successfully.`, {
-          type: "success"
-        });
-
-        navigate(navURL);
-      } catch (error) {
+      if (!result.success) {
         toast(`Failed to ${isAdd ? "add" : "update"} data.`, {
           type: "error"
         });
-        console.log(error.message);
+        console.log(result.msg);
+        return;
       }
-    },
-    [formData, isAdd, id, addData, updateData, navURL]
-  );
+
+      toast(`Data ${isAdd ? "added" : "updated"} successfully.`, {
+        type: "success"
+      });
+
+      navigate(navURL);
+    } catch (error) {
+      toast(`Failed to ${isAdd ? "add" : "update"} data.`, {
+        type: "error"
+      });
+      console.log(error.message);
+    }
+  }
 
   return {
-    loading,
-    error,
-    formData,
-    setFormData,
+    formStateLoading,
+    formStateError,
+    formState,
+    setFormState,
     imageUrls,
     setImageUrls,
     handleChange,

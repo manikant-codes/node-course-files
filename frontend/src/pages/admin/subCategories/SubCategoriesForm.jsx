@@ -47,10 +47,10 @@ function SubCategoriesForm() {
   }
 
   const {
-    loading,
-    error,
-    formData,
-    setFormData,
+    formStateLoading,
+    formStateError,
+    formState,
+    setFormState,
     imageUrls,
     setImageUrls,
     handleChange,
@@ -120,7 +120,7 @@ function SubCategoriesForm() {
     const tempURL = URL.createObjectURL(file);
 
     setImageUrls(tempURL);
-    setFormData({ ...formData, image: file });
+    setFormState({ ...formState, image: file });
   }
 
   // function handleChange(e) {
@@ -169,11 +169,11 @@ function SubCategoriesForm() {
   //   }
   // }
 
-  if (loading) {
+  if (formStateLoading) {
     return <MyAlert icon={HiArrowPath} msg="Loading..." />;
   }
 
-  if (error) {
+  if (formStateError) {
     return (
       <MyAlert
         color="failure"
@@ -198,20 +198,20 @@ function SubCategoriesForm() {
         <MyTextInput
           name="name"
           lable="Sub-Category Name"
-          value={formData.name}
+          value={formState.name}
           onChange={handleChange}
           required={true}
         />
         <MyTextInput
           name="slug"
           lable="Sub-Category Slug"
-          value={formData.slug}
+          value={formState.slug}
           disabled={true}
         />
         <MySelect
           name="category"
           label="Select A Category"
-          value={formData.category}
+          value={formState.category}
           onChange={handleChange}
           options={categoryOptions}
         />

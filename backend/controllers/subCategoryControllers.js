@@ -1,9 +1,30 @@
 const { saveFile, deleteFile } = require("../helpers/fileHelper");
 const SubCategory = require("../models/SubCategory");
+const Category = require("../models/Category");
 
 const getAllSubCategories = async (req, res) => {
   try {
     const subCategories = await SubCategory.find();
+    res.status(200).json({ success: true, data: subCategories });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+const getAllSubCategoriesByCategorySlug = async (req, res) => {
+  try {
+    const { categorySlug } = req.params;
+
+    const category = await Category.findOne({ slug: categorySlug });
+
+    if (!category) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "No such category found." });
+    }
+
+    const subCategories = await SubCategory.find({ category: category._id });
+
     res.status(200).json({ success: true, data: subCategories });
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
@@ -110,6 +131,7 @@ const deleteSubCategory = async (req, res) => {
 
 module.exports = {
   getAllSubCategories,
+  getAllSubCategoriesByCategorySlug,
   getSubCategoryById,
   addSubCategory,
   updateSubCategory,
