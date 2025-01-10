@@ -12,99 +12,142 @@ import {
   getCategoryById,
   updateCategory
 } from "../../../services/apiServices";
+import useForm from "../../../hooks/useForm";
 
 const initialState = { name: "", slug: "", image: "" };
 
 function CategoriesForm() {
-  const { id } = useParams();
-  const isAdd = id === "add";
-  const [formStateLoading, setFormStateLoading] = useState(
-    isAdd ? false : true
-  );
-  const [formState, setFormState] = useState(initialState);
-  const [formStateError, setFormStateError] = useState("");
   const [imageURL, setImageURL] = useState("");
-  const navigate = useNavigate();
+  const {
+    isUpdate,
+    formState,
+    formStateLoading,
+    formStateError,
+    handleChange,
+    handleSubmit
+  } = useForm(
+    initialState,
+    getCategoryById,
+    addCategory,
+    updateCategory,
+    setOtherStates,
+    getUpdatedFormState,
+    getFormData,
+    "/admin/categories"
+  );
 
-  async function fetchCategory() {
-    try {
-      const result = await getCategoryById(id);
+  function setOtherStates(data) {
+    setImageURL(data.image);
+  }
 
-      if (!result.success) {
-        toast("Failed to fetch category data.", { type: "error" });
-        setFormStateError("Failed to fetch category data.");
-        return;
-      }
+  function getFormData() {
+    const formData = new FormData();
+    formData.append("name", formState.name);
+    formData.append("slug", formState.slug);
+    formData.append("image", formState.image);
+    return formData;
+  }
 
-      setFormState(result.data);
-      setImageURL(result.data.image);
-    } catch (error) {
-      toast("Failed to fetch category data.", { type: "error" });
-      setFormStateError("Failed to fetch category data.");
-    } finally {
-      setFormStateLoading(false);
+  function getUpdatedFormState(e, formStateCopy) {
+    if (e.target.name === "name") {
+      formStateCopy[e.target.name] = e.target.value;
+      formStateCopy["slug"] = e.target.value.toLowerCase().replaceAll(" ", "-");
+    } else if (e.target.name === "image") {
+      formStateCopy["image"] = e.target.files[0];
+      const tempURL = URL.createObjectURL(e.target.files[0]);
+      setImageURL(tempURL);
     }
+
+    return formStateCopy;
   }
 
-  useEffect(() => {
-    if (!isAdd) {
-      fetchCategory();
-    }
-  }, [id]);
+  // const { id } = useParams();
+  // const isAdd = id === "add";
+  // const [formStateLoading, setFormStateLoading] = useState(
+  //   isAdd ? false : true
+  // );
+  // const [formState, setFormState] = useState(initialState);
+  // const [formStateError, setFormStateError] = useState("");
 
-  function handleChange(e) {
-    setFormState({
-      ...formState,
-      [e.target.name]: e.target.value,
-      slug: e.target.value.toLowerCase().replaceAll(" ", "-")
-    });
-  }
+  // async function fetchCategory() {
+  //   try {
+  //     const result = await getCategoryById(id);
 
-  function handleImageUpload(e) {
-    const tempURL = URL.createObjectURL(e.target.files[0]);
-    setImageURL(tempURL);
+  //     if (!result.success) {
+  //       toast("Failed to fetch category data.", { type: "error" });
+  //       setFormStateError("Failed to fetch category data.");
+  //       return;
+  //     }
 
-    setFormState({
-      ...formState,
-      image: e.target.files[0]
-    });
-  }
+  //     setFormState(result.data);
+  //     setImageURL(result.data.image);
+  //   } catch (error) {
+  //     toast("Failed to fetch category data.", { type: "error" });
+  //     setFormStateError("Failed to fetch category data.");
+  //   } finally {
+  //     setFormStateLoading(false);
+  //   }
+  // }
 
-  async function handleSubmit(e) {
-    try {
-      e.preventDefault();
+  // useEffect(() => {
+  //   if (!isAdd) {
+  //     fetchCategory();
+  //   }
+  // }, [id]);
 
-      setFormStateLoading(true);
+  // function handleChange(e) {
+  //   setFormState({
+  //     ...formState,
+  //     [e.target.name]: e.target.value,
+  //     slug: e.target.value.toLowerCase().replaceAll(" ", "-")
+  //   });
+  // }
 
-      const formData = new FormData();
-      formData.append("name", formState.name);
-      formData.append("slug", formState.slug);
-      formData.append("image", formState.image);
+  // function handleImageUpload(e) {
+  //   const tempURL = URL.createObjectURL(e.target.files[0]);
+  //   setImageURL(tempURL);
 
-      let data;
+  //   setFormState({
+  //     ...formState,
+  //     image: e.target.files[0]
+  //   });
+  // }
 
-      if (isAdd) {
-        data = await addCategory(formData);
-      } else {
-        data = await updateCategory(id, formData);
-      }
+  // async function handleSubmit(e) {
+  //   try {
+  //     e.preventDefault();
 
-      if (data.success) {
-        setFormStateLoading(false);
-        toast(`Category ${isAdd ? "added" : "updated"} successfully.`, {
-          type: "success"
-        });
-        navigate("/admin/categories");
-      } else {
-        setFormStateLoading(false);
-        setFormStateError(data.msg);
-        toast("Failed to add category.", { type: "error" });
-      }
-    } catch (error) {
-      setFormStateLoading(false);
-      setFormStateError(error.message);
-    }
-  }
+  //     setFormStateLoading(true);
+
+  //     const formData = new FormData();
+  //     formData.append("name", formState.name);
+  //     formData.append("slug", formState.slug);
+  //     formData.append("image", formState.image);
+
+  //     let data;
+
+  //     if (isAdd) {
+  //       data = await addCategory(formData);
+  //     } else {
+  //       data = await updateCategory(id, formData);
+  //     }
+
+  //     if (data.success) {
+  //       setFormStateLoading(false);
+  //       toast(`Category ${isAdd ? "added" : "updated"} successfully.`, {
+  //         type: "success"
+  //       });
+  //       navigate("/admin/categories");
+  //     } else {
+  //       setFormStateLoading(false);
+  //       setFormStateError(data.msg);
+  //       toast("Failed to add category.", { type: "error" });
+  //     }
+  //   } catch (error) {
+  //     setFormStateLoading(false);
+  //     setFormStateError(error.message);
+  //   }
+  // }
 
   if (formStateLoading) {
     return (
@@ -129,17 +172,13 @@ function CategoriesForm() {
 
   return (
     <div>
-      <AdminPageTitle title={isAdd ? "Add Category" : "Update Category"} />
+      <AdminPageTitle title={isUpdate ? "Update Category" : "Add Category"} />
       <div>
         <form
           className="grid grid-cols-[1fr_2fr] gap-4"
           onSubmit={handleSubmit}
         >
-          <MyFileUpload
-            name="image"
-            onChange={handleImageUpload}
-            url={imageURL}
-          />
+          <MyFileUpload name="image" onChange={handleChange} url={imageURL} />
           <div className="flex flex-col gap-4">
             <MyTextInput
               name="name"

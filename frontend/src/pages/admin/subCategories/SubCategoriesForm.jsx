@@ -14,20 +14,59 @@ import {
   getSubCategoryById,
   updateSubCategory
 } from "../../../services/apiServices";
+import useForm from "../../../hooks/useForm";
 
 const initialState = { name: "", slug: "", image: null, category: "" };
 
 function SubCategoriesForm() {
-  const { id } = useParams();
-  const isAdd = id === "add";
-  const [formStateLoading, setFormStateLoading] = useState(
-    isAdd ? false : true
-  );
-  const [formState, setFormState] = useState(initialState);
-  const [formStateError, setFormStateError] = useState(false);
   const [imageURL, setImageURL] = useState("");
   const [categories, setCategories] = useState([]);
-  const navigate = useNavigate();
+
+  const {
+    isUpdate,
+    formState,
+    formStateLoading,
+    formStateError,
+    handleChange,
+    handleSubmit
+  } = useForm(
+    initialState,
+    getSubCategoryById,
+    addSubCategory,
+    updateSubCategory,
+    setOtherStates,
+    getUpdatedFormState,
+    getFormData,
+    "/admin/subCategories"
+  );
+
+  function setOtherStates(data) {
+    setImageURL(data.image);
+  }
+
+  function getUpdatedFormState(e, formStateCopy) {
+    if (e.target.name === "name") {
+      formStateCopy[e.target.name] = e.target.value;
+      formStateCopy["slug"] = e.target.value.toLowerCase().replaceAll(" ", "-");
+    } else if (e.target.name === "image") {
+      formStateCopy["image"] = e.target.files[0];
+      const tempURL = URL.createObjectURL(e.target.files[0]);
+      setImageURL(tempURL);
+    } else {
+      formStateCopy[e.target.name] = e.target.value;
+    }
+
+    return formStateCopy;
+  }
+
+  function getFormData() {
+    const formData = new FormData();
+    formData.append("name", formState.name);
+    formData.append("slug", formState.slug);
+    formData.append("image", formState.image);
+    formData.append("category", formState.category);
+    return formData;
+  }
 
   async function fetchAllCategories() {
     try {
@@ -45,95 +84,104 @@ function SubCategoriesForm() {
     }
   }
 
-  async function fetchSubCategory() {
-    try {
-      const result = await getSubCategoryById(id);
-
-      if (!result.success) {
-        toast("Failed to fetch sub-category.", { type: "error" });
-        setFormStateError("Failed to fetch sub-category.");
-        return;
-      }
-
-      setFormState(result.data);
-      setImageURL(result.data.image);
-    } catch (error) {
-      toast("Failed to fetch sub-category.", { type: "error" });
-      setFormStateError("Failed to fetch sub-category.");
-    } finally {
-      setFormStateLoading(false);
-    }
-  }
-
   useEffect(() => {
     fetchAllCategories();
   }, []);
 
-  useEffect(() => {
-    if (!isAdd) {
-      fetchSubCategory();
-    }
-  }, [id]);
+  // const { id } = useParams();
+  // const isAdd = id === "add";
+  // const [formStateLoading, setFormStateLoading] = useState(
+  //   isAdd ? false : true
+  // );
+  // const [formState, setFormState] = useState(initialState);
+  // const [formStateError, setFormStateError] = useState(false);
+  // const navigate = useNavigate();
 
-  function handleFileUpload(e) {
-    const file = e.target.files[0];
-    const tempURL = URL.createObjectURL(file);
-    setImageURL(tempURL);
-    setFormState({ ...formState, image: file });
-  }
+  // async function fetchSubCategory() {
+  //   try {
+  //     const result = await getSubCategoryById(id);
 
-  function handleChange(e) {
-    if (e.target.name === "name") {
-      setFormState({
-        ...formState,
-        name: e.target.value,
-        slug: e.target.value.toLowerCase().replaceAll(" ", "-")
-      });
-    } else {
-      setFormState({
-        ...formState,
-        category: e.target.value
-      });
-    }
-  }
+  //     if (!result.success) {
+  //       toast("Failed to fetch sub-category.", { type: "error" });
+  //       setFormStateError("Failed to fetch sub-category.");
+  //       return;
+  //     }
 
-  async function handleSubmit(e) {
-    try {
-      e.preventDefault();
+  //     setFormState(result.data);
+  //     setImageURL(result.data.image);
+  //   } catch (error) {
+  //     toast("Failed to fetch sub-category.", { type: "error" });
+  //     setFormStateError("Failed to fetch sub-category.");
+  //   } finally {
+  //     setFormStateLoading(false);
+  //   }
+  // }
 
-      setFormStateLoading(true);
+  // useEffect(() => {
+  //   if (!isAdd) {
+  //     fetchSubCategory();
+  //   }
+  // }, [id]);
 
-      const formData = new FormData();
-      formData.append("name", formState.name);
-      formData.append("slug", formState.slug);
-      formData.append("image", formState.image);
-      formData.append("category", formState.category);
+  // function handleFileUpload(e) {
+  //   const file = e.target.files[0];
+  //   const tempURL = URL.createObjectURL(file);
+  //   setImageURL(tempURL);
+  //   setFormState({ ...formState, image: file });
+  // }
 
-      let result;
+  // function handleChange(e) {
+  //   if (e.target.name === "name") {
+  //     setFormState({
+  //       ...formState,
+  //       name: e.target.value,
+  //       slug: e.target.value.toLowerCase().replaceAll(" ", "-")
+  //     });
+  //   } else {
+  //     setFormState({
+  //       ...formState,
+  //       category: e.target.value
+  //     });
+  //   }
+  // }
 
-      if (isAdd) {
-        result = await addSubCategory(formData);
-      } else {
-        result = await updateSubCategory(id, formData);
-      }
+  // async function handleSubmit(e) {
+  //   try {
+  //     e.preventDefault();
 
-      if (!result.success) {
-        return toast(`Failed to ${isAdd ? "add" : "updated"} sub-category.`, {
-          type: "error"
-        });
-      }
+  //     setFormStateLoading(true);
 
-      toast(`Sub-category ${isAdd ? "added" : "updated"} successfully.`, {
-        type: "success"
-      });
+  //     const formData = new FormData();
+  //     formData.append("name", formState.name);
+  //     formData.append("slug", formState.slug);
+  //     formData.append("image", formState.image);
+  //     formData.append("category", formState.category);
 
-      setFormStateLoading(false);
-      navigate("/admin/subCategories");
-    } catch (error) {
-      setFormStateLoading(false);
-      setFormStateError(error.message);
-    }
-  }
+  //     let result;
+
+  //     if (isAdd) {
+  //       result = await addSubCategory(formData);
+  //     } else {
+  //       result = await updateSubCategory(id, formData);
+  //     }
+
+  //     if (!result.success) {
+  //       return toast(`Failed to ${isAdd ? "add" : "updated"} sub-category.`, {
+  //         type: "error"
+  //       });
+  //     }
+
+  //     toast(`Sub-category ${isAdd ? "added" : "updated"} successfully.`, {
+  //       type: "success"
+  //     });
+
+  //     setFormStateLoading(false);
+  //     navigate("/admin/subCategories");
+  //   } catch (error) {
+  //     setFormStateLoading(false);
+  //     setFormStateError(error.message);
+  //   }
+  // }
 
   if (formStateLoading) {
     return (
@@ -158,17 +206,13 @@ function SubCategoriesForm() {
 
   return (
     <div>
-      <AdminPageTitle title={`${isAdd ? "Add" : "Update"} SubCategory`} />
+      <AdminPageTitle title={`${isUpdate ? "Update" : "Add"} SubCategory`} />
       <div>
         <form
           className="grid grid-cols-[1fr_2fr] gap-4"
           onSubmit={handleSubmit}
         >
-          <MyFileUpload
-            name="image"
-            url={imageURL}
-            onChange={handleFileUpload}
-          />
+          <MyFileUpload name="image" url={imageURL} onChange={handleChange} />
           <div className="grid grid-cols-1 gap-4">
             <MyTextInput
               name="name"
