@@ -1,7 +1,9 @@
 import { Button } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { HiArrowPath, HiMiniExclamationTriangle } from "react-icons/hi2";
+import { toast } from "react-toastify";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
+import MyMultiSelect from "../../../components/admin/common/form/MyMultiSelect";
 import MyMultipleFilesInput from "../../../components/admin/common/form/MyMutipleFilesInput";
 import MySelect from "../../../components/admin/common/form/MySelect";
 import MyTextInput from "../../../components/admin/common/form/MyTextInput";
@@ -14,8 +16,6 @@ import {
   getPageById,
   updatePage
 } from "../../../services/apiServices";
-import MyMultiSelect from "../../../components/admin/common/form/MyMultiSelect";
-import { toast } from "react-toastify";
 
 const initialState = {
   name: "",
@@ -25,6 +25,11 @@ const initialState = {
 };
 
 function PagesForm() {
+  const [imageUrls, setImageUrls] = useState([""]);
+  function setOtherStates(data) {
+    setImageUrls(data.images);
+  }
+
   function getFormData(formState) {
     const formData = new FormData();
     formData.append("name", formState.name);
@@ -41,25 +46,50 @@ function PagesForm() {
     return formData;
   }
 
+  function updateFormState(e, formState, setFormState) {
+    if (e.target.name === "name") {
+      setFormState({
+        ...formState,
+        [e.target.name]: e.target.value,
+        slug: e.target.value.toLowerCase().replaceAll(" ", "-")
+      });
+    } else if (e.target.name === "images") {
+      setFormState({
+        ...formState,
+        [e.target.name]: e.target.files
+      });
+
+      const tempUrls = [];
+      for (const image of e.target.files) {
+        tempUrls.push(URL.createObjectURL(image));
+      }
+      setImageUrls(tempUrls);
+    } else {
+      setFormState({
+        ...formState,
+        [e.target.name]: e.target.value
+      });
+    }
+  }
+
   const {
+    isAdd,
     formStateLoading,
     formStateError,
     formState,
     setFormState,
-    imageUrls,
-    setImageUrls,
     handleChange,
     handleSubmit
-  } = useForm(
+  } = useForm({
     initialState,
-    [""],
-    "images",
-    getPageById,
+    setOtherStates,
+    getDataById: getPageById,
     getFormData,
-    addPage,
-    updatePage,
-    "/admin/pages"
-  );
+    updateFormState,
+    addData: addPage,
+    updateData: updatePage,
+    navURL: "/admin/pages"
+  });
 
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [categoriesOptions, setCategoriesOptions] = useState([]);
@@ -132,16 +162,16 @@ function PagesForm() {
     }
   }
 
-  function handleFileUpload(e) {
-    const files = e.target.files;
-    setFormState({ ...formState, images: files });
+  // function handleFileUpload(e) {
+  //   const files = e.target.files;
+  //   setFormState({ ...formState, images: files });
 
-    const temp = [];
-    for (const file of files) {
-      temp.push(URL.createObjectURL(file));
-    }
-    setImageUrls(temp);
-  }
+  //   const temp = [];
+  //   for (const file of files) {
+  //     temp.push(URL.createObjectURL(file));
+  //   }
+  //   setImageUrls(temp);
+  // }
 
   if (formStateLoading || categoriesLoading || subCategoriesLoading) {
     return <MyAlert icon={HiArrowPath} msg="Loading..." />;
@@ -159,14 +189,14 @@ function PagesForm() {
 
   return (
     <div>
-      <AdminPageTitle title="Add Update Page" />
+      <AdminPageTitle title={`${isAdd ? "Add" : "Update"} Page`} />
       <div>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
           {/* images Upload */}
           <MyMultipleFilesInput
             name="images"
             label="Pages Images"
-            onChange={handleFileUpload}
+            onChange={handleChange}
             urls={imageUrls}
           />
 

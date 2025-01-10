@@ -2,24 +2,25 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-export function useForm(
-  initialFormData,
-  initialImageUrls,
-  imageField,
+export function useForm({
+  initialState,
   getDataById,
+  setOtherStates,
   getFormData,
+  updateFormState,
   addData,
   updateData,
   navURL
-) {
+}) {
   const { id } = useParams();
   const isAdd = id === "add";
+
   const [formStateLoading, setFormStateLoading] = useState(
     isAdd ? false : true
   );
-  const [formState, setFormState] = useState(initialFormData);
+  const [formState, setFormState] = useState(initialState);
   const [formStateError, setFormStateError] = useState("");
-  const [imageUrls, setImageUrls] = useState(initialImageUrls);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,7 +42,10 @@ export function useForm(
         }
 
         setFormState(result.data);
-        setImageUrls(result.data[imageField]);
+
+        if (setOtherStates) {
+          setOtherStates(result.data);
+        }
       } catch (error) {
         toast("Failed to fetch form data.", { type: "error" });
         setFormStateError("Failed to fetch form data.");
@@ -54,18 +58,7 @@ export function useForm(
   );
 
   function handleChange(e) {
-    if (e.target.name === "name") {
-      setFormState({
-        ...formState,
-        [e.target.name]: e.target.value,
-        slug: e.target.value.toLowerCase().replace(/\s+/g, "-")
-      });
-    } else {
-      setFormState({
-        ...formState,
-        [e.target.name]: e.target.value
-      });
-    }
+    updateFormState(e, formState, setFormState);
   }
 
   async function handleSubmit(e) {
@@ -104,12 +97,11 @@ export function useForm(
   }
 
   return {
+    isAdd,
     formStateLoading,
     formStateError,
     formState,
     setFormState,
-    imageUrls,
-    setImageUrls,
     handleChange,
     handleSubmit
   };
