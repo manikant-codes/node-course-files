@@ -17,6 +17,7 @@ import UsersForm from "./pages/admin/users/UsersForm";
 import UsersList from "./pages/admin/users/UsersList";
 import Home from "./pages/public/Home";
 import FormWrapper from "./components/admin/common/FormWrapper";
+import CategoryPage from "./pages/public/CategoryPage";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
       <Routes>
         <Route path="/" element={<PublicLayout />}>
           <Route index element={<Home />} />
+          <Route path=":categorySlug" element={<CategoryPage />} />
         </Route>
         {/*<Route path="/user" element={<UserLayout />}>
           <Route />

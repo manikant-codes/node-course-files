@@ -5,14 +5,16 @@ const {
   addSubCategory,
   updateSubCategory,
   deleteSubCategory,
-  getAllSubCategoriesByCategorySlug
+  getAllSubCategoriesByCategorySlug,
+  getAllSubCategoriesByCategoryId
 } = require("../controllers/subCategoryControllers");
 
 const subCategoryRouter = express.Router();
 
 subCategoryRouter.get("/", getAllSubCategories);
+subCategoryRouter.get("/category/:categoryId", getAllSubCategoriesByCategoryId);
 subCategoryRouter.get(
-  "/category/:categorySlug",
+  "/category/slug/:categorySlug",
   getAllSubCategoriesByCategorySlug
 );
 subCategoryRouter.get("/:id", getSubCategoryById);

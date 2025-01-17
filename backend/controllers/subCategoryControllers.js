@@ -1,6 +1,8 @@
 const { saveFile, deleteFile } = require("../helpers/fileHelper");
 const SubCategory = require("../models/SubCategory");
 const Category = require("../models/Category");
+const Product = require("../models/Product");
+const Page = require("../models/Page");
 
 const getAllSubCategories = async (req, res) => {
   try {
@@ -24,6 +26,18 @@ const getAllSubCategoriesByCategorySlug = async (req, res) => {
     }
 
     const subCategories = await SubCategory.find({ category: category._id });
+
+    res.status(200).json({ success: true, data: subCategories });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+const getAllSubCategoriesByCategoryId = async (req, res) => {
+  try {
+    const { categoryId } = req.params;
+
+    const subCategories = await SubCategory.find({ category: categoryId });
 
     res.status(200).json({ success: true, data: subCategories });
   } catch (error) {
@@ -89,8 +103,6 @@ const updateSubCategory = async (req, res) => {
     if (req.files && req.files.image) {
       await deleteFile(subCategory.image, "subCategory");
       req.body.image = await saveFile(req.files.image, "subCategory");
-      //   const imageURL = await saveFile(req.files.image, "subCategory");
-      //   req.body.image = imageURL;
     }
 
     const updatedSubCategory = await SubCategory.findByIdAndUpdate(
@@ -108,6 +120,16 @@ const updateSubCategory = async (req, res) => {
 const deleteSubCategory = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const product = await Product.findOne({ subCategory: id });
+    const page = await Page.findOne({ subCategories: id });
+
+    if (product || page) {
+      return res.status(400).json({
+        success: false,
+        msg: "Sub-category cannot be deleted as it is being used."
+      });
+    }
 
     const subCategory = await SubCategory.findById(id);
 
@@ -132,6 +154,7 @@ const deleteSubCategory = async (req, res) => {
 module.exports = {
   getAllSubCategories,
   getAllSubCategoriesByCategorySlug,
+  getAllSubCategoriesByCategoryId,
   getSubCategoryById,
   addSubCategory,
   updateSubCategory,

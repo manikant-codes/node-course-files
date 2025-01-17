@@ -1,6 +1,9 @@
 const Category = require("../models/Category");
 const path = require("path");
 const fs = require("fs/promises");
+const Product = require("../models/Product");
+const Page = require("../models/Page");
+const SubCategory = require("../models/SubCategory");
 
 const getAllCategories = async (req, res) => {
   try {
@@ -98,8 +101,20 @@ const updateCategory = async (req, res) => {
 const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
-
     const category = await Category.findById(id);
+
+    const subCategory = await SubCategory.findOne({ category: id });
+    const product = await Product.findOne({ category: id });
+    const page = await Page.findOne({ name: category.name });
+
+    if (product || page || subCategory) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          msg: "Category cannot be deleted as it is being used."
+        });
+    }
 
     if (!category) {
       return res

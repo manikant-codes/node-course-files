@@ -26,6 +26,7 @@ const initialState = {
 
 function PagesForm() {
   const [imageUrls, setImageUrls] = useState([""]);
+
   function setOtherStates(data) {
     setImageUrls(data.images);
   }
@@ -95,7 +96,7 @@ function PagesForm() {
   const [categoriesOptions, setCategoriesOptions] = useState([]);
   const [categoriesError, setCategoriesError] = useState("");
 
-  const [subCategoriesLoading, setSubCategoriesLoading] = useState(true);
+  const [subCategoriesLoading, setSubCategoriesLoading] = useState(false);
   const [subCategoriesOptions, setSubCategoriesOptions] = useState([]);
   const [subCategoriesError, setSubCategoriesError] = useState("");
 
@@ -134,6 +135,8 @@ function PagesForm() {
 
   async function fetchSubCategories() {
     try {
+      setSubCategoriesLoading(true);
+
       const result = await getAllSubCategoriesByCategorySlug(formState.slug);
 
       if (!result.success) {
@@ -162,17 +165,6 @@ function PagesForm() {
     }
   }
 
-  // function handleFileUpload(e) {
-  //   const files = e.target.files;
-  //   setFormState({ ...formState, images: files });
-
-  //   const temp = [];
-  //   for (const file of files) {
-  //     temp.push(URL.createObjectURL(file));
-  //   }
-  //   setImageUrls(temp);
-  // }
-
   if (formStateLoading || categoriesLoading || subCategoriesLoading) {
     return <MyAlert icon={HiArrowPath} msg="Loading..." />;
   }
@@ -182,7 +174,7 @@ function PagesForm() {
       <MyAlert
         color="failure"
         icon={HiMiniExclamationTriangle}
-        msg={formStateError}
+        msg={formStateError || categoriesError || subCategoriesError}
       />
     );
   }

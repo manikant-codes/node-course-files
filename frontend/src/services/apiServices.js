@@ -19,7 +19,14 @@ export const {
 
 export async function getAllSubCategoriesByCategorySlug(categorySlug) {
   const response = await fetch(
-    `${BASE_URL}/subCategories/category/${categorySlug}`
+    `${BASE_URL}/subCategories/category/slug/${categorySlug}`
+  );
+  return await response.json();
+}
+
+export async function getAllSubCategoriesByCategoryId(categoryId) {
+  const response = await fetch(
+    `${BASE_URL}/subCategories/category/${categoryId}`
   );
   return await response.json();
 }

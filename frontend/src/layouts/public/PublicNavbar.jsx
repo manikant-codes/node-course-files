@@ -1,8 +1,29 @@
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import { COMPANY_NAME } from "../../consts";
+import { getAllPages } from "../../services/apiServices";
 
 function PublicNavbar() {
+  const [pages, setPages] = useState([]);
+
+  async function fetchAllPages() {
+    try {
+      const result = await getAllPages();
+
+      if (!result.success) {
+        toast("Failed to fetch pages.", { type: "error" });
+      }
+      setPages(result.data);
+    } catch (error) {
+      toast("Failed to fetch pages.", { type: "error" });
+    }
+  }
+
+  useEffect(() => {
+    fetchAllPages();
+  }, []);
   return (
     <Navbar fluid border>
       <Navbar.Brand as={"div"}>
@@ -45,6 +66,13 @@ function PublicNavbar() {
         <Navbar.Link href="#" active>
           Home
         </Navbar.Link>
+        {pages.map((page) => {
+          return (
+            <Navbar.Link key={page._id} href={`/${page.slug}`}>
+              {page.name}
+            </Navbar.Link>
+          );
+        })}
         <Navbar.Link href="#">About</Navbar.Link>
         <Navbar.Link href="#">Contact</Navbar.Link>
       </Navbar.Collapse>

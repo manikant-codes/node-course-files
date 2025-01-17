@@ -39,7 +39,17 @@ const getPageById = async (req, res) => {
 
 const addPage = async (req, res) => {
   try {
-    console.log("req.body", req.body);
+    if (req.files && req.files.images && !Array.isArray(req.files.images)) {
+      req.files.images = [req.files.images];
+    }
+    if (
+      req.body &&
+      req.body.subCategories &&
+      !Array.isArray(req.body.subCategories)
+    ) {
+      req.body.subCategories = [req.body.subCategories];
+    }
+    
     await imageSchema.validate(req.files);
     await pageValidationSchema.validate(req.body);
 

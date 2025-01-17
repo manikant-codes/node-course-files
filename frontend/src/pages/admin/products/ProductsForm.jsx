@@ -3,21 +3,22 @@ import React, { useEffect, useState } from "react";
 import { HiArrowPath, HiMiniExclamationTriangle } from "react-icons/hi2";
 import { toast } from "react-toastify";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
+import MyMultiSelect from "../../../components/admin/common/form/MyMultiSelect";
 import MyMultipleFilesInput from "../../../components/admin/common/form/MyMutipleFilesInput";
 import MySelect from "../../../components/admin/common/form/MySelect";
 import MyTextArea from "../../../components/admin/common/form/MyTextArea";
 import MyTextInput from "../../../components/admin/common/form/MyTextInput";
 import MyAlert from "../../../components/common/MyAlert";
+import { COLORS, SIZES } from "../../../consts";
 import { useForm } from "../../../hooks/useForm";
 import {
   addProduct,
   getAllCategories,
   getAllSubCategories,
+  getAllSubCategoriesByCategoryId,
   getProductById,
   updateProduct
 } from "../../../services/apiServices";
-import MyMultiSelect from "../../../components/admin/common/form/MyMultiSelect";
-import { COLORS, SIZES } from "../../../consts";
 
 const initialState = {
   name: "",
@@ -36,19 +37,15 @@ const initialState = {
 };
 
 function ProductsForm() {
-  // const { id } = useParams();
-  // const isAdd = id === "add";
+  const [imageUrls, setImageUrls] = useState([""]);
 
-  // const [formStateLoading, setFormStateLoading] = useState(
-  //   isAdd ? false : true
-  // );
-  // const [formState, setFormState] = useState(initialState);
-  // const [formStateError, setFormStateError] = useState("");
-
-  // const [imageURLs, setImageURLs] = useState([""]);
+  function setOtherStates(data) {
+    setImageUrls(data.images);
+  }
 
   function getFormData(formData) {
     const body = new FormData();
+
     for (const key in formData) {
       if (key === "images") {
         for (const image of formData[key]) {
@@ -66,28 +63,54 @@ function ProductsForm() {
         body.append(key, formData[key]);
       }
     }
+
     return body;
   }
 
+  function updateFormState(e, formState, setFormState) {
+    if (e.target.name === "name") {
+      setFormState({
+        ...formState,
+        [e.target.name]: e.target.value,
+        slug: e.target.value.toLowerCase().replaceAll(" ", "-")
+      });
+    } else if (e.target.name === "images") {
+      setFormState({
+        ...formState,
+        [e.target.name]: e.target.files
+      });
+
+      const tempUrls = [];
+      for (const image of e.target.files) {
+        tempUrls.push(URL.createObjectURL(image));
+      }
+      setImageUrls(tempUrls);
+    } else {
+      setFormState({
+        ...formState,
+        [e.target.name]: e.target.value
+      });
+    }
+  }
+
   const {
+    isAdd,
     formStateLoading,
     formStateError,
     formState,
     setFormState,
-    imageUrls,
-    setImageUrls,
     handleChange,
     handleSubmit
-  } = useForm(
+  } = useForm({
     initialState,
-    [""],
-    "images",
-    getProductById,
+    setOtherStates,
+    getDataById: getProductById,
     getFormData,
-    addProduct,
-    updateProduct,
-    "/admin/products"
-  );
+    updateFormState,
+    addData: addProduct,
+    updateData: updateProduct,
+    navURL: "/admin/products"
+  });
 
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [categoriesOptions, setCategoriesOptions] = useState([]);
@@ -97,21 +120,15 @@ function ProductsForm() {
   const [subCategoriesOptions, setSubCategoriesOptions] = useState([]);
   const [subCategoriesError, setSubCategoriesError] = useState([]);
 
-  // const navigate = useNavigate();
-
   useEffect(() => {
     fetchCategories();
   }, []);
 
   useEffect(() => {
-    fetchSubCategories();
-  }, []);
-
-  // useEffect(() => {
-  //   if (!isAdd) {
-  //     fetchProduct();
-  //   }
-  // }, [id]);
+    if (formState.category) {
+      fetchSubCategoriesByCategoryId();
+    }
+  }, [formState.category]);
 
   async function fetchCategories() {
     try {
@@ -136,9 +153,9 @@ function ProductsForm() {
     }
   }
 
-  async function fetchSubCategories() {
+  async function fetchSubCategoriesByCategoryId() {
     try {
-      const result = await getAllSubCategories();
+      const result = await getAllSubCategoriesByCategoryId(formState.category);
 
       if (!result.success) {
         toast("Failed to fetch sub-categories.", { type: "error" });
@@ -159,41 +176,6 @@ function ProductsForm() {
     }
   }
 
-  // async function fetchProduct() {
-  //   try {
-  //     const result = await getProductById(id);
-
-  //     if (!result.success) {
-  //       toast("Failed to fetch product.", { type: "error" });
-  //       setFormStateError("Failed to fetch product.");
-  //       return;
-  //     }
-
-  //     setFormState(result.data);
-  //     setImageURLs(result.data.images);
-  //   } catch (error) {
-  //     toast("Failed to fetch product.", { type: "error" });
-  //     setFormStateError("Failed to fetch product.");
-  //   } finally {
-  //     setFormStateLoading(false);
-  //   }
-  // }
-
-  // function handleChange(e) {
-  //   if (e.target.name === "name") {
-  //     setFormState({
-  //       ...formState,
-  //       [e.target.name]: e.target.value,
-  //       slug: e.target.value.toLowerCase().replace(/\s+/g, "-")
-  //     });
-  //   } else {
-  //     setFormState({
-  //       ...formState,
-  //       [e.target.name]: e.target.value
-  //     });
-  //   }
-  // }
-
   function handleFileUpload(e) {
     const files = e.target.files;
     setFormState({ ...formState, images: files });
@@ -205,62 +187,23 @@ function ProductsForm() {
     setImageUrls(temp);
   }
 
-  // async function handleSubmit(e) {
-  //   try {
-  //     e.preventDefault();
-
-  //     const formData = new FormData();
-  //     for (const key in formState) {
-  //       if (key === "images") {
-  //         for (const image of formState[key]) {
-  //           formData.append("images", image);
-  //         }
-  //       } else {
-  //         formData.append(key, formState[key]);
-  //       }
-  //     }
-
-  //     let result;
-  //     if (isAdd) {
-  //       result = await addProduct(formData);
-  //     } else {
-  //       result = await updateProduct(id, formData);
-  //     }
-
-  //     if (!result.success) {
-  //       return toast(`Failed to ${isAdd ? "add" : "update"} product.`, {
-  //         type: "error"
-  //       });
-  //     }
-
-  //     toast(`Product ${isAdd ? "added" : "updated"} successfully.`, {
-  //       type: "success"
-  //     });
-  //     navigate("/admin/products");
-  //   } catch (error) {
-  //     toast(`Failed to ${isAdd ? "add" : "update"} product.`, {
-  //       type: "error"
-  //     });
-  //   }
-  // }
-
-  if (formStateLoading) {
+  if (formStateLoading || categoriesLoading) {
     return <MyAlert icon={HiArrowPath} msg="Loading..." />;
   }
 
-  if (formStateError) {
+  if (formStateError || categoriesError) {
     return (
       <MyAlert
         color="failure"
         icon={HiMiniExclamationTriangle}
-        msg={formStateError}
+        msg={formStateError || categoriesError}
       />
     );
   }
 
   return (
     <div>
-      <AdminPageTitle title="Add Update Product" />
+      <AdminPageTitle title={isAdd ? "Add Product" : "Update Product"} />
       <div>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
           {/* images Upload */}
