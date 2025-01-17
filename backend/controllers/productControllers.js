@@ -48,6 +48,22 @@ const getProductById = async (req, res) => {
   }
 };
 
+const getProductBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const product = await Product.findOne({ slug });
+
+    if (!product) {
+      return sendErrorResponse(res, "No such product found.", 404);
+    }
+
+    sendDataResponse(res, product);
+  } catch (error) {
+    sendErrorResponse(res, error.message);
+  }
+};
+
 const addProduct = async (req, res) => {
   try {
     if (!req.files || !req.files.images) {
@@ -175,6 +191,7 @@ module.exports = {
   getAllProducts,
   getAllProductsBySubCategorySlug,
   getProductById,
+  getProductBySlug,
   addProduct,
   updateProduct,
   deleteProduct

@@ -19,8 +19,6 @@ function PublicNavbar() {
         return;
       }
 
-      console.log("result", result);
-
       const temp = result.data.map((page) => {
         return {
           id: page._id,
@@ -39,8 +37,6 @@ function PublicNavbar() {
   useEffect(() => {
     fetchPages();
   }, []);
-
-  console.log("pages", pages);
 
   return (
     <Navbar fluid border>

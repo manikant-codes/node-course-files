@@ -55,6 +55,12 @@ export async function getAllProductsBySubCategorySlug(slug) {
   return data;
 }
 
+export async function getProductBySlug(slug) {
+  const response = await fetch(`${BASE_URL}/products/slug/${slug}`);
+  const data = await response.json();
+  return data;
+}
+
 // End Products
 
 // Pages

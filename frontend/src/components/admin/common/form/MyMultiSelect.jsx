@@ -26,6 +26,7 @@ function getSelectedOptions(initialOptions, selected) {
 
 function MyMultiSelect({
   name,
+  label,
   selected,
   setSelected,
   initialOptions,
@@ -84,7 +85,7 @@ function MyMultiSelect({
   return (
     <div>
       <div className="mb-2 block">
-        <Label htmlFor={name} value={"My Multi Select"} />
+        <Label htmlFor={name} value={label} />
       </div>
       <Select id={name} name={name} onChange={handleChange} required={required}>
         {options.map((option, index) => {

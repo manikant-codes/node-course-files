@@ -21,6 +21,7 @@ import Home from "./pages/public/Home";
 import Page from "./pages/public/Page";
 import Products from "./pages/public/Products";
 import ProductsList from "./pages/admin/products/ProductsList";
+import ProductDetails from "./pages/public/ProductDetails";
 
 function App() {
   return (
@@ -30,6 +31,10 @@ function App() {
           <Route index element={<Home />} />
           <Route path=":slug" element={<Page />} />
           <Route path=":slug/:subCategorySlug" element={<Products />} />
+          <Route
+            path=":slug/:subCategorySlug/:productSlug"
+            element={<ProductDetails />}
+          />
           <Route path="contact" element={<Contact />} />
         </Route>
         <Route path="/user" element={<UserLayout />}>

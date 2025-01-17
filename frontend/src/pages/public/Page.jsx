@@ -13,8 +13,6 @@ function Page() {
   const [error, setError] = React.useState("");
   const { slug } = useParams();
 
-  console.log("page", page);
-
   async function fetchPage() {
     try {
       const result = await getPageBySlug(slug);
