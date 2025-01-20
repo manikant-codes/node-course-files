@@ -4,10 +4,14 @@ import { COLORS, SIZES } from "../../../consts";
 import MySelect from "../../admin/common/form/MySelect";
 import { Button, Label, Select } from "flowbite-react";
 import { getDiscountedPrice, getMRP } from "../../../helpers/priceHelper";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../../redux/cartSlice";
 
 function ProductDesc({ product }) {
   const [size, setSize] = useState("");
   const [color, setColor] = useState("");
+
+  const dispatch = useDispatch();
 
   if (!product.sizes.includes("Select Size")) {
     product.sizes.unshift("Select Size");
@@ -22,6 +26,10 @@ function ProductDesc({ product }) {
     } else {
       setColor(e.target.value);
     }
+  }
+
+  function handleAddToCart() {
+    dispatch(addToCart({ ...product, quantity: 1 }));
   }
 
   return (
@@ -88,7 +96,9 @@ function ProductDesc({ product }) {
         </div>
       </div>
 
-      <Button disabled={!size || !color}>Add to Cart</Button>
+      <Button onClick={handleAddToCart} disabled={!size || !color}>
+        Add to Cart
+      </Button>
     </div>
   );
 }
