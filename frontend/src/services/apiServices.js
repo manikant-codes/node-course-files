@@ -74,4 +74,7 @@ export async function getPageBySlug(slug) {
   return data;
 }
 
+export const { getAllHomePages, addHomePage, updateHomePage } =
+  getAllApiServices("homePage", "homePages");
+
 // End Pages

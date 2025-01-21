@@ -2,7 +2,7 @@ import React from "react";
 import { HiGift } from "react-icons/hi2";
 import { HiMiniSquares2X2 } from "react-icons/hi2";
 import { HiMiniRectangleGroup } from "react-icons/hi2";
-import { HiMiniDocumentText } from "react-icons/hi2";
+import { HiMiniDocumentText, HiHome } from "react-icons/hi2";
 import { HiMiniUser } from "react-icons/hi2";
 import { HiMiniTruck } from "react-icons/hi2";
 import { HiMiniPower } from "react-icons/hi2";
@@ -33,6 +33,12 @@ const links = [
     icon: HiGift,
     to: "/admin/products",
     name: "Products"
+  },
+  {
+    id: 51,
+    icon: HiHome,
+    to: "/admin/homePage",
+    name: "Home Page"
   },
   {
     id: 5,

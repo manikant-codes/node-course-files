@@ -7,6 +7,7 @@ const subCategoryRouter = require("./routes/subCategoryRouter");
 const productRouter = require("./routes/productRouter");
 const pageRouter = require("./routes/pageRouter");
 var cors = require("cors");
+const homePageRouter = require("./routes/homePageRouter");
 dotenv.config();
 
 const server = express();
@@ -19,6 +20,7 @@ server.use("/categories", categoryRouter);
 server.use("/subCategories", subCategoryRouter);
 server.use("/products", productRouter);
 server.use("/pages", pageRouter);
+server.use("/homePages", homePageRouter);
 
 const start = async () => {
   try {

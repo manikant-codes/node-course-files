@@ -22,6 +22,7 @@ import Page from "./pages/public/Page";
 import Products from "./pages/public/Products";
 import ProductsList from "./pages/admin/products/ProductsList";
 import ProductDetails from "./pages/public/ProductDetails";
+import HomePageForm from "./pages/admin/HomePageForm";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
           <Route path="subcategories/:id" element={<SubCategoriesForm />} />
           <Route path="products" element={<ProductsList />} />
           <Route path="products/:id" element={<ProductsForm />} />
+          <Route path="homePage" element={<HomePageForm />} />
           <Route path="pages" element={<PagesList />} />
           <Route path="pages/:id" element={<PagesForm />} />
           <Route path="users" element={<UsersList />} />

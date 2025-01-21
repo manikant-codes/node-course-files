@@ -29,7 +29,7 @@ function ProductDesc({ product }) {
   }
 
   function handleAddToCart() {
-    dispatch(addToCart({ ...product, quantity: 1 }));
+    dispatch(addToCart({ ...product, quantity: 1, size, color }));
   }
 
   return (
