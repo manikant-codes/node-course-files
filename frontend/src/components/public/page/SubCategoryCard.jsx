@@ -1,11 +1,13 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-function SubCategoryCard({ subCategory }) {
+function SubCategoryCard({ subCategory, isHomePage }) {
   const navigate = useNavigate();
-  const { slug } = useParams();
 
   function handleNavigate(subCategorySlug) {
+    if (isHomePage) {
+      return navigate(`/${subCategory.category.slug}/${subCategorySlug}`);
+    }
     navigate(`${subCategorySlug}`);
   }
 

@@ -8,7 +8,12 @@ const Page = require("../models/Page");
 
 const getHomePage = async (req, res) => {
   try {
-    const homePage = await HomePage.findOne({});
+    const homePage = await HomePage.findOne({}).populate({
+      path: "subCategories",
+      populate: {
+        path: "category"
+      }
+    });
     sendDataResponse(res, homePage);
   } catch (error) {
     sendErrorResponse(res, error.message);

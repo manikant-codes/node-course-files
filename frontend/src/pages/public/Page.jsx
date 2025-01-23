@@ -53,8 +53,6 @@ function Page() {
     );
   }
 
-  console.log("page", page);
-
   return (
     <div>
       {/* Carousel */}
