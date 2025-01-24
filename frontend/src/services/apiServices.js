@@ -40,9 +40,22 @@ export async function getAllSubCategories() {
   return await response.json();
 }
 
+export async function getSubCategoryById(id) {
+  const response = await fetch(`http://localhost:5000/subCategories/${id}`);
+  return await response.json();
+}
+
 export async function addSubCategory(body) {
   const response = await fetch("http://localhost:5000/subCategories", {
     method: "POST",
+    body
+  });
+  return await response.json();
+}
+
+export async function updateSubCategory(id, body) {
+  const response = await fetch(`http://localhost:5000/subCategories/${id}`, {
+    method: "PATCH",
     body
   });
   return await response.json();

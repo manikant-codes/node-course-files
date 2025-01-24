@@ -1,10 +1,12 @@
 import { Button, FileInput, Label, Select, TextInput } from "flowbite-react";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AdminPageTitle from "../../../components/admin/common/AdminPageTitle";
 import {
   addSubCategory,
-  getAllCategories
+  getAllCategories,
+  getSubCategoryById,
+  updateSubCategory
 } from "../../../services/apiServices";
 import { useFetch } from "../../../hooks/useFetch";
 import StatusMessage from "../../../components/common/StatusMessage";
@@ -17,7 +19,13 @@ const initialState = {
 };
 
 function SubCategoryForm() {
+  const { id } = useParams();
+  const isUpdate = id !== "add";
+  const [formStateLoading, setFormStateLoading] = useState(
+    isUpdate ? true : false
+  );
   const [formState, setFormState] = useState(initialState);
+  const [formStateError, setFormStateError] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const navigate = useNavigate();
 
@@ -31,6 +39,34 @@ function SubCategoryForm() {
     data: categories,
     error
   } = useFetch([], getAllCategories, modifyData);
+
+  async function fetchFormData() {
+    try {
+      const result = await getSubCategoryById(id);
+
+      if (!result.success) {
+        alert("Failed to fetch form data.");
+        console.log("Error: ", result.message);
+        setFormStateError(result.message);
+        return;
+      }
+
+      setFormState(result.data);
+      setImageUrl(result.data.image);
+    } catch (error) {
+      alert("Failed to fetch form data.");
+      console.log("Error: ", error.message);
+      setFormStateError(result.message);
+    } finally {
+      setFormStateLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (isUpdate) {
+      fetchFormData();
+    }
+  }, [id]);
 
   // const [categories, setCategories] = useState([]);
 
@@ -48,7 +84,9 @@ function SubCategoryForm() {
   //   } catch (error) {
   //     alert("Failed to fetch categories.");
   //     console.log("Error: ", error.message);
-  //   }
+  //   } finally {
+  //      setLoading(false);
+  //    }
   // }
 
   // useEffect(() => {
@@ -85,22 +123,27 @@ function SubCategoryForm() {
       formData.append("image", formState.image);
       formData.append("category", formState.category);
 
-      const result = await addSubCategory(formData);
+      let result;
+      if (isUpdate) {
+        result = await updateSubCategory(id, formData);
+      } else {
+        result = await addSubCategory(formData);
+      }
 
       if (!result.success) {
-        alert("Failed to add sub-category.");
+        alert(`Failed to ${isUpdate ? "update" : "add"} sub-category.`);
         console.log("Error: ", result.message);
       }
 
-      alert("Sub-category added successfully.");
+      alert(`Sub-category ${isUpdate ? "updated" : "added"} successfully.`);
       navigate("/admin/subCategories");
     } catch (error) {
-      alert("Failed to add sub-category.");
+      alert(`Failed to ${isUpdate ? "update" : "add"} sub-category.`);
       console.log("Error: ", error.message);
     }
   }
 
-  if (loading) {
+  if (loading || formStateLoading) {
     return (
       <>
         <AdminPageTitle title={`${true ? "Update" : "Add"} Category`} />
@@ -109,11 +152,11 @@ function SubCategoryForm() {
     );
   }
 
-  if (error) {
+  if (error || formStateError) {
     return (
       <>
         <AdminPageTitle title={`${true ? "Update" : "Add"} Category`} />
-        <StatusMessage type="error" message={error} />
+        <StatusMessage type="error" message={error || formStateError} />
       </>
     );
   }
