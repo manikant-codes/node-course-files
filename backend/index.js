@@ -8,12 +8,14 @@ const productRouter = require("./routes/productRouter");
 const pageRouter = require("./routes/pageRouter");
 var cors = require("cors");
 const homePageRouter = require("./routes/homePageRouter");
+const authRouter = require("./routes/authRouter");
 dotenv.config();
 
 const server = express();
 
 server.use(cors());
 server.use(fileUpload());
+server.use(express.json());
 server.use("/uploads", express.static("uploads"));
 
 server.use("/categories", categoryRouter);
@@ -21,6 +23,7 @@ server.use("/subCategories", subCategoryRouter);
 server.use("/products", productRouter);
 server.use("/pages", pageRouter);
 server.use("/homePages", homePageRouter);
+server.use("/auth", authRouter);
 
 const start = async () => {
   try {

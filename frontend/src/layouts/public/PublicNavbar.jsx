@@ -67,6 +67,9 @@ function PublicNavbar() {
               <HiShoppingCart className="h-5 w-5" />
             </span>
           </Button>
+          <Button size="sm" pill as={Link} to="/login" className="mr-2">
+            Login/Register
+          </Button>
           <Dropdown
             arrowIcon={false}
             inline

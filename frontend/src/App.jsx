@@ -23,6 +23,8 @@ import Products from "./pages/public/Products";
 import ProductsList from "./pages/admin/products/ProductsList";
 import ProductDetails from "./pages/public/ProductDetails";
 import HomePageForm from "./pages/admin/HomePageForm";
+import Register from "./pages/public/Register";
+import Login from "./pages/public/Login";
 
 function App() {
   return (
@@ -37,6 +39,8 @@ function App() {
             element={<ProductDetails />}
           />
           <Route path="contact" element={<Contact />} />
+          <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
         </Route>
         <Route path="/user" element={<UserLayout />}>
           <Route index element={<h1 className="text-red-500">User Page!</h1>} />

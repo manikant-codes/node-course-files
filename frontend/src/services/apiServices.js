@@ -79,3 +79,27 @@ export const { getAllHomePages, addHomePage, updateHomePage } =
   getAllApiServices("homePage", "homePages");
 
 // End Pages
+
+// Auth
+
+export async function register(data) {
+  const response = await fetch(`${BASE_URL}/auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+  return await response.json();
+}
+
+export async function login(data) {
+  const response = await fetch(`${BASE_URL}/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+  return await response.json();
+}
