@@ -8,7 +8,6 @@ const {
   getAllProductsBySubCategorySlug,
   getProductBySlug
 } = require("../controllers/productControllers");
-const { adminAuthMiddleware } = require("../middlewares/authMiddleware");
 const productRouter = express.Router();
 
 productRouter.get("/", getAllProducts);
@@ -18,8 +17,8 @@ productRouter.get(
 );
 productRouter.get("/:id", getProductById);
 productRouter.get("/slug/:slug", getProductBySlug);
-productRouter.post("/", adminAuthMiddleware, addProduct);
-productRouter.patch("/:id", adminAuthMiddleware, updateProduct);
-productRouter.delete("/:id", adminAuthMiddleware, deleteProduct);
+productRouter.post("/", addProduct);
+productRouter.patch("/:id", updateProduct);
+productRouter.delete("/:id", deleteProduct);
 
 module.exports = productRouter;

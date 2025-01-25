@@ -12,7 +12,7 @@ function PublicNavbar() {
   const [isOpen, setIsOpen] = React.useState(false);
   const navigate = useNavigate();
 
-  const isLoggedIn = localStorage.getItem("token");
+  const isLoggedIn = !!localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
 
   function handleOpen() {
@@ -60,9 +60,9 @@ function PublicNavbar() {
         alert(result.msg);
       }
 
-      alert("Logged out successfully.");
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      alert("Logged out successfully.");
       navigate("/");
     } catch (error) {
       console.log(error);

@@ -25,13 +25,14 @@ function Register() {
       const result = await register(formData);
 
       if (!result.success) {
-        return alert(result.msg);
+        alert(result.msg);
+        return;
       }
 
-      alert(result.msg);
+      alert("Registered successfully.");
       navigate("/login");
     } catch (error) {
-      console.log(error);
+      console.log(first);
     }
   }
 

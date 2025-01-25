@@ -18,17 +18,17 @@ function Login() {
       const result = await login(formData);
 
       if (!result.success) {
-        return alert(result.msg);
+        alert(result.msg);
+        return;
       }
-
-      alert("Logged in successfully.");
 
       localStorage.setItem("token", result.data.token);
       localStorage.setItem("user", JSON.stringify(result.data.user));
 
+      alert("Logged in successfully.");
       navigate("/");
     } catch (error) {
-      console.log(error);
+      console.log(first);
     }
   }
 

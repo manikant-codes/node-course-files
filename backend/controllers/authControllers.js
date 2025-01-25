@@ -99,7 +99,22 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
+    if (
+      !req.headers.authorization ||
+      !req.headers.authorization.startsWith("Bearer ")
+    ) {
+      return sendErrorResponse(res, "Unauthorized.", 401);
+    }
+
     const token = req.headers.authorization.split(" ")[1];
+
+    const alreadyExpired = await ExpiredToken.findOne({ token });
+
+    if (alreadyExpired) {
+      return sendErrorResponse(res, "Token already expired.", 400);
+    }
+
+    const user = jwt.verify(token, process.env.JWT_SECRET);
 
     await ExpiredToken.create({ token });
 

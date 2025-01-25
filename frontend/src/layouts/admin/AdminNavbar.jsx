@@ -3,7 +3,18 @@ import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { COMPANY_NAME } from "../../consts";
 import { Link } from "react-router-dom";
 
-function AdminNavbar() {
+/*************  ✨ Codeium Command ⭐  *************/
+/**
+ * A simple navbar component for the admin layout.
+ *
+ * It includes a brand image and link, as well as a dropdown
+ * menu with the user's name and email, and options for home
+ * and logout.
+ *
+ * The navbar is responsive and will collapse to a hamburger
+ * menu on smaller screens.
+ */
+/******  f83a35c4-44dc-444a-a46b-1bb9db44a889  *******/function AdminNavbar() {
   return (
     <Navbar fluid border>
       <Navbar.Brand href="/">
