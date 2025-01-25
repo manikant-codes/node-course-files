@@ -5,10 +5,11 @@ const {
   addHomePage,
   updateHomePage
 } = require("../controllers/homePageControllers");
+const { adminAuthMiddleware } = require("../middlewares/authMiddleware");
 const homePageRouter = express.Router();
 
 homePageRouter.get("/", getHomePage);
-homePageRouter.post("/", addHomePage);
-homePageRouter.patch("/", updateHomePage);
+homePageRouter.post("/", adminAuthMiddleware, addHomePage);
+homePageRouter.patch("/", adminAuthMiddleware, updateHomePage);
 
 module.exports = homePageRouter;

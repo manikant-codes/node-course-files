@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { Avatar, Button, Dropdown, Navbar } from "flowbite-react";
 import { COMPANY_NAME } from "../../consts";
-import { Link } from "react-router-dom";
-import { getAllPages } from "../../services/apiServices";
+import { Link, useNavigate } from "react-router-dom";
+import { getAllPages, logout } from "../../services/apiServices";
 import { toast } from "react-toastify";
 import { HiShoppingCart } from "react-icons/hi";
 import CartDrawer from "../../components/public/cart/CartDrawer";
@@ -10,6 +10,10 @@ import CartDrawer from "../../components/public/cart/CartDrawer";
 function PublicNavbar() {
   const [pages, setPages] = React.useState([]);
   const [isOpen, setIsOpen] = React.useState(false);
+  const navigate = useNavigate();
+
+  const isLoggedIn = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
 
   function handleOpen() {
     setIsOpen(true);
@@ -48,6 +52,23 @@ function PublicNavbar() {
     fetchPages();
   }, []);
 
+  async function handleLogout() {
+    try {
+      const result = await logout();
+
+      if (!result.success) {
+        alert(result.msg);
+      }
+
+      alert("Logged out successfully.");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <>
       <Navbar fluid border>
@@ -67,34 +88,39 @@ function PublicNavbar() {
               <HiShoppingCart className="h-5 w-5" />
             </span>
           </Button>
-          <Button size="sm" pill as={Link} to="/login" className="mr-2">
-            Login/Register
-          </Button>
-          <Dropdown
-            arrowIcon={false}
-            inline
-            label={
-              <Avatar
-                alt="User settings"
-                img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                rounded
-              />
-            }
-          >
-            <Dropdown.Header>
-              <span className="block text-sm">Bonnie Green</span>
-              <span className="block truncate text-sm font-medium">
-                name@flowbite.com
-              </span>
-            </Dropdown.Header>
-            <Dropdown.Item as={Link} to="/admin">
-              Dashboard
-            </Dropdown.Item>
-            <Dropdown.Item as={Link} to="/user">
-              Account
-            </Dropdown.Item>
-            <Dropdown.Item>Log Out</Dropdown.Item>
-          </Dropdown>
+          {isLoggedIn ? (
+            <Dropdown
+              arrowIcon={false}
+              inline
+              label={
+                <Avatar
+                  alt="User settings"
+                  img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                  rounded
+                />
+              }
+            >
+              <Dropdown.Header>
+                <span className="block text-sm">{user.fullName}</span>
+                <span className="block truncate text-sm font-medium">
+                  {user.email}
+                </span>
+              </Dropdown.Header>
+              {user.role === "admin" && (
+                <Dropdown.Item as={Link} to="/admin">
+                  Dashboard
+                </Dropdown.Item>
+              )}
+              <Dropdown.Item as={Link} to="/user">
+                Account
+              </Dropdown.Item>
+              <Dropdown.Item onClick={handleLogout}>Log Out</Dropdown.Item>
+            </Dropdown>
+          ) : (
+            <Button size="sm" pill as={Link} to="/login" className="mr-2">
+              Login/Register
+            </Button>
+          )}
           <Navbar.Toggle />
         </div>
         <Navbar.Collapse>

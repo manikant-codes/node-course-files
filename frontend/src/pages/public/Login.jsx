@@ -1,7 +1,7 @@
 import React from "react";
 import MyTextInput from "../../components/admin/common/form/MyTextInput";
 import { Button } from "flowbite-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../services/apiServices";
 
 function Login() {
@@ -21,9 +21,10 @@ function Login() {
         return alert(result.msg);
       }
 
-      alert(result.msg);
+      alert("Logged in successfully.");
 
       localStorage.setItem("token", result.data.token);
+      localStorage.setItem("user", JSON.stringify(result.data.user));
 
       navigate("/");
     } catch (error) {
@@ -42,6 +43,10 @@ function Login() {
           <Button type="submit" className="mt-4">
             Submit
           </Button>
+          <p className="text-center">OR</p>
+          <Link className="text-center" to="/register">
+            Register
+          </Link>
         </form>
       </div>
     </div>

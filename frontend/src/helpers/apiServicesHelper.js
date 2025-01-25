@@ -16,7 +16,10 @@ export function getAllApiServices(entitySingularName, entityPluralName) {
   async function addDocument(body) {
     const response = await fetch(`${BASE_URL}/${entityPluralName}`, {
       body,
-      method: "POST"
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("token")}`
+      }
     });
     const data = await response.json();
     return data;
@@ -25,7 +28,10 @@ export function getAllApiServices(entitySingularName, entityPluralName) {
   async function updateDocument(id, body) {
     const response = await fetch(`${BASE_URL}/${entityPluralName}/${id}`, {
       body,
-      method: "PATCH"
+      method: "PATCH",
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("token")}`
+      }
     });
     const data = await response.json();
     return data;
@@ -33,7 +39,10 @@ export function getAllApiServices(entitySingularName, entityPluralName) {
 
   async function deleteDocument(id) {
     const response = await fetch(`${BASE_URL}/${entityPluralName}/${id}`, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("token")}`
+      }
     });
     const data = await response.json();
     return data;

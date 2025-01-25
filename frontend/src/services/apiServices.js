@@ -103,3 +103,21 @@ export async function login(data) {
   });
   return await response.json();
 }
+
+export async function logout() {
+  const response = await fetch(`${BASE_URL}/auth/logout`, {
+    headers: {
+      authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  });
+  return await response.json();
+}
+
+export async function getUser() {
+  const response = await fetch(`${BASE_URL}/auth/getUser`, {
+    headers: {
+      authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  });
+  return await response.json();
+}

@@ -2,7 +2,7 @@ import React from "react";
 import MyTextInput from "../../components/admin/common/form/MyTextInput";
 import { Button } from "flowbite-react";
 import { register } from "../../services/apiServices";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
   const navigate = useNavigate();
@@ -53,6 +53,10 @@ function Register() {
           <Button type="submit" className="mt-4">
             Submit
           </Button>
+          <p className="text-center">OR</p>
+          <Link className="text-center" to="/login">
+            Login
+          </Link>
         </form>
       </div>
     </div>

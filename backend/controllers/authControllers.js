@@ -3,8 +3,17 @@ const {
   sendDataResponse,
   sendSuccessResponse
 } = require("../helpers/resHelpers");
+const ExpiredToken = require("../models/ExpiredToken");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+
+const getUser = async (req, res) => {
+  try {
+    sendDataResponse(res, req.user, 200);
+  } catch (error) {
+    sendErrorResponse(res, error.message);
+  }
+};
 
 const register = async (req, res) => {
   try {
@@ -73,7 +82,16 @@ const login = async (req, res) => {
       { expiresIn: process.env.JWT_EXPIRY }
     );
 
-    sendDataResponse(res, { token }, 200);
+    const fullName = user.fname + " " + user.lname;
+
+    sendDataResponse(
+      res,
+      {
+        token,
+        user: { id: user._id, fullName, email: user.email, role: user.role }
+      },
+      200
+    );
   } catch (error) {
     sendErrorResponse(res, error.message);
   }
@@ -81,9 +99,14 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
+    const token = req.headers.authorization.split(" ")[1];
+
+    await ExpiredToken.create({ token });
+
+    sendSuccessResponse(res, "Logged out successfully.", 200);
   } catch (error) {
     sendErrorResponse(res, error.message);
   }
 };
 
-module.exports = { register, login, logout };
+module.exports = { register, login, logout, getUser };

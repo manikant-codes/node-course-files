@@ -7,14 +7,15 @@ const {
   deletePage,
   getPageBySlug
 } = require("../controllers/pageControllers");
+const { adminAuthMiddleware } = require("../middlewares/authMiddleware");
 
 const pageRouter = express.Router();
 
 pageRouter.get("/", getAllPages);
 pageRouter.get("/:id", getPageById);
 pageRouter.get("/slug/:slug", getPageBySlug);
-pageRouter.post("/", addPage);
-pageRouter.patch("/:id", updatePage);
-pageRouter.delete("/:id", deletePage);
+pageRouter.post("/", adminAuthMiddleware, addPage);
+pageRouter.patch("/:id", adminAuthMiddleware, updatePage);
+pageRouter.delete("/:id", adminAuthMiddleware, deletePage);
 
 module.exports = pageRouter;

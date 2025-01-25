@@ -7,7 +7,8 @@ import { HiMiniUser } from "react-icons/hi2";
 import { HiMiniTruck } from "react-icons/hi2";
 import { HiMiniPower } from "react-icons/hi2";
 import { HiSparkles } from "react-icons/hi2";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../../services/apiServices";
 
 const links = [
   {
@@ -57,12 +58,6 @@ const links = [
     icon: HiMiniTruck,
     to: "/admin/orders",
     name: "Orders"
-  },
-  {
-    id: 8,
-    icon: HiMiniPower,
-    to: "/",
-    name: "Log Out"
   }
 ];
 
@@ -81,6 +76,25 @@ function SidebarListItem({ icon: Icon, link, name }) {
 }
 
 function Sidebar() {
+  const navigate = useNavigate();
+
+  async function handleLogout() {
+    try {
+      const result = await logout();
+
+      if (!result.success) {
+        alert(result.msg);
+      }
+
+      alert("Logged out successfully.");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <ul className="border-r border-r-gray-300 flex flex-col gap-6 p-6">
       {links.map((link) => {
@@ -93,6 +107,13 @@ function Sidebar() {
           />
         );
       })}
+      <li
+        onClick={handleLogout}
+        className="text-lg cursor-pointer text-gray-600 hover:text-purple-600 flex items-center gap-2"
+      >
+        <HiMiniPower className="w-5 h-5" />
+        <span>Log Out</span>
+      </li>
     </ul>
   );
 }

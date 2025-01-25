@@ -25,6 +25,7 @@ import ProductDetails from "./pages/public/ProductDetails";
 import HomePageForm from "./pages/admin/HomePageForm";
 import Register from "./pages/public/Register";
 import Login from "./pages/public/Login";
+import AuthGuard from "./guards/AuthGuard";
 
 function App() {
   return (
@@ -45,7 +46,14 @@ function App() {
         <Route path="/user" element={<UserLayout />}>
           <Route index element={<h1 className="text-red-500">User Page!</h1>} />
         </Route>
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route
+          path="/admin"
+          element={
+            <AuthGuard>
+              <AdminLayout />
+            </AuthGuard>
+          }
+        >
           <Route index element={<Dashboard />} />
           <Route path="categories" element={<CategoriesList />} />
           <Route path="categories/:id" element={<CategoriesForm />} />
