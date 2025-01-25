@@ -49,7 +49,7 @@ const addPage = async (req, res) => {
     ) {
       req.body.subCategories = [req.body.subCategories];
     }
-    
+
     await imageSchema.validate(req.files);
     await pageValidationSchema.validate(req.body);
 

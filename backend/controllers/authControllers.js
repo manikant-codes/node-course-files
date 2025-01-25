@@ -78,7 +78,10 @@ const login = async (req, res) => {
       { expiresIn: process.env.JWT_EXPIRY }
     );
 
-    sendDataResponse(res, { token });
+    sendDataResponse(res, {
+      token,
+      user: { id: user._id, fullName, email: user.email, role: user.role }
+    });
   } catch (error) {
     sendErrorResponse(res, error.message);
   }

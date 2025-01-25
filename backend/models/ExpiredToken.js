@@ -6,6 +6,6 @@ const expiredTokenScheam = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now, expires: process.env.JWT_EXPIRY }
 });
 
-const ExpiredToken = mongoose.model("User", expiredTokenScheam);
+const ExpiredToken = mongoose.model("ExpiredToken", expiredTokenScheam);
 
 module.exports = ExpiredToken;
