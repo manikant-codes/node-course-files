@@ -6,12 +6,13 @@ const {
   updateCategory,
   deleteCategory
 } = require("../controllers/categoryControllers");
+const { adminAuthMiddleware } = require("../middlewares/authMiddlewares");
 const categoryRouter = express.Router();
 
 categoryRouter.get("/", getAllCategories);
 categoryRouter.get("/:id", getCategoryById);
-categoryRouter.post("/", addCategory);
-categoryRouter.patch("/:id", updateCategory);
-categoryRouter.delete("/:id", deleteCategory);
+categoryRouter.post("/", adminAuthMiddleware, addCategory);
+categoryRouter.patch("/:id", adminAuthMiddleware, updateCategory);
+categoryRouter.delete("/:id", adminAuthMiddleware, deleteCategory);
 
 module.exports = categoryRouter;

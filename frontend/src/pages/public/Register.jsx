@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
   const navigate = useNavigate();
+  
   async function handleSubmit(e) {
     e.preventDefault();
 

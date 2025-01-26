@@ -121,3 +121,11 @@ export async function getUser() {
   });
   return await response.json();
 }
+export async function getAdmin() {
+  const response = await fetch(`${BASE_URL}/auth/getAdmin`, {
+    headers: {
+      authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  });
+  return await response.json();
+}

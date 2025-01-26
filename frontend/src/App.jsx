@@ -25,7 +25,8 @@ import ProductDetails from "./pages/public/ProductDetails";
 import HomePageForm from "./pages/admin/HomePageForm";
 import Register from "./pages/public/Register";
 import Login from "./pages/public/Login";
-import AuthGuard from "./guards/AuthGuard";
+import AdminAuthGuard from "./guards/AdminAuthGuard";
+import UserAuthGuard from "./guards/UserAuthGuard";
 
 function App() {
   return (
@@ -43,15 +44,22 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
         </Route>
-        <Route path="/user" element={<UserLayout />}>
+        <Route
+          path="/user"
+          element={
+            <UserAuthGuard>
+              <UserLayout />
+            </UserAuthGuard>
+          }
+        >
           <Route index element={<h1 className="text-red-500">User Page!</h1>} />
         </Route>
         <Route
           path="/admin"
           element={
-            <AuthGuard>
+            <AdminAuthGuard>
               <AdminLayout />
-            </AuthGuard>
+            </AdminAuthGuard>
           }
         >
           <Route index element={<Dashboard />} />
