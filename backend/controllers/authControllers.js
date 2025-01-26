@@ -103,8 +103,7 @@ const login = async (req, res) => {
   }
 };
 
-/*************  ✨ Codeium Command ⭐  *************/
-/******  7a720d86-d8fd-42f8-9a11-4a0b2eb70a11  *******/const logout = async (req, res) => {
+const logout = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
     await ExpiredToken.create({ token });
