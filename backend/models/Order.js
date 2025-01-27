@@ -24,6 +24,7 @@ const orderSchema = new mongoose.Schema(
           if (orderItems.length === 0) {
             return false;
           }
+          return true;
         },
         message: "At least one order item is required."
       },

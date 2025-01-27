@@ -6,6 +6,11 @@ const {
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 
+// const cartItems = [
+//   { product: "adsadadad", quantity: 2, size: "m", color: "red" },
+//   { product: "adsadadad", quantity: 1, size: "m", color: "red" }
+// ];
+
 const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find();
