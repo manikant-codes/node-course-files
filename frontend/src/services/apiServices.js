@@ -129,3 +129,25 @@ export async function getAdmin() {
   });
   return await response.json();
 }
+
+export async function createOrder(data) {
+  const response = await fetch(`${BASE_URL}/orders`, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  });
+  return await response.json();
+}
+
+export async function getAllOrders(data) {
+  const response = await fetch(`${BASE_URL}/orders`, {
+    method: "GET",
+    headers: {
+      authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  });
+  return await response.json();
+}

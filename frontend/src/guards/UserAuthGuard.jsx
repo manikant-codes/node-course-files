@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { getUser } from "../services/apiServices";
 
-function UserAuthGuard() {
+function UserAuthGuard({ children }) {
   const user = JSON.parse(localStorage.getItem("user"));
   const location = useLocation();
   const navigate = useNavigate();

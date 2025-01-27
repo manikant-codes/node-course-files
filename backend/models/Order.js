@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 const orderItemsSchema = new mongoose.Schema({
   product: { type: mongoose.Types.ObjectId, ref: "Product", required: true },
   price: { type: Number, required: true },
-  quantity: { type: Number, required: true }
+  quantity: { type: Number, required: true },
+  size: { type: String, required: true },
+  color: { type: String, required: true }
 });
 
 const orderSchema = new mongoose.Schema(
@@ -46,6 +48,7 @@ const orderSchema = new mongoose.Schema(
       ],
       default: "Pending"
     },
+    orderTotal: { type: Number, required: true },
     paymentId: { type: String }
   },
   { timestamps: true }

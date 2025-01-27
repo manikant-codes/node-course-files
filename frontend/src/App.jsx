@@ -27,6 +27,7 @@ import Register from "./pages/public/Register";
 import Login from "./pages/public/Login";
 import AdminAuthGuard from "./guards/AdminAuthGuard";
 import UserAuthGuard from "./guards/UserAuthGuard";
+import Checkout from "./pages/public/Checkout";
 
 function App() {
   return (
@@ -43,6 +44,14 @@ function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
+          <Route
+            path="checkout"
+            element={
+              <UserAuthGuard>
+                <Checkout />
+              </UserAuthGuard>
+            }
+          />
         </Route>
         <Route
           path="/user"

@@ -31,7 +31,7 @@ function CartDrawer({ isOpen, handleClose }) {
             <Button color="gray">
               <span className="flex items-center justify-center">Clear</span>
             </Button>
-            <Button as={Link} to="/checkout">
+            <Button as={Link} to="/checkout" onClick={handleClose}>
               <span className="flex items-center justify-center">
                 Checkout
                 <HiArrowRight className="ml-2" />
