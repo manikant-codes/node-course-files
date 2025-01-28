@@ -5,8 +5,9 @@ const {
 } = require("../helpers/resHelpers");
 const Order = require("../models/Order");
 const Product = require("../models/Product");
+let stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-// const cartItems = [
+// const orderItems = [
 //   { product: "adsadadad", quantity: 2, size: "m", color: "red" },
 //   { product: "adsadadad", quantity: 1, size: "m", color: "red" }
 // ];
@@ -78,6 +79,7 @@ const createOrder = async (req, res) => {
 
       orderItemsFinal.push({
         product: product._id,
+        name: product.name,
         price,
         quantity: orderItem.quantity,
         size: orderItem.size,
@@ -91,6 +93,10 @@ const createOrder = async (req, res) => {
       shippingAddress,
       orderTotal
     });
+
+    // stripe.products.create({
+    //   name:
+    // });
 
     sendDataResponse(res, order);
   } catch (error) {
