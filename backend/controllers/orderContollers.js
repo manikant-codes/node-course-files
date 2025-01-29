@@ -1,15 +1,17 @@
 const { getProductPrice } = require("../helpers/priceHelpers");
 const {
   sendErrorResponse,
-  sendDataResponse
+  sendDataResponse,
+  sendSuccessResponse
 } = require("../helpers/resHelpers");
 const Order = require("../models/Order");
 const Product = require("../models/Product");
-let stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+console.log("process.env.STRIPE_SECRET_KEY", process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // const orderItems = [
-//   { product: "adsadadad", quantity: 2, size: "m", color: "red" },
-//   { product: "adsadadad", quantity: 1, size: "m", color: "red" }
+//   { product: "adsadadad", price: 1000, quantity: 2, size: "m", color: "red" },
+//   { product: "adsadadad", price: 2000, quantity: 1, size: "m", color: "red" }
 // ];
 
 const getAllOrders = async (req, res) => {
@@ -94,11 +96,29 @@ const createOrder = async (req, res) => {
       orderTotal
     });
 
-    // stripe.products.create({
-    //   name:
-    // });
+    // Stripe Checkout Session
+    const FRONTEND_BASE_URL = "http://localhost:5173";
+    const line_items = orderItemsFinal.map((orderItemObject) => {
+      return {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: orderItemObject.name
+          },
+          unit_amount: orderItemObject.price * 100
+        },
+        quantity: orderItemObject.quantity
+      };
+    });
 
-    sendDataResponse(res, order);
+    const session = await stripe.checkout.sessions.create({
+      line_items: line_items,
+      mode: "payment",
+      success_url: `${FRONTEND_BASE_URL}/checkout/success?id=${order._id}`,
+      cancel_url: `${FRONTEND_BASE_URL}/checkout/failure?id=${order._id}`
+    });
+
+    sendDataResponse(res, { order, sessionURL: session.url });
   } catch (error) {
     sendErrorResponse(res, error.message);
   }
@@ -106,6 +126,46 @@ const createOrder = async (req, res) => {
 
 const updateOrderStatus = async (req, res) => {
   try {
+    const { id } = req.params;
+    const { orderStatus } = req.body;
+
+    console.log("orderStatus", orderStatus);
+
+    const order = await Order.findById(id);
+
+    if (!order) {
+      return sendErrorResponse(res, "No such order found.", 404);
+    }
+
+    console.log("order", order.orderStatus);
+
+    if (order.orderStatus === "Pending") {
+      if (orderStatus !== "Confirmed" && orderStatus !== "Cancelled") {
+        return sendErrorResponse(res, "Invalid order status", 400);
+      }
+    } else if (order.orderStatus === "Confirmed") {
+      if (orderStatus !== "Dispatched" && orderStatus !== "Cancelled") {
+        return sendErrorResponse(res, "Invalid order status", 400);
+      }
+    } else if (order.orderStatus === "Dispatched") {
+      if (orderStatus !== "Shipped" && orderStatus !== "Cancelled") {
+        return sendErrorResponse(res, "Invalid order status", 400);
+      }
+    } else if (order.orderStatus === "Shipped") {
+      if (orderStatus !== "Delivered" && orderStatus !== "Cancelled") {
+        return sendErrorResponse(res, "Invalid order status", 400);
+      }
+    } else {
+      return sendErrorResponse(res, "Invalid order status", 400);
+    }
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+      id,
+      { orderStatus },
+      { new: true }
+    );
+
+    sendSuccessResponse(res, "Order status updated successfully.");
   } catch (error) {
     sendErrorResponse(res, error.message);
   }

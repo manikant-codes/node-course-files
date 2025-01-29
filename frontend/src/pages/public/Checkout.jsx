@@ -69,7 +69,7 @@ function Checkout() {
 
     alert("Order placed successfully.");
 
-    navigate("/");
+    window.location.href = result.data.sessionURL;
   }
 
   return (

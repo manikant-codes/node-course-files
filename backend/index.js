@@ -1,7 +1,8 @@
+const dotenv = require("dotenv");
+dotenv.config();
 const express = require("express");
 const connect = require("./db/connect");
 const fileUpload = require("express-fileupload");
-const dotenv = require("dotenv");
 const categoryRouter = require("./routes/categoryRouter");
 const subCategoryRouter = require("./routes/subCategoryRouter");
 const productRouter = require("./routes/productRouter");
@@ -10,7 +11,6 @@ var cors = require("cors");
 const homePageRouter = require("./routes/homePageRouter");
 const authRouter = require("./routes/authRouter");
 const orderRouter = require("./routes/orderRouter");
-dotenv.config();
 
 const server = express();
 

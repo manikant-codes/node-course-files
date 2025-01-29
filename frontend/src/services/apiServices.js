@@ -142,6 +142,18 @@ export async function createOrder(data) {
   return await response.json();
 }
 
+export async function updateOrderStatus(id, data) {
+  const response = await fetch(`${BASE_URL}/orders/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  });
+  return await response.json();
+}
+
 export async function getAllOrders(data) {
   const response = await fetch(`${BASE_URL}/orders`, {
     method: "GET",

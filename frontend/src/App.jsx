@@ -28,6 +28,7 @@ import Login from "./pages/public/Login";
 import AdminAuthGuard from "./guards/AdminAuthGuard";
 import UserAuthGuard from "./guards/UserAuthGuard";
 import Checkout from "./pages/public/Checkout";
+import CheckoutStatus from "./pages/public/CheckoutStatus";
 
 function App() {
   return (
@@ -49,6 +50,14 @@ function App() {
             element={
               <UserAuthGuard>
                 <Checkout />
+              </UserAuthGuard>
+            }
+          />
+          <Route
+            path="checkout/:status"
+            element={
+              <UserAuthGuard>
+                <CheckoutStatus />
               </UserAuthGuard>
             }
           />
