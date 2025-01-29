@@ -129,15 +129,11 @@ const updateOrderStatus = async (req, res) => {
     const { id } = req.params;
     const { orderStatus } = req.body;
 
-    console.log("orderStatus", orderStatus);
-
     const order = await Order.findById(id);
 
     if (!order) {
       return sendErrorResponse(res, "No such order found.", 404);
     }
-
-    console.log("order", order.orderStatus);
 
     if (order.orderStatus === "Pending") {
       if (orderStatus !== "Confirmed" && orderStatus !== "Cancelled") {
@@ -153,6 +149,10 @@ const updateOrderStatus = async (req, res) => {
       }
     } else if (order.orderStatus === "Shipped") {
       if (orderStatus !== "Delivered" && orderStatus !== "Cancelled") {
+        return sendErrorResponse(res, "Invalid order status", 400);
+      }
+    } else if (order.orderStatus === "Delivered") {
+      if (orderStatus !== "Cancelled") {
         return sendErrorResponse(res, "Invalid order status", 400);
       }
     } else {

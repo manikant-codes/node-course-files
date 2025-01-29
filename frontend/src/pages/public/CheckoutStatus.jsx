@@ -17,13 +17,13 @@ function CheckoutStatus() {
         });
 
         if (!result.success) {
-          //   alert(result.msg);
+          alert(result.msg);
           console.log(result.msg);
         }
 
-        // alert("Order Confirmed");
+        alert("Order Confirmed");
       } catch (error) {
-        // alert(error.message);
+        alert(error.message);
         console.log(error);
       }
     }
